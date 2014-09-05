@@ -1,0 +1,206 @@
+<!-- 练习记录 -->
+<!doctype html>
+<html>
+<head>
+<title>练习记录 考试系统题库</title>
+<#include "common/loadPageJS.ftl" />
+</head>
+
+<body>
+<#include "common/head.html" />
+<div class="main">
+	<div class="h30"></div>
+	<div class="content fl">
+    	<div class="cont-l fl">
+        	<div class="box fl yinying">
+                <div class="dangqian">练习记录</div>
+                <div class="hui-botton"><a href="错题记录.html">错题记录</a></div>
+                <div class="hui-botton"><a href="我的收藏.html">我的收藏</a></div>
+                <div class="h10"></div>
+            </div>
+        </div>
+        <div class="cont-r fr">
+        	<div class="box fl yinying">
+                <div class="record fl">
+                	<div class="title">做题记录</div>
+                    <div class="list">
+                    	<ul>
+                        	<li class="bg">全部记录</a></li>
+                            <li><a href="#">已完成</a></li>
+                            <li><a href="#">未完成</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="recordsift fl">
+                    <div class="sift fl">
+                        <div class="siftbox fl">
+                            <div class="f-l fl">科目：</div>
+                            <div class="f-r fr">
+                               <div class="list">
+                                    <ul>
+                                        <li><a href="#"><em>全部</em></a></li>
+                                        <li class="bg"><em>中级经济师</em><i class="shang"></i></li>
+                                        <li><a href="#"><em>初级经济师</em><i class="cheng"></i><i class="xia"></i></a></li><!--鼠标移动上去去掉<i class="cheng"></i>-->
+                                    </ul>
+                                </div>
+                                <div class="erji fl">
+                                    <div class="list">
+                                        <ul>
+                                            <li><a href="#">中级经济师</a></li>
+                                            <li><a href="#">章节练习</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="siftbox fl">
+                            <div class="f-l fl">模式：</div>
+                            <div class="f-r fr">
+                               <div class="list">
+                                    <ul>
+                                        <li class="bg">全部</li>
+                                        <li><a href="#">模拟试题</a></li>
+                                        <li><a href="#">章节练习</a></li>
+                                        <li><a href="#">每日一练</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box fl">
+            	<!--无错题情况下<div class="moni-list">
+                    <ul>
+                        <li class="line">亲爱的同学，暂无您的练习记录,<a href="#" class="red">立即练习</a></li>
+                    </ul>
+                </div>-->
+                <div class="moni-list">
+                    <ul>
+                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
+                            <div class="title">
+                                <ol>
+                                    <div class="title">2014年经济师考试《经济师》每日一练（09月04日）</div>
+                                    <p>3小时前</p><p class="red">总共：5题</p><p class="red">做对：0题</p>
+                                </ol>
+                                <span><a href="#" class="red">查看解析</a></span>
+                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
+                            </div>
+                        </li>
+                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
+                            <div class="title">
+                                <ol>
+                                    <div class="title">2014年经济师考试《经济师》每日一练（09月04日）</div>
+                                    <p>2014-09-01</p><p class="red">总共：25题</p><p class="red">做对：10题</p>
+                                </ol>
+                                <span><a href="#" class="red">查看解析</a></span>
+                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
+                            </div>
+                        </li>
+                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
+                            <div class="title">
+                                <ol>
+                                    <div class="title">2014年经济师考试《经济师》每日一练（09月04日）</div>
+                                    <p>2014-09-01</p><p class="red">总共：25题</p><p class="red">做对：10题</p>
+                                </ol>
+                                <span><a href="#" class="red">查看解析</a></span>
+                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
+                            </div>
+                        </li>
+                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
+                            <div class="title">
+                                <ol>
+                                    <div class="title">2014年经济师考试《经济师》每日一练（09月04日）</div>
+                                    <p>2014-09-01</p><p class="red">总共：25题</p><p class="red">做对：10题</p>
+                                </ol>
+                                <span><a href="#" class="red">查看解析</a></span>
+                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
+                            </div>
+                        </li>
+                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
+                            <div class="title">
+                                <ol>
+                                    <div class="title">2014年经济师考试《经济师》每日一练（09月04日）</div>
+                                    <p>3小时前</p><p class="red">总共：5题</p><p class="red">做对：0题</p>
+                                </ol>
+                                <span><a href="#" class="red">查看解析</a></span>
+                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
+                            </div>
+                        </li>
+                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
+                            <div class="title">
+                                <ol>
+                                    <div class="title">2014年经济师考试《经济师》每日一练（09月04日）</div>
+                                    <p>2014-09-01</p><p class="red">总共：25题</p><p class="red">做对：10题</p>
+                                </ol>
+                                <span><a href="#" class="red">查看解析</a></span>
+                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
+                            </div>
+                        </li>
+                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
+                            <div class="title">
+                                <ol>
+                                    <div class="title">2014年经济师考试《经济师》每日一练（09月04日）</div>
+                                    <p>2014-09-01</p><p class="red">总共：25题</p><p class="red">做对：10题</p>
+                                </ol>
+                                <span><a href="#" class="red">查看解析</a></span>
+                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
+                            </div>
+                        </li>
+                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
+                            <div class="title">
+                                <ol>
+                                    <div class="title">2014年经济师考试《经济师》每日一练（09月04日）</div>
+                                    <p>2014-09-01</p><p class="red">总共：25题</p><p class="red">做对：10题</p>
+                                </ol>
+                                <span><a href="#" class="red">查看解析</a></span>
+                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
+                            </div>
+                        </li>
+                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
+                            <div class="title">
+                                <ol>
+                                    <div class="title">2014年经济师考试《经济师》每日一练（09月04日）</div>
+                                    <p>2014-09-01</p><p class="red">总共：25题</p><p class="red">做对：10题</p>
+                                </ol>
+                                <span><a href="#" class="red">查看解析</a></span>
+                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
+                            </div>
+                        </li>
+                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
+                            <div class="title">
+                                <ol>
+                                    <div class="title">2014年经济师考试《经济师》每日一练（09月04日）</div>
+                                    <p>2014-09-01</p><p class="red">总共：25题</p><p class="red">做对：10题</p>
+                                </ol>
+                                <span><a href="#" class="red">查看解析</a></span>
+                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="h20"></div>
+                <div class="page fl">
+                    <a href="#">上一页</a>
+                    <a href="#">1</a>
+                    <em>...</em>
+                    <span>8</span>
+                    <a href="#">9</a>
+                    <a href="#">10</a>
+                    <a href="#">11</a>
+                    <a href="#">12</a>
+                    <a href="#">13</a>
+                    <a href="#">14</a>
+                    <em>...</em>
+                    <a href="#">28</a>
+                    <a href="#">下一页</a>
+                </div>
+                <div class="h20"></div>
+            </div>
+        </div>
+    </div>
+    <div class="h10"></div>
+</div>
+<#include "common/foot.html" />
+</body>
+</html>

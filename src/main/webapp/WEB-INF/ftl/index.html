@@ -1,12 +1,15 @@
 <!doctype html>
 <html>
 <head>
-<meta charset="utf-8">
 <title>考试类选择页 考试系统题库</title>
-	<link href="<@s.url "/resources/front-default/pub.css"/>" rel="stylesheet" type="text/css">
-	<link href="<@s.url "/resources/front-default/home.css"/>" rel="stylesheet" type="text/css">
-	<!-- jquery -->
-	<script type="text/javascript" src="<@s.url "/resources/jquery.min.1.11.1.js"/>"></script>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<!-- css -->
+<link href="<@s.url "/resources/front-default/pub.css"/>" rel="stylesheet" type="text/css">
+<link href="<@s.url "/resources/front-default/home.css"/>" rel="stylesheet" type="text/css">
+<!-- jquery -->
+<script type="text/javascript" src="<@s.url "/resources/jquery.min.1.11.1.js"/>"></script>
 </head>
 
 <body>
@@ -58,6 +61,8 @@
                 </div>
             </div>
         </div>
+        <div class="h10"></div>
+        <div class="choose-botton"><div class="hong-botton"><a href="javascript:void(0)" target="_blank" id="button">开启学习之旅·走起</a></div></div>
     </div>
 </div>
 <div class="h30"></div>
@@ -108,6 +113,10 @@
  			if(id) $(this).remove();
  			if($("#choosen_exams").children("li").length==0) 
  				$("#choosen_exams").append("<li><em>您没有选择考试</em></li>");
+ 		});
+ 		//
+ 		$("#button").click(function(){
+ 			alert("");
  		});
  	});
  </script>

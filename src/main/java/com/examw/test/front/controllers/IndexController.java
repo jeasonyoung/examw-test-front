@@ -42,4 +42,53 @@ public class IndexController {
 		}
 		return "index";
 	}
+	/**
+	 * 获取每日一练
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/daily", method = RequestMethod.GET)
+	public String daily(Model model){
+		return "daily_practice";
+	}
+	
+	/**
+	 * 获取模拟考场
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/simulate", method = RequestMethod.GET)
+	public String simulate(Model model){
+		return "simulate";
+	}
+	
+	/**
+	 * 获取章节练习
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/chapter", method = RequestMethod.GET)
+	public String chapter(Model model){
+		return "chapter_list";
+	}
+	
+	/**
+	 * 获取练习记录
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/record", method = RequestMethod.GET)
+	public String records(Model model){
+		return "practice_records";
+	}
+	
+	/**
+	 * 获取题库首页
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/center", method = RequestMethod.GET)
+	public String center(Model model){
+		return "exam_center";
+	}
 }
