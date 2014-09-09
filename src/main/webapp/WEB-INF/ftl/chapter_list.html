@@ -1,4 +1,18 @@
 <!-- 章节练习 -->
+<!-- 定义章节的宏 -->
+<#--创建节点-->
+<#macro createNode modules index>
+	<#if modules ??>
+		<#list modules as m>
+			<li id="${m.id}" data-options="<#if (m.icon ? length > 0)>iconCls='${m.icon}',</#if>attributes:{url:'<#if (m.uri ? length > 0)><@s.url m.uri/></#if>'}">
+				<span>${m.name}</span>
+				<#if (m.children ? size > 0)>
+					<@createChilds m.children/>
+				</#if>
+			</li>
+		</#list>
+	</#if>
+</#macro>
 <!doctype html>
 <html>
 <head>
@@ -19,38 +33,36 @@
                         <div class="f-r fr">
                            <div class="list">
                                 <ul>
-                                    <li class="bg"><em>中级经济师</em><i class="shang"></i></li>
-                                    <li><a href="#"><em>初级经济师</em><i class="xia"></i><i class="cheng"></i></a></li><!--鼠标移动上去去掉<i class="cheng"></i>-->
+                                    <!-- <li class="bg"><em>中级经济师</em><i class="shang"></i></li>
+                                    <li><a href="#"><em>初级经济师</em><i class="xia"></i><i class="cheng"></i></a></li>鼠标移动上去去掉<i class="cheng"></i> -->
+                                    <#list SUBJECTLIST as s>
+                                    <li><a href="?subjectId=${s.name}">${s.name}</a></li>
+                                    </#list>
                                 </ul>
                             </div>
-                            <div class="erji fl">
+                            <!-- <div class="erji fl">
                                 <div class="list">
                                     <ul>
                                         <li><a href="#">中级经济师</a></li>
                                         <li><a href="#">章节练习</a></li>
                                         <li><a href="#">中级经济师</a></li>
                                         <li><a href="#">章节练习</a></li>
-                                        <li><a href="#">中级经济师</a></li>
-                                        <li><a href="#">章节练习</a></li>
-                                        <li><a href="#">中级经济师</a></li>
-                                        <li><a href="#">章节练习章节练习</a></li>
-                                        <li><a href="#">中级经济师</a></li>
-                                        <li><a href="#">章节练习</a></li>
-                                        <li><a href="#">中级经济师</a></li>
-                                        <li><a href="#">章节练习</a></li>
-                                        <li><a href="#">中级经济师</a></li>
-                                        <li><a href="#">章节练习</a></li>
-                                        <li><a href="#">中级经济师</a></li>
-                                        <li><a href="#">章节练习</a></li>
-                                        <li><a href="#">中级经济师</a></li>
-                                        <li><a href="#">章节练习</a></li>
-                                        <li><a href="#">中级经济师</a></li>
-                                        <li><a href="#">章节练习</a></li>
                                     </ul>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
+                    <!-- <div  class="siftbox fl">
+                    	<div class="f-l fl">地区：</div>
+                        <div class="f-r fr">
+                           <div class="list">
+                              <ul>
+                                  <li><a href="#">全国</a></li>
+                                  <li><a href="#">陕西</a></li>
+                              </ul>
+                           </div>
+                        </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -66,96 +78,45 @@
                             <span class="f-bold">错题</span>
                         </div>
                     </li>
-                    <li class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
-                        <div class="title">
-                        	<div class="jian"></div>
-                            <em>第一章 市场需求、供给与均衡价格</em>
-                            <span>5 / 203</span>
-                            <span class="red">3</span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
-                        <div class="title">
-                        	<div class="jian kong"></div>
-                            <i>第一节 市场需求</i>
-                            <span>0 / 53</span>
-                            <span>0</span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
-                        <div class="title">
-                        	<div class="jian kong bg-no"></div>
-                            <i>&middot; <a href="#" target="_blank" title="需求的含义">需求的含义</a></i>
-                            <span></span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#" target="_blank">查看知识点</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
-                        <div class="title">
-                        	<div class="jian kong bg-no"></div>
-                            <i>&middot; <a href="#" target="_blank" title="影响需求变动的主要因素">影响需求变动的主要因素</a></i>
-                            <span></span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#" target="_blank">查看知识点</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
-                        <div class="title">
-                        	<div class="jia kong"></div>
-                            <i>第二节 市场供给</i>
-                            <span>0 / 53</span>
-                            <span>0</span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
-                        <div class="title">
-                        	<div class="jia kong"></div>
-                            <i>第三节 市场供给</i>
-                            <span>0 / 53</span>
-                            <span>0</span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
-                        <div class="title">
-                        	<div class="jia"></div>
-                            <em>第二章 市场需求、供给与均衡价格</em>
-                            <span>0 / 203</span>
-                            <span>0</span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
-                        <div class="title">
-                        	<div class="jia"></div>
-                            <em>第三章 市场需求、供给与均衡价格</em>
-                            <span>0 / 203</span>
-                            <span>0</span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
-                        <div class="title">
-                        	<div class="jia"></div>
-                            <em>第四章 市场需求、供给与均衡价格</em>
-                            <span>0 / 203</span>
-                            <span>0</span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
-                        <div class="title">
-                        	<div class="jia"></div>
-                            <em>第五章 市场需求、供给与均衡价格</em>
-                            <span>0 / 203</span>
-                            <span>0</span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
-                        </div>
-                    </li>
+                    <#list CHAPTERLIST as father>
+						<li id="${father.id}" name="father" class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
+                        	<div class="title">
+                        		<#if father.children??>
+                        			<#if father_index == 0>
+                        			<div class="jian"></div>
+                        			<#else>
+                        			<div class="jia"></div>
+                        			</#if>
+                        		<#else>
+                        		<div class="jian"></div>	
+                        		</#if>
+                           	 	<em>${father.text}</em>
+                            	<span>5 / 203</span>
+                            	<span class="red">3</span>
+                            	<span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
+                        	</div>
+                    	</li>
+                    	<#if father.children??>
+                    		<#list father.children as sun>
+                    		<li <#if father_index != 0>style="display:none"</#if> name="child" pid="${father.id}" class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
+                        		<div class="title">
+                        			<#if sun.children??>
+                        				<div class="jia kong"></div>
+                        			<#else>
+                        				<div class="jian kong"></div>	
+                        			</#if>
+                            			<i>${sun.text}</i>
+                            				<span>0 / 53</span>
+                            				<span>0</span>
+                            				<span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
+                        		</div>
+                    		</li>
+                    		<#if sun.children??>
+                    		
+                    		</#if>
+                    		</#list>
+                    	</#if>                	
+                    </#list>
                 </ul>
             </div>
         </div>

@@ -8,14 +8,16 @@
 <!-- css -->
 <link href="<@s.url "/resources/front-default/pub.css"/>" rel="stylesheet" type="text/css">
 <link href="<@s.url "/resources/front-default/home.css"/>" rel="stylesheet" type="text/css">
-<!-- jquery -->
+<!-- js -->
 <script type="text/javascript" src="<@s.url "/resources/jquery.min.1.11.1.js"/>"></script>
+<script type="text/javascript" src="<@s.url "/resources/jquery.cookie.js"/>"></script>
 </head>
 
 <body>
 <#include "common/head.html"/>
 <div class="banner fl"></div>
 <div class="examw-box">
+	<form id= "form" method="post" action="<@s.url "/products"/>">
     <div class="main">
         <div class="examw">
         	<#list CATEGORYLIST as c>
@@ -50,6 +52,7 @@
                         	<li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'" data-examid="${child.id}">
                         		<div class="pic"><img src="<@s.url "/resources/front-default/image/class.png"/>" width="66" height="74"></div>
                             	<em>${child.name}</em>
+                            	<input name="examId" value="${child.id}" type="hidden" disabled="disabled"/>
                         	</li>
                        	</#list>
                     	</ul>
@@ -62,14 +65,24 @@
             </div>
         </div>
         <div class="h10"></div>
-        <div class="choose-botton"><div class="hong-botton"><a href="javascript:void(0)" target="_blank" id="button">开启学习之旅·走起</a></div></div>
+        <div class="choose-botton"><div class="hong-botton"><a href="javascript:void(0)" id="button">开启学习之旅·走起</a></div></div>
     </div>
+    </form>
 </div>
 <div class="h30"></div>
 <#include "common/foot.html"/>
 </body>
  <script type="text/javascript">
  	$(function(){
+ 		//读cookie
+ 		var exams = $.cookie("exams");
+ 		if(exams){
+ 			exams = exams.split(",");
+ 			$.each(exams,function(i){
+ 				$("ul[name='category_children'] li[data-examid='"+exams[i]+"']").append("<span></span>");
+ 	 			$("ul[name='category_children'] li[data-examid='"+exams[i]+"']").children("input").attr("disabled",false);
+ 			});
+ 		}
  		//点击顶级分类
  		$(".examw > div").click(function(){
  			//同类以及自身样式改变
@@ -91,7 +104,9 @@
  				var choosen = $("ul[name='category_children'] li span");
  				if(choosen.length>0)
  					$.each(choosen,function(i){
- 						$("#choosen_exams").append($(choosen[i]).parent("li").clone());
+ 						var li_copy = $(choosen[i]).parent("li").clone();
+ 						li_copy.children("input").remove();
+ 						$("#choosen_exams").append(li_copy);
  					});
  				else
  					$("#choosen_exams").append("<li><em>您没有选择考试</em></li>");
@@ -102,21 +117,35 @@
  		$("ul[name='category_children'] li").click(function(){
  			if($(this).children("span").length == 0){
  				$(this).append("<span></span>");
+ 				$(this).children("input").attr("disabled",false);
  			}else{
  				$(this).children("span").remove();
+ 				$(this).children("input").attr("disabled",true);
  			}
  		});
  		//点击已选中的情况
  		$("#choosen_exams").delegate("li","click",function(){
  			var id = $(this).attr("data-examid");
  			$("ul[name='category_children'] li[data-examid='"+id+"']").children("span").remove();
+ 			$("ul[name='category_children'] li[data-examid='"+id+"']").children("input").attr("disabled",true);
  			if(id) $(this).remove();
  			if($("#choosen_exams").children("li").length==0) 
  				$("#choosen_exams").append("<li><em>您没有选择考试</em></li>");
  		});
  		//
  		$("#button").click(function(){
- 			alert("");
+ 			var input = $("input:enabled");
+ 			if(input.length == 0 )
+ 			{
+ 				alert("请先选择考试");
+ 				return;
+ 			}
+ 			var ids = [];
+ 			$.each(input,function(i){
+ 				ids.push($(input[i]).val());
+ 			});
+ 			$.cookie("exams",ids.join(","));
+ 			$("#form").submit();
  		});
  	});
  </script>

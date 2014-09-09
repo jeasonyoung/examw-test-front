@@ -2,7 +2,14 @@
 <html>
 <head>
 <title>分类产品列表 考试系统题库</title>
-<#include "common/loadPageJS.ftl"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<!-- css -->
+<link href="<@s.url "/resources/front-default/pub.css"/>" rel="stylesheet" type="text/css">
+<link href="<@s.url "/resources/front-default/home.css"/>" rel="stylesheet" type="text/css">
+<!-- jquery -->
+<script type="text/javascript" src="<@s.url "/resources/jquery.min.1.11.1.js"/>"></script>
 </head>
 <body>
 <#include "common/head.html"/>
@@ -20,25 +27,21 @@
                             <span class="f-bold">未购/已购</span>
                         </div>
                     </li>
+                    <#list PRODUCTLIST as p>
                     <li class="porduct-out" onMouseOver="this.className='porduct-over'" onMouseOut="this.className='porduct-out'">
                         <div class="title">
-                            <em>&middot;<a href="#" target="_blank" title="2014版一级建造师(公共科目+市政公用工程)">2014版一级建造师(公共科目+市政公用工程)年人力资源管理师</a></em>
-                            <span class="red">5888元</span>
+                            <em>&middot;<a href="#" target="_blank" title="${p.name}">${p.name}</a></em>
+                            <span class="red">${p.discount}元</span>
                             <span>6888题</span>
                             <span>
-                            	<div class="shiyong-botton"><div class="hei-cheng"><a href="题库首页.html">试用</a></div></div>
+                            	<div class="shiyong-botton"><div class="hei-cheng"><a href="<@s.url "/library"/>?productId=${p.id}">试用</a></div></div>
                                 <div class="shiyong-botton"><div class="t-cheng"><a href="#">购买</a></div></div>
                             </span>
+                            <!-- 已经购买的情况 -->
+                           <!--  <span><div class="buy-botton"><div class="hong-botton"><a href="题库首页.html">点击进入</a></div></div></span> -->
                         </div>
                     </li>
-                    <li class="porduct-out" onMouseOver="this.className='porduct-over'" onMouseOut="this.className='porduct-out'">
-                        <div class="title">
-                            <em>&middot;<a href="#" target="_blank" title="2014版一级建造师(公共科目+市政公用工程)">2014版一级建造师(公共科目+市政公用工程)年人力资源管理师</a></em>
-                            <span class="red">5888元</span>
-                            <span>6888题</span>
-                            <span><div class="buy-botton"><div class="hong-botton"><a href="题库首页.html">点击进入</a></div></div></span>
-                        </div>
-                    </li>
+                    </#list>
                 </ul>
             </div>
         </div>

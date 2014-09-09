@@ -19,7 +19,6 @@ import com.examw.test.front.service.ICategoryService;
  * @since 2014年9月4日 上午10:30:26.
  */
 @Controller
-@RequestMapping()
 public class IndexController {
 	private static final Logger logger = Logger.getLogger(IndexController.class);
 	@Resource
