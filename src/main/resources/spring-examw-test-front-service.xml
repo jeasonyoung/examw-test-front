@@ -13,6 +13,7 @@
 	</bean>
 	<!-- 章节 -->
 	<bean id="chapterService" class="com.examw.test.front.service.impl.ChapterServiceImpl">
-	    <property name="api_url" value="${api_chapter_url}" />
+	    <property name="api_list_url" value="${api_chapters_url}" />
+	    <property name="api_detail_url" value="${api_chapter_url}" />
 	</bean>
 </beans>

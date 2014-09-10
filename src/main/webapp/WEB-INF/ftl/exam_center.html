@@ -26,8 +26,8 @@
                     <div class="name fl">${PRODUCT.name}</div>
                     <div class="ti">
                         <ul>
-                            <li>您可以做<span>38</span>套模拟试卷</li>
-                            <li>您可以做<span>194</span>道试题</li>
+                            <li>您可以做&nbsp;<span>${PRODUCT.paperNum}</span>&nbsp;套模拟试卷</li>
+                            <li>您可以做&nbsp;<span>${PRODUCT.itemNum}</span>&nbsp;道试题</li>
                         </ul>
                     </div>
                 </div>
@@ -46,10 +46,10 @@
                     	<ul>
                         	<li>产品版本：<span>${PRODUCT.version}</span></li>
                             <li>试题解析：<span>有</span></li>
-                            <li>历年真题：<span>有</span></li>
-                            <li>更新时间：<span>${PRODUCT.lastTime}</span></li>
+                            <li>历年真题：<span><#if PRODUCT.hasRealItem>有<#else>无</#if></span></li>
+                            <li>更新时间：<span>${PRODUCT.lastTime?substring(0,11)}</span></li>
                             <li>产品价格：<span>${PRODUCT.discount}元</span></li>
-                            <li>试题数量：<span>6888题</span></li>
+                            <li>试题数量：<span>${PRODUCT.itemNum}题</span></li>
                         </ul>
                     </div>
                 </div>

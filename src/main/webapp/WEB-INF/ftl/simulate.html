@@ -4,6 +4,10 @@
 <head>
 <title>模拟考场 考试系统题库</title>
 <#include "common/loadPageJS.ftl" />
+<!-- 分页工具  -->
+<link href="<@s.url "/resources/front-default/pager.css"/>" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<@s.url "/resources/jquery.pager.js"/>"></script>
+<!-- 分页工具  -->
 </head>
 
 <body>
@@ -11,6 +15,7 @@
 <div class="main">
 	<div class="h30"></div>
 	<div class="content fl">
+		<form action="" method="post">
     	<div class="width998 yinying">
         	<div class="sift-box fl">
                 <div class="sift fl">
@@ -40,14 +45,9 @@
                            <div class="list">
                                 <ul>
                                     <li class="bg">全部</li>
-                                    <li><a href="#">模拟题</a></li>
-                                    <li><a href="#">预测题</a></li>
-                                    <li><a href="#">模拟题</a></li>
-                                    <li><a href="#">预测题</a></li>
-                                    <li><a href="#">模拟题</a></li>
-                                    <li><a href="#">预测题</a></li>
-                                    <li><a href="#">模拟题</a></li>
-                                    <li><a href="#">预测题</a></li>
+                                    <#list PAPERTYPE as type>
+                                    <li><a href="#">${type}</a></li>
+                                    </#list>
                                 </ul>
                             </div>
                         </div>
@@ -84,10 +84,24 @@
                 </div>
         	</div>
         </div>
+        </form>
         <div class="h20"></div>
     	<div class="width998 yinying">
             <div class="moni-list">
               	<ul>
+              		<#list PAPERLIST as paper>
+              		<li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
+                        <div class="title">
+                            <em>
+                            	<div class="title"><a href="#" target="_blank" title="${paper.name}">${paper.name}</a></div>
+                                <p>总题：150 题</p><p>考试时长：${paper.time}分钟</p><p>总分：${paper.score}分</p><p>最高得分：93分</p><p>117人参考</p>
+                            </em>
+                            <span>${paper.createTime?substring(0,10)}</span>
+                            <span></span>
+                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">进入做题</a></div></div></span>
+                        </div>
+                    </li>	
+              		</#list>
                     <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
                         <div class="title">
                             <em>
@@ -110,116 +124,30 @@
                             <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
                         </div>
                     </li>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                            <em>
-                            	<div class="title"><a href="#" target="_blank" title="2014版一级建造师(公共科目+市政公用工程)">2014版一级建造师(公共科目+市政公用工程)年人力资源管理师</a></div>
-                                <p>总题：150 题</p><p>考试时长：120分钟</p><p>总分：100分</p><p>最高得分：93分</p><p>117人参考</p>
-                            </em>
-                            <span>2014-08-20</span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">进入做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                            <em>
-                            	<div class="title"><a href="#" target="_blank" title="2014版一级建造师(公共科目+市政公用工程)">2014版一级建造师(公共科目+市政公用工程)年人力资源管理师</a></div>
-                                <p>总题：150 题</p><p>考试时长：120分钟</p><p>总分：100分</p><p>最高得分：93分</p><p>117人参考</p>
-                            </em>
-                            <span>2014-08-20</span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">进入做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                            <em>
-                            	<div class="title"><a href="#" target="_blank" title="2014版一级建造师(公共科目+市政公用工程)">2014版一级建造师(公共科目+市政公用工程)年人力资源管理师</a></div>
-                                <p>总题：150 题</p><p>考试时长：120分钟</p><p>总分：100分</p><p>最高得分：93分</p><p>117人参考</p>
-                            </em>
-                            <span>2014-08-20</span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">进入做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                            <em>
-                            	<div class="title"><a href="#" target="_blank" title="2014版一级建造师(公共科目+市政公用工程)">2014版一级建造师(公共科目+市政公用工程)年人力资源管理师</a></div>
-                                <p>总题：150 题</p><p>考试时长：120分钟</p><p>总分：100分</p><p>最高得分：93分</p><p>117人参考</p>
-                            </em>
-                            <span>2014-08-20</span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">进入做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                            <em>
-                            	<div class="title"><a href="#" target="_blank" title="2014版一级建造师(公共科目+市政公用工程)">2014版一级建造师(公共科目+市政公用工程)年人力资源管理师</a></div>
-                                <p>总题：150 题</p><p>考试时长：120分钟</p><p>总分：100分</p><p>最高得分：93分</p><p>117人参考</p>
-                            </em>
-                            <span>2014-08-20</span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">进入做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                            <em>
-                            	<div class="title"><a href="#" target="_blank" title="2014版一级建造师(公共科目+市政公用工程)">2014版一级建造师(公共科目+市政公用工程)年人力资源管理师</a></div>
-                                <p>总题：150 题</p><p>考试时长：120分钟</p><p>总分：100分</p><p>最高得分：93分</p><p>117人参考</p>
-                            </em>
-                            <span>2014-08-20</span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">进入做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                            <em>
-                            	<div class="title"><a href="#" target="_blank" title="2014版一级建造师(公共科目+市政公用工程)">2014版一级建造师(公共科目+市政公用工程)年人力资源管理师</a></div>
-                                <p>总题：150 题</p><p>考试时长：120分钟</p><p>总分：100分</p><p>最高得分：93分</p><p>117人参考</p>
-                            </em>
-                            <span>2014-08-20</span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">进入做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                            <em>
-                            	<div class="title"><a href="#" target="_blank" title="2014版一级建造师(公共科目+市政公用工程)">2014版一级建造师(公共科目+市政公用工程)年人力资源管理师</a></div>
-                                <p>总题：150 题</p><p>考试时长：120分钟</p><p>总分：100分</p><p>最高得分：93分</p><p>117人参考</p>
-                            </em>
-                            <span>2014-08-20</span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">进入做题</a></div></div></span>
-                        </div>
-                    </li>
                 </ul>
             </div>
         </div>
         <div class="h20"></div>
-        <div class="page fl">
-            <a href="#">上一页</a>
-            <a href="#">1</a>
-            <em>...</em>
-            <span>8</span>
-            <a href="#">9</a>
-            <a href="#">10</a>
-            <a href="#">11</a>
-            <a href="#">12</a>
-            <a href="#">13</a>
-            <a href="#">14</a>
-            <em>...</em>
-            <a href="#">28</a>
-            <a href="#">下一页</a>
+        <div style="width:100%">
+        <div id="pager" ></div>
+        <span class="ui-page-skip" style="float:left;margin:auto auto">
+		<b>第 2/69 页</b>
+		<input class="ui-page-txt page-num-input" type="text" name="input" size="15px">
+		<a class="ui-page-submit page-go"  href="javascript:void(0)">跳转</a>
+		</span>
         </div>
   </div>
     <div class="h30"></div>
 </div>
 <#include "common/foot.html" />
 </body>
+<script type="text/javascript" language="javascript">
+       $(function() {
+            $("#pager").pager({ pagenumber: 1, pagecount: 5, buttonClickCallback: PageClick });
+        });
+        PageClick = function(pageclickednumber) {
+            $("#pager").pager({ pagenumber: pageclickednumber, pagecount: 5, buttonClickCallback: PageClick });
+            //跳转
+        }
+</script>
 </html>

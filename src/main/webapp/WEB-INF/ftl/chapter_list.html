@@ -19,7 +19,6 @@
 <title>章节练习 考试系统题库</title>
 <#include "common/loadPageJS.ftl" />
 </head>
-
 <body>
 <#include "common/head.html" />
 <div class="main">
@@ -36,7 +35,7 @@
                                     <!-- <li class="bg"><em>中级经济师</em><i class="shang"></i></li>
                                     <li><a href="#"><em>初级经济师</em><i class="xia"></i><i class="cheng"></i></a></li>鼠标移动上去去掉<i class="cheng"></i> -->
                                     <#list SUBJECTLIST as s>
-                                    <li><a href="?subjectId=${s.name}">${s.name}</a></li>
+                                    <li><a href="?examId=${EXAMID}&subjectId=${s.id}">${s.name}</a></li>
                                     </#list>
                                 </ul>
                             </div>
@@ -79,8 +78,9 @@
                         </div>
                     </li>
                     <#list CHAPTERLIST as father>
-						<li id="${father.id}" name="father" class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
+						<li class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
                         	<div class="title">
+                        		<div id="${father.id}" name="father" >
                         		<#if father.children??>
                         			<#if father_index == 0>
                         			<div class="jian"></div>
@@ -91,6 +91,7 @@
                         		<div class="jian"></div>	
                         		</#if>
                            	 	<em>${father.text}</em>
+                           	 	</div>
                             	<span>5 / 203</span>
                             	<span class="red">3</span>
                             	<span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
@@ -98,21 +99,32 @@
                     	</li>
                     	<#if father.children??>
                     		<#list father.children as sun>
-                    		<li <#if father_index != 0>style="display:none"</#if> name="child" pid="${father.id}" class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
+                    		<li <#if father_index != 0>style="display:none"</#if> name="child" pid="${father.id}" sid="${sun.id}" class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
                         		<div class="title">
+                        			<div id="${sun.id}" name="father" >
                         			<#if sun.children??>
                         				<div class="jia kong"></div>
                         			<#else>
                         				<div class="jian kong"></div>	
                         			</#if>
-                            			<i>${sun.text}</i>
+                            			<i>${sun.text}</i></div>
                             				<span>0 / 53</span>
                             				<span>0</span>
                             				<span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
                         		</div>
                     		</li>
                     		<#if sun.children??>
-                    		
+                    			<#list sun.children as grandsun>
+                    			<li class="chapter-out" tpid="${father.id}" pid="${sun.id}" style="display:none" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
+                        			<div class="title">
+                        				<div class="jian kong bg-no"></div>
+                            			<i>&middot; <a href="<@s.url "/library/chapter/detail?pid=${sun.id}&id=${grandsun.id}"/>" target="_blank" title="${grandsun.text}">${grandsun.text}</a></i>
+                            			<span></span>
+                            			<span></span>
+                            			<span><div class="buy-botton"><div class="hei-botton"><a href="<@s.url "/library/chapter/detail?pid=${sun.id}&id=${grandsun.id}"/>" target="_blank">查看知识点</a></div></div></span>
+                        			</div>
+                    			</li>
+                    			</#list>
                     		</#if>
                     		</#list>
                     	</#if>                	
@@ -125,4 +137,29 @@
 </div>
 <#include "common/foot.html" />
 </body>
+<script type="text/javascript">
+	$(function(){
+		$("div[name='father']").click(function(){
+			var id = $(this).attr("id");
+			if($("li[pid="+id+"]").length==0) return;
+			if($(this).find(".jia").length == 1) //展开
+			{
+				$(this).find(".jia").addClass("jian").removeClass("jia");
+				$("li[pid="+id+"]").show();
+			}else{	//收起 全收
+				$(this).find(".jian").addClass("jia").removeClass("jian");
+				$("li[pid="+id+"]").hide();
+				var children = $("li[pid="+id+"]");
+				//带子子类的进行收起符号的处理
+				$.each(children,function(i){
+					var cid = $(children[i]).attr("sid");
+					if($("li[tpid="+id+"][pid="+cid+"]").length > 0){
+						$(this).find(".jian").addClass("jia").removeClass("jian");
+					}
+				});
+				$("li[tpid="+id+"]").hide();
+			}
+		});
+	});
+</script>
 </html>

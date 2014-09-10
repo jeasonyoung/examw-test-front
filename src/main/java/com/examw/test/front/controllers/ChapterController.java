@@ -24,19 +24,45 @@ public class ChapterController {
 	
 	@Resource
 	private IChapterService chapterService;
-	
+	/**
+	 * 章节联系界面
+	 * @param examId
+	 * @param subjectId
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = {"","/"}, method = {RequestMethod.GET,RequestMethod.POST})
-	public String chapters(String examId,Model model){
+	public String chapters(String examId,String subjectId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载章节练习...");
-		logger.debug(examId);
 		try{
-			Map<String,Object> map = this.chapterService.loadExamAndChapterInfo(examId);
+			Map<String,Object> map = this.chapterService.loadExamAndChapterInfo(examId,subjectId);
+			model.addAttribute("EXAMID", examId);
 			model.addAttribute("SUBJECTLIST", map.get("SUBJECTLIST"));
 			model.addAttribute("CHAPTERLIST", map.get("CHAPTERLIST"));
 		}catch(Exception e){
 			e.printStackTrace();
-			if(logger.isDebugEnabled()) logger.debug("加载products异常...");
+			if(logger.isDebugEnabled()) logger.debug("加载章节信息异常...");
 		}
 		return "chapter_list";
+	}
+	/**
+	 * 章节详情
+	 * @param pid
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/detail", method = {RequestMethod.GET,RequestMethod.POST})
+	public String chapterDetail(String pid,String id,Model model){
+		if(logger.isDebugEnabled()) logger.debug("加载章节练习...");
+		try{
+			Map<String,Object> map = this.chapterService.loadChapterDetail(pid,id);
+			model.addAttribute("CHAPTER", map.get("CHAPTER"));
+			model.addAttribute("KNOWLEDGE", map.get("KNOWLEDGE"));
+		}catch(Exception e){
+			e.printStackTrace();
+			if(logger.isDebugEnabled()) logger.debug("加载章节信息异常...");
+		}
+		return "chapter_knowledge";
 	}
 }

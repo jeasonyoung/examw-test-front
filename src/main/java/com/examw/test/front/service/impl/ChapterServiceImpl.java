@@ -16,16 +16,26 @@ import com.examw.test.front.support.JSONUtil;
  */
 public class ChapterServiceImpl implements IChapterService{
 	private static final Logger logger = Logger.getLogger(ProductServiceImpl.class);
-	private String api_url;
-	
+	private String api_list_url;
+	private String api_detail_url;
 	/**
-	 * 设置 数据接口地址
+	 * 设置 章节列表数据接口地址
 	 * @param api_url
 	 * 
 	 */
-	public void setApi_url(String api_url) {
-		this.api_url = api_url;
+	public void setApi_list_url(String api_list_url) {
+		this.api_list_url = api_list_url;
 	}
+	
+	/**
+	 * 设置 章节详情数据接口地址
+	 * @param api_detail_url
+	 * 
+	 */
+	public void setApi_detail_url(String api_detail_url) {
+		this.api_detail_url = api_detail_url;
+	}
+
 
 	/*
 	 * 加载考试,科目和章节的信息
@@ -33,12 +43,27 @@ public class ChapterServiceImpl implements IChapterService{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Object> loadExamAndChapterInfo(String examId)
+	public Map<String, Object> loadExamAndChapterInfo(String examId,String subjectId)
 			throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("加载章节信息....");
 		if(StringUtils.isEmpty(examId))
 		return null;
-		String url = String.format(this.api_url,examId);
+		String url = String.format(this.api_list_url,examId);
+		String xml = HttpUtil.httpRequest(url,"GET","subjectId="+subjectId,"utf-8");
+		if(!StringUtils.isEmpty(xml)){
+			return JSONUtil.JsonToCollection(xml, Map.class, String.class,Object.class);
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<String, Object> loadChapterDetail(String pid, String id)
+			throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("加载章节详情信息....");
+		if(StringUtils.isEmpty(pid)||StringUtils.isEmpty(id))
+		return null;
+		String url = String.format(this.api_detail_url,pid,id);
 		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml, Map.class, String.class,Object.class);
