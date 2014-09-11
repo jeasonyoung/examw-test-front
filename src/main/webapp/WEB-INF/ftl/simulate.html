@@ -1,4 +1,5 @@
 <!-- 模拟考场 -->
+<#assign years = [0,1,2,3,4,5,6,7,8,9]/>
 <!doctype html>
 <html>
 <head>
@@ -9,13 +10,13 @@
 <script type="text/javascript" src="<@s.url "/resources/jquery.pager.js"/>"></script>
 <!-- 分页工具  -->
 </head>
-
 <body>
 <#include "common/head.html" />
 <div class="main">
 	<div class="h30"></div>
 	<div class="content fl">
-		<form action="" method="post">
+		<form id="form" action="<@s.url "/library/simulate"/>" method="post">
+		<input type="hidden" name="productId" value="${PRODUCTID}"/>
     	<div class="width998 yinying">
         	<div class="sift-box fl">
                 <div class="sift fl">
@@ -24,19 +25,25 @@
                         <div class="f-r fr">
                            <div class="list">
                                 <ul>
-                                    <li><a href="#"><em>全部</em></a></li>
-                                    <li class="bg"><em>中级经济师</em><i class="shang"></i></li>
-                                    <li><a href="#"><em>初级经济师</em><i class="cheng"></i><i class="xia"></i></a></li><!--鼠标移动上去去掉<i class="cheng"></i>-->
+                                	<#if !CURRENT_SUBJECT_ID??>
+                                    <li class="bg">全部</li>
+                                    </#if>
+                                    <#list SUBJECTLIST as subject>
+                                    <#if subject.id == CURRENT_SUBJECT_ID>   
+                                    <li class="bg"><em>${subject.name}</em><!-- <i class="shang"></i> --></li>
+                                    <#else>
+                                    	<li><a href="#">${subject.name}</a></li>
+                                    </#if>
+                                    </#list>
                                 </ul>
                             </div>
-                            <div class="erji fl">
+                            <!-- <div class="erji fl">
                                 <div class="list">
                                     <ul>
-                                        <li><a href="#">中级经济师</a></li>
-                                        <li><a href="#">章节练习</a></li>
+                                        <li><a href="#">${subject.name}</a></li>
                                     </ul>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="siftbox fl">
@@ -44,9 +51,15 @@
                         <div class="f-r fr">
                            <div class="list">
                                 <ul>
+                                    <#if !CURRENT_TYPE??>
                                     <li class="bg">全部</li>
-                                    <#list PAPERTYPE as type>
-                                    <li><a href="#">${type}</a></li>
+                                    </#if>
+                                    <#list PAPERTYPE?keys as key>
+                                    <#if key == CURRENT_TYPE>
+                                    	<li class="bg">${PAPERTYPE[key]}</li>
+                                    <#else>
+                                    	<li><a href="#">${PAPERTYPE[key]}</a></li>
+                                    </#if>
                                     </#list>
                                 </ul>
                             </div>
@@ -57,15 +70,12 @@
                         <div class="f-r fr">
                            <div class="list">
                                 <ul>
+                                    <#if !CURRENT_YEAR??>
                                     <li class="bg">全部</li>
-                                    <li><a href="#">2014年</a></li>
-                                    <li><a href="#">2013年</a></li>
-                                    <li><a href="#">2012年</a></li>
-                                    <li><a href="#">2011年</a></li>
-                                    <li><a href="#">2010年</a></li>
-                                    <li><a href="#">2014年</a></li>
-                                    <li><a href="#">2014年</a></li>
-                                    <li><a href="#">2014年</a></li>
+                                    </#if>
+                                    <#list years as  y>
+                                    	<li><a href="#">${(THIS_YEAR - y)?c}年</a></li>
+                                    </#list>
                                 </ul>
                             </div>
                         </div>
@@ -129,12 +139,8 @@
         </div>
         <div class="h20"></div>
         <div style="width:100%">
-        <div id="pager" ></div>
-        <span class="ui-page-skip" style="float:left;margin:auto auto">
-		<b>第 2/69 页</b>
-		<input class="ui-page-txt page-num-input" type="text" name="input" size="15px">
-		<a class="ui-page-submit page-go"  href="javascript:void(0)">跳转</a>
-		</span>
+        <div id="pager" >
+        </div>
         </div>
   </div>
     <div class="h30"></div>

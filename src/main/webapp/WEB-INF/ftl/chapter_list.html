@@ -1,18 +1,5 @@
 <!-- 章节练习 -->
 <!-- 定义章节的宏 -->
-<#--创建节点-->
-<#macro createNode modules index>
-	<#if modules ??>
-		<#list modules as m>
-			<li id="${m.id}" data-options="<#if (m.icon ? length > 0)>iconCls='${m.icon}',</#if>attributes:{url:'<#if (m.uri ? length > 0)><@s.url m.uri/></#if>'}">
-				<span>${m.name}</span>
-				<#if (m.children ? size > 0)>
-					<@createChilds m.children/>
-				</#if>
-			</li>
-		</#list>
-	</#if>
-</#macro>
 <!doctype html>
 <html>
 <head>
@@ -99,7 +86,7 @@
                     	</li>
                     	<#if father.children??>
                     		<#list father.children as sun>
-                    		<li <#if father_index != 0>style="display:none"</#if> name="child" pid="${father.id}" sid="${sun.id}" class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
+                    		<li <#if father_index != 0>style="display:none;overflow:hidden;"</#if> name="child" pid="${father.id}" sid="${sun.id}" class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
                         		<div class="title">
                         			<div id="${sun.id}" name="father" >
                         			<#if sun.children??>
@@ -115,7 +102,7 @@
                     		</li>
                     		<#if sun.children??>
                     			<#list sun.children as grandsun>
-                    			<li class="chapter-out" tpid="${father.id}" pid="${sun.id}" style="display:none" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
+                    			<li class="chapter-out" tpid="${father.id}" pid="${sun.id}" style="display:none;overflow:hidden;" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
                         			<div class="title">
                         				<div class="jian kong bg-no"></div>
                             			<i>&middot; <a href="<@s.url "/library/chapter/detail?pid=${sun.id}&id=${grandsun.id}"/>" target="_blank" title="${grandsun.text}">${grandsun.text}</a></i>

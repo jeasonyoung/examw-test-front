@@ -16,4 +16,8 @@
 	    <property name="api_list_url" value="${api_chapters_url}" />
 	    <property name="api_detail_url" value="${api_chapter_url}" />
 	</bean>
+	<!-- 试卷 -->
+	<bean id="paperService" class="com.examw.test.front.service.impl.PaperServiceImpl">
+	    <property name="api_paperlist_url" value="${api_papers_url}" />
+	</bean>
 </beans>
