@@ -1,7 +1,6 @@
-<!-- 模拟考场 -->
-<#assign years = [0,1,2,3,4,5,6,7,8,9]/>
 <!doctype html>
 <html>
+<#assign years = [0,1,2,3,4,5,6,7,8,9]/>
 <head>
 <title>模拟考场 考试系统题库</title>
 <#include "common/loadPageJS.ftl" />
@@ -17,6 +16,15 @@
 	<div class="content fl">
 		<form id="form" action="<@s.url "/library/simulate"/>" method="post">
 		<input type="hidden" name="productId" value="${PRODUCTID}"/>
+		<input type="hidden" name="subjectId" value="${CURRENT_SUBJECT_ID}"/>
+		<#if CURRENT_YEAR??>
+		<input type="hidden" name="year" value="${CURRENT_YEAR?c}"/>
+		<#else>
+		<input type="hidden" name="year" />
+		</#if>
+		<input type="hidden" name="type" value="${CURRENT_TYPE}"/>
+		<input type="hidden" name="areaId" value="${CURRENT_AREAID}"/>
+		<input type="hidden" name="page"/>
     	<div class="width998 yinying">
         	<div class="sift-box fl">
                 <div class="sift fl">
@@ -27,12 +35,14 @@
                                 <ul>
                                 	<#if !CURRENT_SUBJECT_ID??>
                                     <li class="bg">全部</li>
+                                    <#else>
+                                    <li><a href="javascript:void(0)" onclick="choose('subjectId','')">全部</a></li>
                                     </#if>
                                     <#list SUBJECTLIST as subject>
                                     <#if subject.id == CURRENT_SUBJECT_ID>   
                                     <li class="bg"><em>${subject.name}</em><!-- <i class="shang"></i> --></li>
                                     <#else>
-                                    	<li><a href="#">${subject.name}</a></li>
+                                    	<li><a href="javascript:void(0)" onclick="choose('subjectId','${subject.id}')">${subject.name}</a></li>
                                     </#if>
                                     </#list>
                                 </ul>
@@ -53,12 +63,14 @@
                                 <ul>
                                     <#if !CURRENT_TYPE??>
                                     <li class="bg">全部</li>
+                                    <#else>
+                                    <li><a href="javascript:void(0)" onclick="choose('type','')">全部</a></li>
                                     </#if>
                                     <#list PAPERTYPE?keys as key>
                                     <#if key == CURRENT_TYPE>
                                     	<li class="bg">${PAPERTYPE[key]}</li>
                                     <#else>
-                                    	<li><a href="#">${PAPERTYPE[key]}</a></li>
+                                    	<li><a href="javascript:void(0)" onclick="choose('type','${key}')">${PAPERTYPE[key]}</a></li>
                                     </#if>
                                     </#list>
                                 </ul>
@@ -72,9 +84,15 @@
                                 <ul>
                                     <#if !CURRENT_YEAR??>
                                     <li class="bg">全部</li>
+                                    <#else>
+                                    <li><a href="javascript:void(0)" onclick="choose('year','')">全部</a></li>
                                     </#if>
                                     <#list years as  y>
-                                    	<li><a href="#">${(THIS_YEAR - y)?c}年</a></li>
+                                     <#if (THIS_YEAR-y) == CURRENT_YEAR>
+                                    	<li class="bg">${(THIS_YEAR - y)?c}</li>
+                                    <#else>
+                                    	<li><a href="javascript:void(0)" onclick="choose('year','${(THIS_YEAR - y)?c}')">${(THIS_YEAR - y)?c}年</a></li>
+                                    </#if>
                                     </#list>
                                 </ul>
                             </div>
@@ -86,7 +104,7 @@
                            <div class="list">
                                 <ul>
                                     <li class="bg">全部</li>
-                                    <li><a href="#">全国</a></li>
+                                    <li class="bg">全部</li>
                                 </ul>
                             </div>
                         </div>
@@ -108,32 +126,10 @@
                             </em>
                             <span>${paper.createTime?substring(0,10)}</span>
                             <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">进入做题</a></div></div></span>
+                            <span><div class="buy-botton"><div class="hei-botton"><a href="<@s.url "/library/paper"/>?paperId=${paper.id}">进入做题</a></div></div></span>
                         </div>
                     </li>	
               		</#list>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                            <em>
-                            	<div class="title"><a href="#" target="_blank" title="2014版一级建造师(公共科目+市政公用工程)">2014版一级建造师(公共科目+市政公用工程)年人力资源管理师</a></div>
-                                <p>总题：150 题</p><p>考试时长：120分钟</p><p>总分：100分</p><p>最高得分：93分</p><p>117人参考</p>
-                            </em>
-                            <span>2014-08-20</span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">进入做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                        	<em>
-                            	<div class="title"><a href="#链接到解析" target="_blank" title="2014版一级建造师(公共科目+市政公用工程)">2014版一级建造师(公共科目+市政公用工程)年人力资源管理师</a></div>
-                                <p class="red">得分：0.5分</p><p class="red">用时：1分钟</p><p>最高得分：94分</p><p>496人参考</p><p>考试日期：2014-09-03</p>
-                            </em>
-                            <span>2014-08-20</span>
-                            <span><a href="#" target="_blank" class="red">查看解析</a></span>
-                            <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
-                        </div>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -148,12 +144,23 @@
 <#include "common/foot.html" />
 </body>
 <script type="text/javascript" language="javascript">
+		var total;
        $(function() {
-            $("#pager").pager({ pagenumber: 1, pagecount: 5, buttonClickCallback: PageClick });
+    	   total = Number("${TOTAL}");
+    	   if(total > 0)
+    		{
+    		   total = Math.floor(total%5==0?total/5:(total/5+1));
+    		   $("#pager").pager({ pagenumber: ${PAGE}, pagecount: total, buttonClickCallback: PageClick });
+    		}
         });
         PageClick = function(pageclickednumber) {
-            $("#pager").pager({ pagenumber: pageclickednumber, pagecount: 5, buttonClickCallback: PageClick });
+            $("#pager").pager({ pagenumber: pageclickednumber, pagecount: total, buttonClickCallback: PageClick });
             //跳转
+            choose("page",pagenumber);
+        }
+        function choose(tag,value){
+        	$("#form input[name='"+tag+"']").val(value);
+        	$("#form").submit();
         }
 </script>
 </html>

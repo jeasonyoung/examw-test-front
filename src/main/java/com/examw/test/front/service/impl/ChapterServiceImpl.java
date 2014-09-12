@@ -49,6 +49,7 @@ public class ChapterServiceImpl implements IChapterService{
 		if(StringUtils.isEmpty(examId))
 		return null;
 		String url = String.format(this.api_list_url,examId);
+		if(StringUtils.isEmpty(subjectId)) subjectId = "";
 		String xml = HttpUtil.httpRequest(url,"GET","subjectId="+subjectId,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml, Map.class, String.class,Object.class);

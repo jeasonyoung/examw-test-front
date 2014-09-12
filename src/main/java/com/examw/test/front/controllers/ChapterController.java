@@ -32,13 +32,14 @@ public class ChapterController {
 	 * @return
 	 */
 	@RequestMapping(value = {"","/"}, method = {RequestMethod.GET,RequestMethod.POST})
-	public String chapters(String examId,String subjectId,Model model){
+	public String chapters(String productId,String subjectId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载章节练习...");
 		try{
-			Map<String,Object> map = this.chapterService.loadExamAndChapterInfo(examId,subjectId);
-			model.addAttribute("EXAMID", examId);
+			Map<String,Object> map = this.chapterService.loadExamAndChapterInfo(productId,subjectId);
+			model.addAttribute("PRODUCTID", productId);
 			model.addAttribute("SUBJECTLIST", map.get("SUBJECTLIST"));
 			model.addAttribute("CHAPTERLIST", map.get("CHAPTERLIST"));
+			model.addAttribute("CURRENT_SUBJECT_ID", map.get("CURRENT_SUBJECT_ID"));
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载章节信息异常...");

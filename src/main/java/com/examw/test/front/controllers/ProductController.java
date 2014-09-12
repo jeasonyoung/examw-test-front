@@ -24,11 +24,15 @@ public class ProductController {
 	private static final Logger logger = Logger.getLogger(IndexController.class);
 	@Resource
 	private IProductService productService;
-	
+	/**
+	 * 根据所选考试加载产品列表
+	 * @param examId
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = {"","/"}, method = {RequestMethod.GET,RequestMethod.POST})
 	public String products(String examId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载products...");
-		logger.debug(examId);
 		try{
 			List<ProductInfo> list = this.productService.loadProducts(examId);
 			model.addAttribute("PRODUCTLIST", list);

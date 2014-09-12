@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="gb2312">
+<title>题型介绍 考试系统题库</title>
+<#include "common/loadPageJS.ftl" />
+</head>
+<body>
+<#include "common/head.html" />
+<div class="main">
+	<div class="h30"></div>
+	<div class="content fl">
+    	<div class="width998 yinying">
+        	<div class="tx fl">
+            	<div class="tx-pic"><img src="<@s.url "/resources/front-default/image/tx-pic.png"/>" width="350" height="330"></div>
+              	<div class="tx-fr">
+                	<div class="title fl">${PAPER.name	}</div>
+                    <div class="list">
+                    	<ul>
+                        	<li>价格：${PAPER.price} 考试币
+                        	<!-- <a href="#" target="_blank" class="tip_1">
+                        			<img class="kuang" src="<@s.url "/resources/front-default/image/fen.gif"/>">
+                        			<span class="popbox">
+                        				本套试卷您需要支付10积分。您可以通过完成任务来获取积分;<br>
+                  						<font color="#f60">赚取积分>></font>
+                  					</span>
+                  				</a> 
+                  			-->
+                  			</li>
+                            <li>年份：${PAPER.year?c} 年</li>
+                            <li>类型：${PAPER.typeName}试卷</li>
+                            <li>合格分数：${PAPER.score*0.6} 分</li>
+                            <li>总分: ${PAPER.score} 分</li>
+                            <li>阅卷收费：自动阅卷</li>
+                            <li>作答：${PAPER.tiem} 分钟</li>
+                            <li>来源：${PAPER.sourceName?default("网络")}</li>
+                            <!-- <li>参与人数：0人</li> -->
+                  		</ul>
+                  	</div>
+                  	<div class="botton-box">
+                  		<div class="botton"><div class="hong-botton"><a href="javascript:void(0);" onclick="start('${PAPER.id}');">普通模考</a></div></div>
+                        <div class="botton"><div class="hei-botton"><a href="#">全真模考</a></div></div>
+                  	</div>
+                </div>
+            </div>
+            <div class="tixing-box">
+                <div class="moni-list">
+                    <ul>
+                        <li class="moni-over"><b>题型介绍</b></li>
+                        <#list PAPER.structures as rule>
+                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
+                            <div class="title">
+                                <i>
+                                    <div class="title"><dd>${rule.typeName}</dd></div>
+                                    <p>${rule_index+1}、${rule.title}</p>
+                                </i>
+                            </div>
+                        </li>
+                        </#list>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        </div>
+  </div>
+    <div class="h30"></div>
+</div>
+<#include "common/foot.html" />
+</body>
+<script type="text/javascript">
+	function start(id){
+		location = "<@s.url "/library/paper/do"/>?paperId="+id;		
+	}
+</script>
+</html>

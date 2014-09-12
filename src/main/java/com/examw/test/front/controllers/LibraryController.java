@@ -82,7 +82,7 @@ public class LibraryController {
 			//试卷类型
 			model.addAttribute("PAPERTYPE", map.get("PAPERTYPE"));
 			//页码
-			model.addAttribute("PAGE",map.get("PAGE"));
+			model.addAttribute("PAGE",info.getPage()==null?1:info.getPage());
 			//总条数
 			model.addAttribute("TOTAL",map.get("TOTAL"));
 			model.addAttribute("THIS_YEAR",Calendar.getInstance().get(Calendar.YEAR));

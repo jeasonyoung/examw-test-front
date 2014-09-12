@@ -1,5 +1,3 @@
-<!-- 章节练习 -->
-<!-- 定义章节的宏 -->
 <!doctype html>
 <html>
 <head>
@@ -22,7 +20,11 @@
                                     <!-- <li class="bg"><em>中级经济师</em><i class="shang"></i></li>
                                     <li><a href="#"><em>初级经济师</em><i class="xia"></i><i class="cheng"></i></a></li>鼠标移动上去去掉<i class="cheng"></i> -->
                                     <#list SUBJECTLIST as s>
-                                    <li><a href="?examId=${EXAMID}&subjectId=${s.id}">${s.name}</a></li>
+                                    <#if s.id == CURRENT_SUBJECT_ID>
+                                    	<li class="bg">${s.name}</li>
+                                    	<#else>
+                                    	<li><a href="?productId=${PRODUCTID}&subjectId=${s.id}">${s.name}</a></li>
+                                    </#if>
                                     </#list>
                                 </ul>
                             </div>

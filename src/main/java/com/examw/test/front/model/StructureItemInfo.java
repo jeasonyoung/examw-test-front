@@ -1,14 +1,12 @@
 package com.examw.test.front.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.springframework.util.StringUtils;
 
 import com.examw.model.Paging;
-import com.examw.support.CustomDateSerializer;
 /**
  * 结构下题目信息。
  * 
@@ -22,7 +20,10 @@ public class StructureItemInfo extends Paging {
 	private BigDecimal score;
 	private Integer orderNo;
 	private ItemScoreInfo item;
-	private Date createTime;
+	private String createTime;
+	private Integer type;
+	private String typeName;
+	private Integer status;
 	/**
 	 * 获取结构下题目ID。
 	 * @return 结构下题目ID。
@@ -43,21 +44,27 @@ public class StructureItemInfo extends Paging {
 	 * @return 试题类型。
 	 */
 	public Integer getType(){
+		if(type==null)
 		return (this.getItem() == null) ? null : this.getItem().getType();
+		return type;
 	}
 	/**
 	 * 获取试题题型名称。
 	 * @return
 	 */
 	public String getTypeName(){
+		if(StringUtils.isEmpty(typeName))
 		return (this.getItem() == null) ? null : this.getItem().getTypeName();
+		return typeName;
 	}
 	/**
 	 *  获取试题状态值。
 	 * @return
 	 */
 	public Integer getStatus(){
+		if(status == null)
 		return (this.getItem() == null) ? null : this.getItem().getStatus();
+		return status;
 	}
 	/**
 	 * 获取所属结构ID。
@@ -154,8 +161,7 @@ public class StructureItemInfo extends Paging {
 	 * 获取创建时间。
 	 * @return 创建时间。
 	 */
-	@JsonSerialize(using = CustomDateSerializer.class)
-	public Date getCreateTime() {
+	public String getCreateTime() {
 		return createTime;
 	}
 	/**
@@ -163,7 +169,7 @@ public class StructureItemInfo extends Paging {
 	 * @param createTime 
 	 *	  创建时间。
 	 */
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
 }

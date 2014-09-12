@@ -37,6 +37,10 @@
         // empty out the destination element and then render out the pager with the supplied options
             $(this).empty().append(renderpager(parseInt(options.pagenumber), parseInt(options.pagecount), options.buttonClickCallback));
             //render pagers 2014-09-11 FW
+			var $input = $('<div class="pages"></div>');
+			$input.append("<span><b>"+parseInt(options.pagenumber)+"/"+parseInt(options.pagecount)+"</b></span>");
+			$input.append("<input id='pagenumInput'/>");
+			$(this).append($input);
 			$(this).append(renderinput(parseInt(options.pagenumber), parseInt(options.pagecount), options.buttonClickCallback));
             // specify correct cursor activity
             $('.pages li').mouseover(function() { document.body.style.cursor = "pointer"; }).mouseout(function() { document.body.style.cursor = "auto"; });
@@ -54,15 +58,15 @@
 
         // pager currently only handles 10 viewable pages ( could be easily parameterized, maybe in next version ) so handle edge cases
         var startPoint = 1;
-        var endPoint = 9;
+        var endPoint = 5;
 
-        if (pagenumber > 4) {
-            startPoint = pagenumber - 4;
-            endPoint = pagenumber + 4;
+        if (pagenumber > 3) {
+            startPoint = pagenumber - 2;
+            endPoint = pagenumber + 2;
         }
 
         if (endPoint > pagecount) {
-            startPoint = pagecount - 8;
+            startPoint = pagecount - 4;
             endPoint = pagecount;
         }
 
@@ -120,19 +124,20 @@
     }
 	//render 页码和跳转
 	function renderinput(pagenumber, pagecount, buttonClickCallback){
-		var $input = $('<div class="pages"></div>');
-		$input.append("<span><b>"+pagenumber+"/"+pagecount+"</b></span>");
-		$input.append("<input />");
-		$Button = $("<a href='javascript:void(0)'>跳转</a>");
+		$ul = $('<ul class="pages"></ul>')
+		$Button = $("<li class='pgNext'>跳转</li>");
 		$Button.click(function(){
-			var num = Number($(this).siblings("input").val());
-			if(!num) return;
+			var num = Number($("#pagenumInput").val());
+			if(!num){
+				$("#pagenumInput").val("");
+				return;
+			}
 			if(num <= 0) num =  1;
 			if(num >= pagecount) num = pagecount;
 			buttonClickCallback(num);
 		});
-		$input.append($Button);
-		return $input;
+		$ul.append($Button);
+		return $ul;
 	}
     // pager defaults. hardly worth bothering with in this case but used as placeholder for expansion in the next version
     $.fn.pager.defaults = {

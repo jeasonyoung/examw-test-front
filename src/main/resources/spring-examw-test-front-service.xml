@@ -19,5 +19,7 @@
 	<!-- 试卷 -->
 	<bean id="paperService" class="com.examw.test.front.service.impl.PaperServiceImpl">
 	    <property name="api_paperlist_url" value="${api_papers_url}" />
+	    <property name="api_paperinfo_url" value="${api_paper_url}" />
+	     <property name="api_paperitem_url" value="${api_paperitem_url}" />
 	</bean>
 </beans>

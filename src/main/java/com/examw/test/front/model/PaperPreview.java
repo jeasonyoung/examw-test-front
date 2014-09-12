@@ -2,13 +2,10 @@ package com.examw.test.front.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
-
-import com.examw.support.CustomDateSerializer;
 
 /**
  * 试卷预览信息。
@@ -22,7 +19,7 @@ public class PaperPreview implements Serializable {
 	private String id,name,description,typeName,statusName,examId,examName,subjectId,subjectName,sourceId,sourceName;
 	private Integer type,status,price,time,year;
 	private BigDecimal score;
-	private Date createTime,lastTime,publishTime;
+	private String createTime,lastTime,publishTime;
 	private List<StructureInfo> structures;
 	/**
 	 * 获取试卷ID。
@@ -283,8 +280,7 @@ public class PaperPreview implements Serializable {
 	 * 获取创建时间。
 	 * @return 创建时间。
 	 */
-	@JsonSerialize(using=CustomDateSerializer.ShortDate.class)
-	public Date getCreateTime() {
+	public String getCreateTime() {
 		return createTime;
 	}
 	/**
@@ -292,15 +288,14 @@ public class PaperPreview implements Serializable {
 	 * @param createTime 
 	 *	  创建时间。
 	 */
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
 	/**
 	 * 获取最后修改时间。
 	 * @return 最后修改时间。
 	 */
-	@JsonSerialize(using=CustomDateSerializer.ShortDate.class)
-	public Date getLastTime() {
+	public String getLastTime() {
 		return lastTime;
 	}
 	/**
@@ -308,15 +303,14 @@ public class PaperPreview implements Serializable {
 	 * @param lastTime 
 	 *	  最后修改时间。
 	 */
-	public void setLastTime(Date lastTime) {
+	public void setLastTime(String lastTime) {
 		this.lastTime = lastTime;
 	}
 	/**
 	 * 获取发布时间。
 	 * @return 发布时间。
 	 */
-	@JsonSerialize(using=CustomDateSerializer.class)
-	public Date getPublishTime() {
+	public String getPublishTime() {
 		return publishTime;
 	}
 	/**
@@ -324,7 +318,7 @@ public class PaperPreview implements Serializable {
 	 * @param publishTime 
 	 *	  发布时间。
 	 */
-	public void setPublishTime(Date publishTime) {
+	public void setPublishTime(String publishTime) {
 		this.publishTime = publishTime;
 	}
 	/**

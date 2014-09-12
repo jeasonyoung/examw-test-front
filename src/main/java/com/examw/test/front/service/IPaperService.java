@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.examw.test.front.model.PaperInfo;
+import com.examw.test.front.model.PaperPreview;
 
 /**
  * 试卷服务接口
@@ -17,4 +18,18 @@ public interface IPaperService {
 	 * @return
 	 */
 	Map<String,Object> loadPaperList(String productId,PaperInfo info)throws IOException;
+	/**
+	 * 根据试卷ID加载试卷详情
+	 * @param paperId 试卷id
+	 * @return
+	 * @throws IOException
+	 */
+	PaperPreview loadPaperInfo(String paperId)throws IOException;
+	/**
+	 * 根据试卷ID加载试卷详情
+	 * @param paperId
+	 * @return
+	 * @throws IOException
+	 */
+	PaperPreview loadPaperDetail(String paperId)throws IOException;
 }

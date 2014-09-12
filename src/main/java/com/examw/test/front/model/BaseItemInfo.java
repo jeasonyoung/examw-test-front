@@ -1,12 +1,8 @@
 package com.examw.test.front.model;
 
-import java.util.Date;
 import java.util.Set;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-
 import com.examw.model.Paging;
-import com.examw.support.CustomDateSerializer;
 
 /**
  * 题目信息基类。
@@ -19,7 +15,7 @@ public abstract class BaseItemInfo<T extends BaseItemInfo<T>>  extends Paging {
 	private String pid,id,typeName,statusName,optName,examId,examName,subjectId,subjectName, 
 			content,answer,analysis,checkCode,sourceId,sourceName;
 	private Integer type,level,year,opt,status,orderNo;
-	private Date createTime,lastTime;
+	private String createTime,lastTime;
 	/**
 	 * 获取父题目ID。
 	 * @return 父题目ID。
@@ -339,8 +335,7 @@ public abstract class BaseItemInfo<T extends BaseItemInfo<T>>  extends Paging {
 	 * 获取创建时间。
 	 * @return 创建时间。
 	 */
-	@JsonSerialize(using = CustomDateSerializer.class)
-	public Date getCreateTime() {
+	public String getCreateTime() {
 		return createTime;
 	}
 	/**
@@ -348,15 +343,14 @@ public abstract class BaseItemInfo<T extends BaseItemInfo<T>>  extends Paging {
 	 * @param createTime
 	 * 创建时间。
 	 */
-	public void setCreateTime(Date createTime) {
+	public void setCreateTime(String createTime) {
 		this.createTime = createTime;
 	}
 	/**
 	 * 获取最后修改时间。
 	 * @return 最后修改时间。
 	 */
-	@JsonSerialize(using = CustomDateSerializer.class)
-	public Date getLastTime() {
+	public String getLastTime() {
 		return lastTime;
 	}
 	/**
@@ -364,7 +358,7 @@ public abstract class BaseItemInfo<T extends BaseItemInfo<T>>  extends Paging {
 	 * @param lastTime 
 	 * 最后修改时间。
 	 */
-	public void setLastTime(Date lastTime) {
+	public void setLastTime(String lastTime) {
 		this.lastTime = lastTime;
 	}
 	/**
