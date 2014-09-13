@@ -1,6 +1,6 @@
 @charset "utf-8";
 /* CSS Document */
-.time,.cont-l .box .list li em,.cont-r .xz-daan,.cont-r .xz-daan .list li span,.on,.off,.defen,.xz-daan .dui,.xz-daan .cuo,.daanbox .f-r em,.pic-bg,.zan,.huifu,.zhankai-bg,.moni-list .title em,.sift .siftbox .f-r .list li i,.jia,.jian,.moni-list .title i,.moni-list .title ol{ background:url(image/style.png) no-repeat}
+.time,.cont-l .box .list li em,.cont-r .xz-daan,.cont-r .xz-daan .list li span,.on,.off,.choose,.defen,.xz-daan .dui,.xz-daan .cuo,.daanbox .f-r em,.pic-bg,.zan,.huifu,.zhankai-bg,.moni-list .title em,.sift .siftbox .f-r .list li i,.jia,.jian,.moni-list .title i,.moni-list .title ol{ background:url(image/style.png) no-repeat}
 /*内容段*/
 .cont-l{ width:150px; height:auto; margin-right:20px}
 .cont-l .box{ width:148px; height:auto;-webkit-border-top-left-radius:5px;-webkit-border-top-right-radius:5px;-webkit-border-bottom-right-radius:5px;-webkit-border-bottom-left-radius:5px;-moz-border-radius-topleft:5px;-moz-border-radius-topright:5px;-moz-border-radius-bottomright:5px;-moz-border-radius-bottomleft:5px;border-top-left-radius:5px;border-top-right-radius:5px;border-bottom-right-radius:5px;border-bottom-left-radius:5px;border-bottom:#b3b3b3 solid 1px;border-left:#e8e8e8 solid 1px;border-right:#d4d4d4 solid 1px;border-top:#e8e8e8 solid 1px; background:#fff; margin-bottom:20px; padding:1px 0}
@@ -46,7 +46,7 @@
 .cont-r .timu{ width:100%; background:#f5f4f9; height:auto;-webkit-border-top-left-radius:5px;-webkit-border-top-right-radius:5px;-webkit-border-bottom-right-radius:0px;-webkit-border-bottom-left-radius:0px;-moz-border-radius-topleft:5px;-moz-border-radius-topright:5px;-moz-border-radius-bottomright:0px;-moz-border-radius-bottomleft:0px;border-top-left-radius:5px;border-top-right-radius:5px;border-bottom-right-radius:0px;border-bottom-left-radius:0px}
 .cont-r .timu i{ float:left; width:70px; color:#f60; font:30px/64px Arial}
 .cont-r .timu em{ width:750px; line-height:30px; color:#000; text-align:left; padding:15px 0; float:left}
-.cont-r .timu em span{ width:auto; color:#f60; float:left; padding-right:8px; line-height:30px}
+.cont-r .timu em span{ width:auto; color:#f60; float:right; padding-right:8px; line-height:30px}
 .cont-r .timu em span a:link,.cont-r .timu em span a:visited,.cont-r .timu em span a:active{color:#f60}
 .cont-r .timu em span a:hover{ color:#cc0000}
 /*选择题答案*/
@@ -62,6 +62,7 @@
 .cont-r .xz-daan .abcd li{ width:67px; height:auto !important; height:37px; min-height:37px; padding-left:44px; margin:20px 20px 0px 0px; float:left; text-align:left;font:20px/37px "Arial","宋体"; color:#777; cursor:pointer}
 .cont-r .xz-daan .abcd .on{ background-position: -430px -30px; color:#fff;width:67px;height:37px; float:left}
 .cont-r .xz-daan .abcd .off{ background-position: -430px -70px;width:67px;height:37px; float:left}
+.cont-r .xz-daan .abcd .choose{ background-position: -430px -30px; color:#fff;width:67px;height:37px; float:left}
 .cont-r .fenxiti{width:800px; height:auto; background:#fff; padding:10px 14px; border:#d4d4d4 solid 1px; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; line-height:24px; text-align:left; margin-bottom:20px}
 .cont-r .fenxiti i{ width:20px; padding:3px 5px; text-align:center; background:#f50;-moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; margin-right:10px; color:#fff; float:left; line-height:20px}
 .cont-r .fenxiti em{ width:755px; float:left}
@@ -228,3 +229,8 @@ a.kuang {width:18px;height:17px;position:absolute;top:0px;left:0px;z-index:9;ove
 .tx .tx-fr .botton-box{ width:100%; height:auto; float:left; padding-top:30px;}
 .tx .tx-fr .botton-box .botton{ width:145px; line-height:40px; float:left; padding-left:80px;}
 .tixing-box{ width:957px; border:#efefef solid 1px; border-bottom:none; height:auto; float:left; margin:20px}
+/*pause*/
+.pause{background-image: url("image/coffee-pause.png");background-position: center 40px;background-repeat: no-repeat;height: 318px;text-align: center;width: 487px;}
+.f-f14 {font-size: 14px;line-height: 25px;}
+.f-f16 {font-size: 16px;line-height: 30px;}
+.f-f18 {font-size: 18px;line-height: 35px;}

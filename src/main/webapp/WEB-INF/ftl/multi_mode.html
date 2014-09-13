@@ -1,20 +1,22 @@
-<!-- 多题模式 -->
 <!doctype html>
 <html>
 <head>
 <title>模拟考场 考试系统题库</title>
 <#include "common/loadPageJS.ftl" />
+<!-- dialog -->
+<link href="<@s.url "/resources/artDialog/ui-dialog.css"/>" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<@s.url "/resources/artDialog/dialog-min.js"/>"></script>
 </head>
-
 <body>
+<#include "common/item.ftl"/>
 <#include "common/head.html" />
 <div class="main">
 	<div class="h30"></div>
 	<div class="content fl">
-    	<div class="cont-l fl">
+    	<div class="cont-l fl" id="leftArea">
         	<div class="box fl yinying">
-            	<div class="time">00:58:28</div>
-                <div class="hui-botton"><a href="#">暂停</a></div>
+            	<div class="time" id="showtime">00:00:00</div>
+                <div class="hui-botton"><a href="javascript:void(0)" onclick="pause_do();">暂停</a></div>
                 <div class="hui-botton"><a href="#">下次再做</a></div>
                 <div class="jiaojuan-botton"><a href="#">提交试卷</a></div>
                 <div class="h10"></div>
@@ -29,21 +31,21 @@
                 </div>
             </div>
         </div>
-        <div class="cont-r fr">
+        <div class="cont-r fr f-f14" id="paper_body">
         	<div class="box fl yinying">
             	<div class="daxiao">
                 	<div class="list">
-                    	<ul>
-                        	<li class="out bg" onMouseOver="this.className='over bg'" onMouseOut="this.className='out bg'"><a href="#">小</a></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><a href="#">中</a></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><a href="#">大</a></li>
+                    	<ul id="fontset">
+                        	<li id="f-f14" current="true" class="out bg" onMouseOver="this.className='over bg'" onMouseOut="this.className='out bg'"><a href="#">小</a></li>
+                            <li id="f-f16" class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><a href="#">中</a></li>
+                            <li id="f-f18" class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><a href="#">大</a></li>
                             <li>字体大小:</li>
                         </ul>
                     </div>
                 </div>
             	<div class="name"><h1>${PAPER.name}</h1></div>
                 <div class="h20"></div>
-                <div class="shuoming" id="font14">
+                <div class="shuoming" >
                 	<p>&gt; 本卷共分为${PAPER.structures?size}大题 70小题，作答时间为${PAPER.time}分钟，总分${PAPER.score}分，${PAPER.score*0.6}分及格。</p>
                     <p>&gt; 试卷来源：${PAPER.sourceName}</p>
                 </div>
@@ -51,305 +53,28 @@
                 	<div class="list">
                     	<ul>
                     		<#list PAPER.structures as structure>
-                        	<li class="bg">${structure.title}</a></li>
+                    		<#if structure_index == 0>
+                        	<li class="bg">${structure.title}</li>
+                        	<#else>
+                        	<li><a href="javascript:void(0)" onclick="chooseRule('${structure.id}');">${structure.title}</a></li>
+                        	</#if>
                         	</#list>
-                            <li><a href="#duoxiang">多项选择题</a></li>
-                            <li><a href="#panduan">判断题</a></li>
-                            <li><a href="#fenxiti">案例分析题</a></li>
                         </ul>
                     </div>
                 </div>
             </div><a name="danxiang" id="danxiang"></a>
-            <div class="tx-box fl" id="font14">一、单项选择题（本类题共20题，每小题1分，共20分。每小题备选答案中，只有一个符合题意的正确答案，多选、错题、不选均不得分）</div>
-            <div class="box fl">
-            	<div class="timu fl" id="font14"><a name="1" id="1"></a>
-                	<i>1.</i>
-                    <em><span>[单项选择题]</span>高级会计师的基本任务条件之一是取得博士学位，并担任会计师职务(   )。</em>
-                </div>
-                <div class="xz-daan fl" id="font14">
-                	<div class="list">
-                    	<ul>
-                        	<li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>A.</i><em>3—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>B.</i><em>2—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>C.</i><em>1—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>D.</i><em>5年以上</em></li>
-                        </ul>
-                    </div>
-                    <div class="abcd">
-                    	<ul>
-                        	<li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">A.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">B.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">C.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">D.</li>
-                        </ul>
-                    </div>
-                </div>
+            <#list PAPER.structures as structure>
+            <div <#if structure_index != 0>style="display:none"</#if> structure_id="${structure.id}">
+            <div class="tx-box fl" >${structure.title}</div>
+            <#list structure.items as i>
+            	<@show_item i/>
+            </#list>
             </div>
-            <div class="box fl">
-            	<div class="timu fl" id="font14"><a name="2" id="2"></a>
-                	<i>2.</i>
-                    <em><span>[单项选择题]</span>高级会计师的基本任务条件之一是取得博士学位，并担任会计师职务(   )。</em>
-                </div>
-                <div class="xz-daan fl">
-                	<div class="list">
-                    	<ul>
-                        	<li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>A.</i><em>3—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>B.</i><em>2—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>C.</i><em>1—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>D.</i><em>5年以上</em></li>
-                        </ul>
-                    </div>
-                    <div class="abcd">
-                    	<ul>
-                        	<li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">A.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">B.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">C.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">D.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="box fl">
-            	<div class="timu fl" id="font14"><a name="3" id="3"></a>
-                	<i>3.</i>
-                    <em><span>[单项选择题]</span>高级会计师的基本任务条件之一是取得博士学位，并担任会计师职务(   )。</em>
-                </div>
-                <div class="xz-daan fl">
-                	<div class="list">
-                    	<ul>
-                        	<li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>A.</i><em>3—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>B.</i><em>2—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>C.</i><em>1—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>D.</i><em>5年以上</em></li>
-                        </ul>
-                    </div>
-                    <div class="abcd">
-                    	<ul>
-                        	<li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">A.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">B.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">C.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">D.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="box fl">
-            	<div class="timu fl" id="font14"><a name="4" id="4"></a>
-                	<i>4.</i>
-                    <em><span>[单项选择题]</span>高级会计师的基本任务条件之一是取得博士学位，并担任会计师职务(   )。</em>
-                </div>
-                <div class="xz-daan fl">
-                	<div class="list">
-                    	<ul>
-                        	<li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>A.</i><em>3—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>B.</i><em>2—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>C.</i><em>1—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>D.</i><em>5年以上</em></li>
-                        </ul>
-                    </div>
-                    <div class="abcd">
-                    	<ul>
-                        	<li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">A.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">B.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">C.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">D.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div><a name="duoxiang" id="duoxiang"></a>
-            <div class="tx-box fl" id="font14">二、多项选择题（本类题共20题，每小题1分，共20分。每小题备选答案中，有多个符合题意的正确答案，单选、错题、不选均不得分）</div>
-            <div class="box fl">
-            	<div class="timu fl" id="font14"><a name="5" id="5"></a>
-                	<i>5.</i>
-                    <em><span>[多项选择题]</span>高级会计师的基本任务条件之一是取得博士学位，并担任会计师职务(   )。</em>
-                </div>
-                <div class="xz-daan fl">
-                	<div class="list">
-                    	<ul>
-                        	<li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>A.</i><em>3—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>B.</i><em>2—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>C.</i><em>1—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>D.</i><em>5年以上</em></li>
-                        </ul>
-                    </div>
-                    <div class="abcd">
-                    	<ul>
-                        	<li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">A.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">B.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">C.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">D.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="box fl">
-            	<div class="timu fl" id="font14"><a name="6" id="6"></a>
-                	<i>6.</i>
-                    <em><span>[多项选择题]</span>高级会计师的基本任务条件之一是取得博士学位，并担任会计师职务(   )。</em>
-                </div>
-                <div class="xz-daan fl">
-                	<div class="list">
-                    	<ul>
-                        	<li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>A.</i><em>3—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>B.</i><em>2—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>C.</i><em>1—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>D.</i><em>5年以上</em></li>
-                        </ul>
-                    </div>
-                    <div class="abcd">
-                    	<ul>
-                        	<li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">A.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">B.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">C.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">D.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="box fl">
-            	<div class="timu fl" id="font14"><a name="7" id="7"></a>
-                	<i>7.</i>
-                    <em><span>[多项选择题]</span>高级会计师的基本任务条件之一是取得博士学位，并担任会计师职务(   )。</em>
-                </div>
-                <div class="xz-daan fl">
-                	<div class="list">
-                    	<ul>
-                        	<li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>A.</i><em>3—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>B.</i><em>2—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>C.</i><em>1—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>D.</i><em>5年以上</em></li>
-                        </ul>
-                    </div>
-                    <div class="abcd">
-                    	<ul>
-                        	<li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">A.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">B.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">C.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">D.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div><a name="panduan" id="pandun"></a>
-            <div class="tx-box fl" id="font14">三、判断题（本类题共20题，每小题1分，共20分。）</div>
-            <div class="box fl">
-            	<div class="timu fl" id="font14"><a name="8" id="8"></a>
-                	<i>8.</i>
-                    <em><span>[判断题]</span>高级会计师的基本任务条件之一是取得博士学位，并担任会计师职务(   )。</em>
-                </div>
-                <div class="xz-daan fl">
-                    <div class="abcd">
-                    	<ul>
-                        	<li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">对</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">错</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="box fl">
-            	<div class="timu fl" id="font14"><a name="9" id="9"></a>
-                	<i>9.</i>
-                    <em><span>[判断题]</span>高级会计师的基本任务条件之一是取得博士学位，并担任会计师职务(   )。</em>
-                </div>
-                <div class="xz-daan fl">
-                    <div class="abcd">
-                    	<ul>
-                        	<li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">对</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">错</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="box fl">
-            	<div class="timu fl" id="font14"><a name="10" id="10"></a>
-                	<i>10.</i>
-                    <em><span>[判断题]</span>高级会计师的基本任务条件之一是取得博士学位，并担任会计师职务(   )。</em>
-                </div>
-                <div class="xz-daan fl">
-                    <div class="abcd">
-                    	<ul>
-                        	<li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">对</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">错</li>
-                        </ul>
-                    </div>
-                </div>
-            </div><a name="fenxiti" id="fenxiti"></a>
-            <div class="tx-box fl" id="font14">四、案例分析题（本类题共20题，每小题1分，共20分。）</div>
-            <div class="fenxiti fl" id="font14"><i>材料题</i><em>回答题：<br>高级会计师的基本任务条件之一是取得博士学位高级会计师的基本任务条件之一是取得博士学位高级会计师的基本任务条件之一是取得博士学位<br>要求：根据以上资料，回答以下问题</em></div>
-            <div class="box fl">
-            	<div class="timu fl" id="font14"><a name="11" id="11"></a>
-                	<i>11.</i>
-                    <em><span id="cailiao11"><a href="javascript:void(0)" onclick="ShowTC('#cailiao11','一级建造师单科VIP班 ','tiku.html');" class="apply">[查看资料]</a></span>高级会计师的基本任务条件之一是取得博士学位，并担任会计师职务(   )。</em>
-                </div>
-                <div class="xz-daan fl">
-                	<div class="list">
-                    	<ul>
-                        	<li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>A.</i><em>3—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>B.</i><em>2—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>C.</i><em>1—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>D.</i><em>5年以上</em></li>
-                        </ul>
-                    </div>
-                    <div class="abcd">
-                    	<ul>
-                        	<li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">A.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">B.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">C.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">D.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="box fl">
-            	<div class="timu fl" id="font14"><a name="12" id="12"></a>
-                	<i>12.</i>
-                    <em><span id="cailiao12"><a href="javascript:void(0)" onclick="ShowTC('#cailiao12','一级建造师单科VIP班 ','/user/GetList.asp?ClassID=2&TCID=67');" class="apply">[查看资料]</a></span>高级会计师的基本任务条件之一是取得博士学位，并担任会计师职务(   )。</em>
-                </div>
-                <div class="xz-daan fl">
-                	<div class="list">
-                    	<ul>
-                        	<li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>A.</i><em>3—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>B.</i><em>2—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>C.</i><em>1—5年</em></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><i>D.</i><em>5年以上</em></li>
-                        </ul>
-                    </div>
-                    <div class="abcd">
-                    	<ul>
-                        	<li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">A.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">B.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">C.</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">D.</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="box fl">
-            	<div class="timu fl" id="font14"><a name="13" id="13"></a>
-                	<i>13.</i>
-                    <em><span id="cailiao13"><a href="javascript:void(0)" onclick="ShowTC('#cailiao13','一级建造师单科VIP班 ','/user/GetList.asp?ClassID=2&TCID=67');" class="apply">[查看资料]</a></span>高级会计师的基本任务条件之一是取得博士学位，并担任会计师职务(   )。</em>
-                </div>
-                <div class="xz-daan fl">
-                    <div class="abcd">
-                    	<ul>
-                        	<li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">对</li>
-                            <li class="off" onMouseOver="this.className='on'" onMouseOut="this.className='off'">错</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="box fl">
-            	<div class="timu fl" id="font14"><a name="13" id="13"></a>
-                	<i>14.</i>
-                    <em><span id="cailiao14"><a href="javascript:void(0)" onclick="ShowTC('#cailiao14','一级建造师单科VIP班 ','/user/GetList.asp?ClassID=2&TCID=67');" class="apply">[查看资料]</a></span>高级会计师的基本任务条件之一是取得博士学位，并担任会计师职务(   )。</em>
-                </div>
-                <div class="xz-daan fl">
-                    <textarea name="" cols="" rows="" class="wenben"></textarea>
-                </div>
-            </div>
-            <div class="datika fl" id="answerCard">
-            	<div class="ka fl" id="font14">隐藏答题卡(剩下34道题)</div>
+            </#list>
+            <div class="datika fl" id="answerCard" style="width:830px;">
+            	<div class="ka fl" id="font14">展开答题卡</div>
                 <div class="ka-ge fl"></div>
-                <div class="ka-box fl">
+                <div class="ka-box fl" style="display:none">
                 	<div class="five fl">
                     	<div class="list">
                         	<ul>
@@ -435,27 +160,40 @@
 <#include "common/foot.html" />
 </body>
 <script type="text/javascript">
-$.fn.smartFloat = function() {
+<!-- 浮动,参数isTop是否距离顶部,否表示距离底部 -->
+$.fn.smartFloat = function(isTop) {
 	var position = function(element) {
-		var top = element.position().top, pos = element.css("position");
+		var top = element.position().top,left =element.position().left, pos = element.css("position");
 		var height = $(this).height();
 		$(window).scroll(function() {
 			var scrolls = $(this).scrollTop();
-			console.info(scrolls);
-			if (scrolls < top-height) { //如果滚动到页面超出了当前元素element的相对页面顶部的高度
+			var flag;
+			if(isTop) flag = scrolls-top;
+			else flag = top-height-scrolls;
+			if (flag > 0) { //如果滚动到页面超出了当前元素element的相对页面顶部的高度
 				if (window.XMLHttpRequest) { //如果不是ie6
+					if(isTop) element.css({position: "fixed",left:left,top: 0});
+					else
 					element.css({
 						position: "fixed",
+						left:left,
 						bottom: 0
 					});	
 				} else { //如果是ie6
+					if(isTop) element.css({position: "absolute",left:left,top: scrolls});
+					else
 					element.css({
-						bottom: scrolls
+						position: "absolute",
+						left:left,
+						bottom: 0
 					});	
 				}
-			}else {
+			}else {	//滑到了底部
+				if(isTop) element.css({position: pos,left:left,top: top});
+				else
 				element.css({
 					position: pos,
+					left:left,
 					bottom: top
 				});	
 			}
@@ -466,7 +204,121 @@ $.fn.smartFloat = function() {
 	});
 };
 $(function(){
-	$("#answerCard").smartFloat();
+	//var obj = '${PAPERJSON}';
+	//console.info(obj);
+	$("#answerCard").smartFloat(false);	//答题卡浮动
+	$("#leftArea").smartFloat(1);//左侧浮动
+	<!-- 答题卡点击显示  -->
+	$("#answerCard div").first().click(function(){
+		var card = $(this).siblings("div").last();
+		if(card.is(":hidden"))
+		{
+			$(this).html("隐藏答题卡");
+			card.show();
+		}
+		else{
+			$(this).html("展开答题卡");
+			card.hide();
+		}
+	});
+	<!-- 点击选项 -->
+	$("ul li[option_id]").click(function(){
+		var option_id = $(this).attr("option_id");
+		if($(this).attr("option_type")=="radio") //互斥
+		{
+			$("li[actual][option_id='"+option_id+"']").attr("class","choose");
+			$("li[option_id='"+option_id+"']").siblings().attr("class","out");
+			$("li[actual][option_id='"+option_id+"']").siblings().attr("class","off");
+		}else{
+			$("li[actual][option_id='"+option_id+"']").attr("class","choose");
+		}
+		
+	}).mouseout(function(){
+		if($(this).attr("actual")){
+			if($(this).attr("class")=="choose") return;
+			$(this).attr("class","off");
+			$("li[option_id='"+$(this).attr("option_id")+"']:not([actual])").attr("class","out");
+		}else{
+			if($("li[option_id='"+$(this).attr("option_id")+"'][actual]").attr("class")=="choose") return;
+			$(this).attr("class","out");
+			$("li[option_id='"+$(this).attr("option_id")+"'][actual]").attr("class","off");
+		}
+	}).mouseover(function(){
+		if($(this).attr("actual")){
+			if($(this).attr("class")=="choose") return;
+			$(this).attr("class","on");
+			$("li[option_id='"+$(this).attr("option_id")+"']:not([actual])").attr("class","over");
+		}else{
+			if($("li[option_id='"+$(this).attr("option_id")+"'][actual]").attr("class")=="choose") return;
+			$(this).attr("class","over");
+			$("li[option_id='"+$(this).attr("option_id")+"'][actual]").attr("class","on");
+		}
+		$(this).addClass("over");
+	});
+	<!-- 字体选择 -->
+	$("#fontset li").click(function(){
+		if($(this)==$("#fontset li[current='true']")) return;
+		$(this).addClass("bg").attr("current",'true');
+		$("#paper_body").addClass($(this).attr("id")).removeClass($("#fontset li[current='true']").attr("id"));
+		$(this).siblings().removeClass("bg").attr("current",'false');
+	});
+	<!-- timer -->
+	window.limit_time = parseInt('${PAPER.time}')*60;        // 单位：秒
+	window.timer         = setInterval(updateTime,1000);                          // 过1秒执行
+	function updateTime(){
+		/*
+		var pause_time = parseInt($('#pause_do').attr('time'));  // 暂停时间
+		if (! isNaN(pause_time) ){
+			$('#pause_do').attr('time','a');
+			var oDateNow = (new Date()).getTime();
+			//var aa = parseInt((oDateNow - parseInt(pause_time))/1000);
+			console.log('pause_time  not isNaN.');
+			window.limit_time = window.limit_time + parseInt((oDateNow - parseInt(pause_time))/1000);
+		}
+		*/
+		if (window.limit_time==300){
+			//小于5分钟提示
+			alert('请抓紧时间答题');
+		}
+		if (window.limit_time ==0 ){
+			// 停止计时，并自动交卷
+			clearInterval(window.timer);
+			window.limit_time=0;
+			//xc.answer.submit();
+		}
+		// 转换
+		var fillZero = function (num,n){
+			var str = ''+num;   //数字转换为字符串
+			while(str.length<n){
+				str = '0'+str;
+			}
+			return str;
+		};
+		var iRemain = window.limit_time;
+		//剩余小时
+		var iHour = fillZero(parseInt(iRemain/3600),2);
+		iRemain%=3600;  //剩下的秒数
+		//剩余分钟
+		var iMin = fillZero(parseInt(iRemain/60),2);
+		iRemain%=60;
+		//剩余秒
+		var iSec = fillZero(parseInt(iRemain),2);
+		var sTime = iHour+':'+iMin+':'+iSec;
+		$('#showtime').html(sTime);
+		window.limit_time--;
+	}
+	<!-- 暂停 -->
+	pause_do = function(){
+		window.clearInterval(timer);
+		dialog({
+	        content: "<div class='pause'></div>",
+	        ok: function () {
+	        	window.timer = setInterval(updateTime,1000);   
+	            return true;
+	        },
+	        okValue: '点击继续'
+	    }).showModal();
+	}
 });
 </script>
 </html>

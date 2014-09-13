@@ -8,8 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.examw.test.front.model.Constant;
 import com.examw.test.front.model.PaperPreview;
 import com.examw.test.front.service.IPaperService;
+import com.examw.test.front.support.JSONUtil;
 
 /**
  * 试卷控制器
@@ -53,6 +55,25 @@ public class PaperController {
 		try{
 			PaperPreview info = this.paperService.loadPaperDetail(paperId);
 			model.addAttribute("PAPER", info);
+			model.addAttribute("PAPERJSON", JSONUtil.ObjectToJson(info));
+			//单选
+			model.addAttribute("TYPE_SINGLE_VALUE", Constant.TYPE_SINGLE);
+			//多选
+			model.addAttribute("TYPE_MULTY_VALUE", Constant.TYPE_MULTY);
+			//不定向选
+			model.addAttribute("TYPE_UNCERTAIN_VALUE", Constant.TYPE_UNCERTAIN);
+			//判断
+			model.addAttribute("TYPE_JUDGE_VALUE", Constant.TYPE_JUDGE);
+			//问答
+			model.addAttribute("TYPE_QANDA_VALUE", Constant.TYPE_QANDA);
+			//共提干
+			model.addAttribute("TYPE_SHARE_TITLE_VALUE", Constant.TYPE_SHARE_TITLE);
+			//共答案
+			model.addAttribute("TYPE_SHARE_ANSWER_VALUE", Constant.TYPE_SHARE_ANSWER);
+			//判断[正确]
+			model.addAttribute("ANSWER_JUDGE_RIGTH",Constant.ANSWER_JUDGE_RIGTH);
+			//判断[错误]
+			model.addAttribute("ANSWER_JUDGE_WRONG",Constant.ANSWER_JUDGE_WRONG);
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情异常...");

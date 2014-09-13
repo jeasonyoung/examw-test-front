@@ -46,7 +46,7 @@ a:hover,a:active{color:#cc0000; text-decoration:none}
 .top .logo{ background-position:0px 0px; width:210px; height:80px; padding-right:10px}
 /*头部LOGO段导航*/
 .topnva{float:left; position:relative;display:inline;font-size:16px;border-left:#efefef solid 1px; border-right:#efefef solid 1px;margin-right:-1px}
-.topnva .nvabox{width:auto;display:inline-block;cursor:pointer;position:relative;z-index:9999;padding:0 20px 0 16px;height:77px;border-top:3px solid #fff}
+.topnva .nvabox{width:auto;display:inline-block;cursor:pointer;position:relative;padding:0 20px 0 16px;height:77px;border-top:3px solid #fff}
 .topnva .nvabox em{ float:left;display:inline;width:50px; height:77px}
 .topnva .nvabox .tiku{ background-position:-300px 0}
 .topnva .nvabox .video{ background-position:-400px 0}
@@ -67,7 +67,7 @@ a:hover,a:active{color:#cc0000; text-decoration:none}
 @-o-keyframes mymove /* Opera */{0%   {top:-30px}25%  {top:22px}75%  {top:-25px}100% {top:-25px}}
 /*头部LOGO段导航结束*/
 /*分类导航*/
-.nav{width:230px; height:45px; padding-top:8px; font:16px/45px "微软雅黑"; position:absolute; _position:relative;*position:relative; z-index:9999999; cursor:pointer}
+.nav{width:230px; height:45px; padding-top:8px; font:16px/45px "微软雅黑"; position:absolute; _position:relative;*position:relative; cursor:pointer}
 .nav span{ float:left; width:31px; margin-left:5px; height:35px; background-position:-440px -80px}
 .menuover{width:230px; height:auto; float:left; font:20px/45px "微软雅黑"; overflow:hidden}
 .menuout{ width:230px; height:45px; float:left; font:20px/45px "微软雅黑"; overflow:hidden}
