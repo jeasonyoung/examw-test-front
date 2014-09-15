@@ -1,8 +1,10 @@
 package com.examw.test.front.service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
+import com.examw.test.front.model.ItemScoreInfo;
 import com.examw.test.front.model.PaperInfo;
 import com.examw.test.front.model.PaperPreview;
 
@@ -32,4 +34,10 @@ public interface IPaperService {
 	 * @throws IOException
 	 */
 	PaperPreview loadPaperDetail(String paperId)throws IOException;
+	/**
+	 * 加载试卷试题的集合
+	 * @param paper
+	 * @return
+	 */
+	List<ItemScoreInfo> loadItemsList(PaperPreview paper);
 }

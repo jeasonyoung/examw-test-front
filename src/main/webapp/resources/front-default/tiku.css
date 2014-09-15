@@ -46,7 +46,7 @@
 .cont-r .timu{ width:100%; background:#f5f4f9; height:auto;-webkit-border-top-left-radius:5px;-webkit-border-top-right-radius:5px;-webkit-border-bottom-right-radius:0px;-webkit-border-bottom-left-radius:0px;-moz-border-radius-topleft:5px;-moz-border-radius-topright:5px;-moz-border-radius-bottomright:0px;-moz-border-radius-bottomleft:0px;border-top-left-radius:5px;border-top-right-radius:5px;border-bottom-right-radius:0px;border-bottom-left-radius:0px}
 .cont-r .timu i{ float:left; width:70px; color:#f60; font:30px/64px Arial}
 .cont-r .timu em{ width:750px; line-height:30px; color:#000; text-align:left; padding:15px 0; float:left}
-.cont-r .timu em span{ width:auto; color:#f60; float:right; padding-right:8px; line-height:30px}
+.cont-r .timu em span{ width:auto; color:#f60; float:left; padding-right:8px; line-height:30px}
 .cont-r .timu em span a:link,.cont-r .timu em span a:visited,.cont-r .timu em span a:active{color:#f60}
 .cont-r .timu em span a:hover{ color:#cc0000}
 /*选择题答案*/
@@ -76,7 +76,9 @@
 .datika .ka-box .list li{float:left; margin-right:10px; font: bold 14px/24px "宋体"}
 .datika .ka-box .list li a:link,.datika .ka-box .list li a:visited,.datika .ka-box .list li a:active{width:30px; height:26px; float:left;background:#fff; border:#d4d4d4 solid 1px;-moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; color:#000}
 .datika .ka-box .list li a:hover{width:30px; height:26px; float:left; background:#f60; border:#f60 solid 1px;-moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; color:#fff}
-
+.daanbox .f-l .dui,.datika .dui{background:#4ca50e!important}
+.daanbox .f-l .cuo,.datika .cuo{background:#f00!important}
+.daanbox .f-l .yida,.datika .yida{background:#ccc!important}
 /*正确答案*/
 .defen{font: 56px/56px "Georgia";font-style:italic;color: #f00; height:66px; letter-spacing:3px; background-position:-430px 54px}
 .dangqian{ background-color:#f30f4a; width:100%; float:left; margin-top:10px; height:40px; font-size:16px; font-weight:bold; line-height:40px; color:#fff}

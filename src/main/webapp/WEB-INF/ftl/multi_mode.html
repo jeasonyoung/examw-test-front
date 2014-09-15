@@ -6,6 +6,8 @@
 <!-- dialog -->
 <link href="<@s.url "/resources/artDialog/ui-dialog.css"/>" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="<@s.url "/resources/artDialog/dialog-min.js"/>"></script>
+<!-- scrollTo -->
+<script type="text/javascript" src="<@s.url "/resources/jquery.scrollTo.js"/>"></script>
 </head>
 <body>
 <#include "common/item.ftl"/>
@@ -24,7 +26,7 @@
             <div class="box fl yinying">
             	<div class="list">
                 	<ul>
-                        <li><a href="单个题.html"><em class="dan-liang"></em>单体模式</a></li>
+                        <li><a href="<@s.url "/library/paper/do/single"/>?paperId=${PAPER.id}"><em class="dan-liang"></em>单体模式</a></li>
                         <li><a href="答案页面.html"><em class="kandaan"></em>查看答案</a></li>
                         <li class="bb-no"><a href="#"><em class="jisuanqi"></em>计算器</a></li>
                     </ul>
@@ -46,7 +48,7 @@
             	<div class="name"><h1>${PAPER.name}</h1></div>
                 <div class="h20"></div>
                 <div class="shuoming" >
-                	<p>&gt; 本卷共分为${PAPER.structures?size}大题 70小题，作答时间为${PAPER.time}分钟，总分${PAPER.score}分，${PAPER.score*0.6}分及格。</p>
+                	<p>&gt; 本卷共分为${PAPER.structures?size}大题 ${PAPER.total}小题，作答时间为${PAPER.time}分钟，总分${PAPER.score}分，${PAPER.score*0.6}分及格。</p>
                     <p>&gt; 试卷来源：${PAPER.sourceName}</p>
                 </div>
                 <div class="tixing fl">
@@ -64,10 +66,16 @@
                 </div>
             </div><a name="danxiang" id="danxiang"></a>
             <#list PAPER.structures as structure>
-            <div <#if structure_index != 0>style="display:none"</#if> structure_id="${structure.id}">
-            <div class="tx-box fl" >${structure.title}</div>
+            <div <#if structure_index != 0></#if> >
+            <#assign total = total + structure.total/> 
+            <#assign xuhao = total-structure.total + 1 />
+            <div class="tx-box fl" structure_id="${structure.id}">${structure.title}</div>
             <#list structure.items as i>
-            	<@show_item i/>
+            	<#if i.type != TYPE_SHARE_TITLE_VALUE && i.type != TYPE_SHARE_ANSWER_VALUE>
+            		<@show_item item=i index=(i_index+xuhao)/>
+            	<#else>
+            		<@show_item item=i index=xuhao/>
+            	</#if>
             </#list>
             </div>
             </#list>
@@ -75,82 +83,7 @@
             	<div class="ka fl" id="font14">展开答题卡</div>
                 <div class="ka-ge fl"></div>
                 <div class="ka-box fl" style="display:none">
-                	<div class="five fl">
-                    	<div class="list">
-                        	<ul>
-                            	<li><a href="#1">1</a></li>
-                                <li><a href="#2">2</a></li>
-                                <li><a href="#3">3</a></li>
-                                <li><a href="#4">4</a></li>
-                                <li><a href="#5">5</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="five fl">
-                    	<div class="list">
-                        	<ul>
-                            	<li><a href="#6">6</a></li>
-                                <li><a href="#7">7</a></li>
-                                <li><a href="#8">8</a></li>
-                                <li><a href="#9">9</a></li>
-                                <li><a href="#10">10</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="five fl">
-                    	<div class="list">
-                        	<ul>
-                            	<li><a href="#11">11</a></li>
-                                <li><a href="#12">12</a></li>
-                                <li><a href="#13">13</a></li>
-                                <li><a href="#">14</a></li>
-                                <li><a href="#">15</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="five fl">
-                    	<div class="list">
-                        	<ul>
-                            	<li><a href="#">16</a></li>
-                                <li><a href="#">17</a></li>
-                                <li><a href="#">18</a></li>
-                                <li><a href="#">19</a></li>
-                                <li><a href="#">20</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="five fl">
-                    	<div class="list">
-                        	<ul>
-                            	<li><a href="#">21</a></li>
-                                <li><a href="#">22</a></li>
-                                <li><a href="#">23</a></li>
-                                <li><a href="#">24</a></li>
-                                <li><a href="#">25</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="five fl">
-                    	<div class="list">
-                        	<ul>
-                            	<li><a href="#">26</a></li>
-                                <li><a href="#">27</a></li>
-                                <li><a href="#">28</a></li>
-                                <li><a href="#">29</a></li>
-                                <li><a href="#">30</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="five fl">
-                    	<div class="list">
-                        	<ul>
-                            	<li><a href="#">31</a></li>
-                                <li><a href="#">32</a></li>
-                                <li><a href="#">33</a></li>
-                                <li><a href="#">34</a></li>
-                            </ul>
-                        </div>
-                    </div>
+                	<@answer_card ITEMLIST />
                 </div>
             </div>
         </div>
@@ -226,6 +159,11 @@ $(function(){
 		var option_id = $(this).attr("option_id");
 		if($(this).attr("option_type")=="radio") //互斥
 		{
+			if($(this).attr("class").indexOf("choose")!=-1) {
+				$("li[option_id='"+option_id+"']").attr("class","out");
+				$("li[actual][option_id='"+option_id+"']").attr("class","off");
+				return;
+			}
 			$("li[actual][option_id='"+option_id+"']").attr("class","choose");
 			$("li[option_id='"+option_id+"']").siblings().attr("class","out");
 			$("li[actual][option_id='"+option_id+"']").siblings().attr("class","off");
@@ -318,6 +256,25 @@ $(function(){
 	        },
 	        okValue: '点击继续'
 	    }).showModal();
+	}
+	
+	<!-- 滑动到目标题目 -->
+	focusTo = function(obj,index){
+		var target = $("div[item_id='"+$(obj).attr("item_id")+"']");
+		$.scrollTo(target,800,{axis:'y', offset:-20 });
+		
+	}
+	<!-- 切换大题 -->
+	chooseRule = function(id){
+		var target = $("div[structure_id='" + id + "']");
+		$.scrollTo(target,800,{axis:'y', offset:-20 });
+	}
+	<!-- 查看材料 -->
+	showCommonTitle = function(id){
+		dialog({
+			title: '查看材料',
+	        content: "<div class='cont-r'><div class='fenxiti fl' style='border:0px'>"+$("div[fenxi_item_id='"+id+"']").html()+"</div></div>",
+	    }).show();
 	}
 });
 </script>

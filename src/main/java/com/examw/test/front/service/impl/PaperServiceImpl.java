@@ -1,13 +1,20 @@
 package com.examw.test.front.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
+import com.examw.test.front.model.Constant;
+import com.examw.test.front.model.ItemScoreInfo;
 import com.examw.test.front.model.PaperInfo;
 import com.examw.test.front.model.PaperPreview;
+import com.examw.test.front.model.StructureInfo;
+import com.examw.test.front.model.StructureItemInfo;
 import com.examw.test.front.service.IPaperService;
 import com.examw.test.front.support.HttpUtil;
 import com.examw.test.front.support.JSONUtil;
@@ -107,6 +114,10 @@ public class PaperServiceImpl implements IPaperService{
 		return null;
 	}
 	
+	/*
+	 * 加载试卷详情[带试题]
+	 * @see com.examw.test.front.service.IPaperService#loadPaperDetail(java.lang.String)
+	 */
 	@Override
 	public PaperPreview loadPaperDetail(String paperId) throws IOException {
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷基本信息...");
@@ -118,5 +129,28 @@ public class PaperServiceImpl implements IPaperService{
 			return JSONUtil.JsonToObject(xml, PaperPreview.class);
 		}
 		return null;
+	}
+	/*
+	 * 从试卷详情中把试题集合择出来
+	 * @see com.examw.test.front.service.IPaperService#loadItemsList(com.examw.test.front.model.PaperPreview)
+	 */
+	@Override
+	public List<ItemScoreInfo> loadItemsList(PaperPreview paper) {
+		if(paper == null)	return null;
+		List<ItemScoreInfo> result = new ArrayList<ItemScoreInfo>();
+		List<StructureInfo> structures = paper.getStructures();
+		if(structures == null || structures.size()==0) return result;
+		for(StructureInfo s:structures){
+			Set<StructureItemInfo> items = s.getItems();
+			if(items == null || items.size()==0) continue;
+			for(StructureItemInfo item : items){
+				if(item.getItem() == null) continue;
+				if(item.getType().equals(Constant.TYPE_SHARE_ANSWER)||item.getType().equals(Constant.TYPE_SHARE_TITLE))
+					result.addAll(item.getItem().getChildren());
+				else
+					result.add(item.getItem());
+			}
+		}
+		return result;
 	}
 }
