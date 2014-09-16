@@ -135,7 +135,7 @@ public class PaperServiceImpl implements IPaperService{
 	 * @see com.examw.test.front.service.IPaperService#loadItemsList(com.examw.test.front.model.PaperPreview)
 	 */
 	@Override
-	public List<ItemScoreInfo> loadItemsList(PaperPreview paper) {
+	public List<ItemScoreInfo> loadItemsList(PaperPreview paper,boolean isSetCommonTitle) {
 		if(paper == null)	return null;
 		List<ItemScoreInfo> result = new ArrayList<ItemScoreInfo>();
 		List<StructureInfo> structures = paper.getStructures();
@@ -145,12 +145,26 @@ public class PaperServiceImpl implements IPaperService{
 			if(items == null || items.size()==0) continue;
 			for(StructureItemInfo item : items){
 				if(item.getItem() == null) continue;
-				if(item.getType().equals(Constant.TYPE_SHARE_ANSWER)||item.getType().equals(Constant.TYPE_SHARE_TITLE))
+				if(item.getType().equals(Constant.TYPE_SHARE_ANSWER)||item.getType().equals(Constant.TYPE_SHARE_TITLE)){
+					if(isSetCommonTitle){
+						setCommonItemTile(item); //设置题干
+					}
 					result.addAll(item.getItem().getChildren());
+				}
 				else
 					result.add(item.getItem());
 			}
 		}
 		return result;
+	}
+	/*
+	 * 设置共享题题干
+	 */
+	private void setCommonItemTile(StructureItemInfo item) {
+		Set<ItemScoreInfo> set = item.getItem().getChildren();
+		for(ItemScoreInfo info : set){
+			info.setParentContent(item.getContent());
+		}
+		item.getItem().setChildren(set);
 	}
 }

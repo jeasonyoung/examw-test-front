@@ -28,8 +28,8 @@
             <div class="box fl yinying">
             	<div class="list">
                 	<ul>
-                    	<li><a href="#"><em class="shang"></em>上一题</a></li>
-                        <li><a href="#"><em class="xia"></em>下一题</a></li>
+                    	<li><a href="javascript:void(0)" onclick="focusTo(null,0)"><em class="shang"></em>上一题</a></li>
+                        <li><a href="javascript:void(0)" onclick="focusTo(null,1)"><em class="xia"></em>下一题</a></li>
                         <li><a href="<@s.url "/library/paper/do/multi"/>?paperId=${PAPER.id}"><em class="dan-liang"></em>批量模式</a></li>
                         <li><a href="答案页面.html"><em class="kandaan"></em>查看答案</a></li>
                         <li class="bb-no"><a href="#"><em class="jisuanqi"></em>计算器</a></li>
@@ -53,7 +53,7 @@
             </div>
             <div id="questionArea">
             <#list ITEMLIST as item>
-            	<div <#if item_index != 0>style="display:none"</#if> single_item_id="${item.id}">
+            	<div <#if item_index != 0>style="display:none"</#if> single_item_id="${item.id}" id="single${item_index}">
             	<@show_item item item_index+1/>
             	</div>
             </#list>
@@ -236,13 +236,57 @@ $(function(){
 	        okValue: '点击继续'
 	    }).showModal();
 	}
-	
-	<!-- 滑动到目标题目 -->
+	<!-- 滑动到目标题目 上一题 下一题  -->
+	window.current_index = 0;
 	focusTo = function(obj,index){
+		if(!obj){
+			if(index==0)//上一题
+			{
+				if(current_index == 0){
+					showMsg("已经是第一题");
+					return;
+				}
+				current_index = current_index-1;
+			}else{
+				current_index = current_index+1;
+				if($("#single"+current_index).length==0){
+					showMsg("已经是最后一题");
+					return;
+				}
+			}
+			var target = $("#single"+current_index);
+			$(target).show();
+			$.scrollTo(target,800,{axis:'xy', offset:-20 });
+			$(target).siblings().hide();
+			return;
+		}
 		var target = $("div[single_item_id='"+$(obj).attr("item_id")+"']");
+		current_index = target.attr("id");
 		$(target).show();
-		$(target).siblings().hide();
 		$.scrollTo(target,800,{axis:'xy', offset:-20 });
+		$(target).siblings().hide();
+	}
+	showMsg = function(msg){
+		var d = dialog({
+			id:'message',
+			content:msg
+		}).show();
+		var t=setTimeout(function(){
+			if(d) d.close().remove();
+		},1000);
+	}
+	<!-- 显示收起解析 -->
+	toggleAnalysis = function(obj,id){
+		var target = $("div[name='jiexi'][item_id='"+id+"']");
+		if(target.is(":hidden")){
+			target.show();
+			$(obj).html("收起解析");
+			$(obj).parent().siblings("em").attr("class","jiexi-h");
+		}else{
+			target.hide();
+			$(obj).html("展开解析");
+			$(obj).parent().siblings("em").attr("class","jiexi");
+		}
 	}
 });
 </script>

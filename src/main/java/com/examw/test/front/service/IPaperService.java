@@ -39,5 +39,5 @@ public interface IPaperService {
 	 * @param paper
 	 * @return
 	 */
-	List<ItemScoreInfo> loadItemsList(PaperPreview paper);
+	List<ItemScoreInfo> loadItemsList(PaperPreview paper,boolean isSetCommonTitle);
 }

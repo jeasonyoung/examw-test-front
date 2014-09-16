@@ -273,8 +273,22 @@ $(function(){
 	showCommonTitle = function(id){
 		dialog({
 			title: '查看材料',
+			drag: true,
 	        content: "<div class='cont-r'><div class='fenxiti fl' style='border:0px'>"+$("div[fenxi_item_id='"+id+"']").html()+"</div></div>",
 	    }).show();
+	}
+	<!-- 显示收起解析 -->
+	toggleAnalysis = function(obj,id){
+		var target = $("div[name='jiexi'][item_id='"+id+"']");
+		if(target.is(":hidden")){
+			target.show();
+			$(obj).html("收起解析");
+			$(obj).parent().siblings("em").attr("class","jiexi-h");
+		}else{
+			target.hide();
+			$(obj).html("展开解析");
+			$(obj).parent().siblings("em").attr("class","jiexi");
+		}
 	}
 });
 </script>
