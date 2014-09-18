@@ -119,11 +119,11 @@ public class PaperServiceImpl implements IPaperService{
 	 * @see com.examw.test.front.service.IPaperService#loadPaperDetail(java.lang.String)
 	 */
 	@Override
-	public PaperPreview loadPaperDetail(String paperId) throws IOException {
+	public PaperPreview loadPaperDetail(String paperId,String userId) throws IOException {
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷基本信息...");
-		if(StringUtils.isEmpty(paperId))
+		if(StringUtils.isEmpty(paperId) || StringUtils.isEmpty(userId))
 		return null;
-		String url = String.format(this.api_paperitem_url,paperId);
+		String url = String.format(this.api_paperitem_url,paperId,userId);
 		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToObject(xml, PaperPreview.class);

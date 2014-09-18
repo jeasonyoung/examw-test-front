@@ -106,7 +106,48 @@
                  <li class="off" actual="true" pid="${i.id}" option_id="${i.item.id}_${ANSWER_JUDGE_WRONG}" option_value="${ANSWER_JUDGE_WRONG}" option_type="radio">错</li>
             	</ul>
               </div>
-          </div>
+         </div>
+         <div class="daanbox fl">
+               <div class="zhankai-bg"></div>
+               <div class="f-l fl"><i>参考答案：</i>
+               			<em class="dui">
+               			<#if i.item??>
+               				<#if i.item.answer == ANSWER_JUDGE_RIGTH>
+               				对
+               				<#else>
+               				错
+               				</#if>
+               			<#else>
+               				<#if i.answer == ANSWER_JUDGE_RIGTH>
+               				对
+               				<#else>
+               				错
+               				</#if>
+               			</#if>
+               			</em>
+               	</div>
+               <div class="f-l fl"><i>我的答案：</i><em class="dui">对</em></div>
+               <div class="fr" id="font14">
+                    <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.item.id?default(i.id)}')">收起解析</a></i><em class="jiexi-h"></em></div>
+                    <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
+                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="#">纠错</a></i></div>
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="#">移除此收藏</a></i></div>
+                    <!--收藏后<div class="f-r fl"><em class="shoucang"></em><i><a href="#">收藏</a></i></div>-->
+               </div>
+         </div>
+         <div class="jiexi-box fl" name="jiexi" item_id="${i.item.id?default(i.id)}">
+              <div class="cankaobox fl">
+                   <i>参考解析：</i>${i.item.analysis?default(i.analysis)}
+              </div>
+              <div class="h10"></div>
+              <!--<div class="bookbox fl">
+                    <div class="book-l fl"><span>第1题笔记</span>（本题共120条笔记）</div>
+                    <div class="sybook fr"><a href="#">查看所有笔记（120条）</a></div>
+                    <div class="mybook fr"><a href="#">查看我的笔记（0条）</a></div>
+                    <textarea name="" class="notebook" id="font14"></textarea>
+                    <div class="sure"><a href="#">确认保存</a></div>
+              </div>-->
+         </div>
     </div>
 </#macro>
 <#macro item_qanda i index>

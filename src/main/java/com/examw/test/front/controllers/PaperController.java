@@ -1,6 +1,7 @@
 package com.examw.test.front.controllers;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -48,11 +49,13 @@ public class PaperController {
 	 * @return
 	 */
 	@RequestMapping(value ="/do/multi", method = {RequestMethod.GET,RequestMethod.POST})
-	public String paperDetail(String paperId,Model model){
+	public String paperDetail(String paperId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情...");
+		//TODO 模拟一个用户ID
+		String userId = getUserId(null);
 		//TODO 判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
 		try{
-			PaperPreview info = this.paperService.loadPaperDetail(paperId);
+			PaperPreview info = this.paperService.loadPaperDetail(paperId,userId);
 			model.addAttribute("PAPER", info);
 			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info,false));
 			//单选
@@ -83,9 +86,11 @@ public class PaperController {
 	@RequestMapping(value ="/do/single", method = {RequestMethod.GET,RequestMethod.POST})
 	public String paperDetailSigleModel(String paperId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情...");
+		//TODO 模拟一个用户ID
+		String userId = getUserId(null);
 		//TODO 判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
 		try{
-			PaperPreview info = this.paperService.loadPaperDetail(paperId);
+			PaperPreview info = this.paperService.loadPaperDetail(paperId,userId);
 			model.addAttribute("PAPER", info);
 			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info,true));
 			//单选
@@ -113,4 +118,7 @@ public class PaperController {
 		return "single_mode";
 	}
 	
+	private String getUserId(HttpServletRequest request){
+		return "34c5421a-a629-4884-9b85-48609028e30b";
+	}
 }

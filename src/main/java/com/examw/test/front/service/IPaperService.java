@@ -33,7 +33,7 @@ public interface IPaperService {
 	 * @return
 	 * @throws IOException
 	 */
-	PaperPreview loadPaperDetail(String paperId)throws IOException;
+	PaperPreview loadPaperDetail(String paperId,String userId)throws IOException;
 	/**
 	 * 加载试卷试题的集合
 	 * @param paper
