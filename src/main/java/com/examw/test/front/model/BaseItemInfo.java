@@ -1,5 +1,6 @@
 package com.examw.test.front.model;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import com.examw.model.Paging;
@@ -390,5 +391,57 @@ public abstract class BaseItemInfo<T extends BaseItemInfo<T>>  extends Paging {
 	 */
 	public void setParentContent(String parentContent) {
 		this.parentContent = parentContent;
+	}
+	/*前台使用属性 2014-09-20 by FW.*/
+	private String userAnswer;
+	private BigDecimal userScore;
+	private Integer answerStatus;
+	/**
+	 * 获取 用户答案
+	 * @return userAnswer
+	 * 用户答案
+	 */
+	public String getUserAnswer() {
+		return userAnswer;
+	}
+	/**
+	 * 设置 用户答案
+	 * @param userAnswer
+	 * 用户答案
+	 */
+	public void setUserAnswer(String userAnswer) {
+		this.userAnswer = userAnswer;
+	}
+	/**
+	 * 获取 用户得分
+	 * @return userScore
+	 * 用户得分
+	 */
+	public BigDecimal getUserScore() {
+		return userScore;
+	}
+	/**
+	 * 设置 用户得分
+	 * @param userScore
+	 * 用户得分
+	 */
+	public void setUserScore(BigDecimal userScore) {
+		this.userScore = userScore;
+	}
+	/**
+	 * 获取 答题状态
+	 * @return answerStatus
+	 * 
+	 */
+	public Integer getAnswerStatus() {
+		return answerStatus;
+	}
+	/**
+	 * 设置 答题状态
+	 * @param answerStatus
+	 * 
+	 */
+	public void setAnswerStatus(Integer answerStatus) {
+		this.answerStatus = answerStatus;
 	}
 }

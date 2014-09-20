@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -60,7 +61,8 @@ public class LibraryController {
 	public String simulate(String productId,PaperInfo info,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考试界面...");
 		try{
-			Map<String,Object> map = this.paperService.loadPaperList(productId, info);
+			String userId = this.getUserId(null);
+			Map<String,Object> map = this.paperService.loadPaperList(productId, info,userId);
 			//productId
 			model.addAttribute("PRODUCTID", productId);
 			if(!StringUtils.isEmpty(info.getSubjectId())){
@@ -103,5 +105,9 @@ public class LibraryController {
 	public String daily(String productId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载题库界面...");
 		return "daily_practice";
+	}
+	
+	private String getUserId(HttpServletRequest request){
+		return "34c5421a-a629-4884-9b85-48609028e30b";
 	}
 }

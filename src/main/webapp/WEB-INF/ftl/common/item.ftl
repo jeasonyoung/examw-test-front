@@ -36,12 +36,13 @@
             <div class="list">
                 <ul>
                 <#if i.item.children??>
-                <#list i.item.children as option>
-                <li option_id="${option.id}" option_type="${input}" class="out"><i><@option_flag option_index/>.</i><em>${option.content}</em></li>
+                <!-- 按顺序输出?sort_by(["orderNo"]) -->
+                <#list i.item.children?sort_by(["orderNo"]) as option>
+                <li option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" class="out"><i><@option_flag option_index/>.</i><em>${option.content}</em></li>
                 </#list>
                 <#else>
-                <#list i.children as option>
-                <li option_id="${option.id}" option_type="${input}" class="out"><i><@option_flag option_index/>.</i><em>${option.content}</em></li>
+                <#list i.children?sort_by(["orderNo"]) as option>
+                <li option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" class="out"><i><@option_flag option_index/>.</i><em>${option.content}</em></li>
                 </#list>
                 </#if>
                 </ul>
@@ -49,17 +50,18 @@
             <div class="abcd">
                 <ul>
                 <#if i.item.children??>
-                <#list i.item.children as option>
-                <li class="off" option_id="${option.id}" option_type="${input}" actual="true"><@option_flag option_index/></li>
+                <#list i.item.children?sort_by(["orderNo"]) as option>
+                <li class="off" option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" actual="true"><@option_flag option_index/></li>
                 </#list>
                 <#else>
-                <#list i.children as option>
-                <li class="off" option_id="${option.id}" option_type="${input}" actual="true"><@option_flag option_index/></li>
+                <#list i.children?sort_by(["orderNo"]) as option>
+                <li class="off" option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" actual="true"><@option_flag option_index/></li>
                 </#list>
                 </#if>
                 </ul>
              </div>
          </div>
+         <#if IS_SHOW_ANSWER>
          <div class="daanbox fl">
                <div class="zhankai-bg"></div>
                <div class="f-l fl"><i>参考答案：</i><em class="dui"><@calculate_right_answer i/></em></div>
@@ -85,6 +87,7 @@
                     <div class="sure"><a href="#">确认保存</a></div>
               </div>-->
          </div>
+         </#if>
     </div>
 </#macro>
 <#macro item_judge i index>
@@ -102,11 +105,12 @@
         <div class="xz-daan fl">
             <div class="abcd">
                <ul>
-                 <li class="off" actual="true" pid="${i.id}" option_id="${i.item.id}_${ANSWER_JUDGE_RIGTH}" option_value="${ANSWER_JUDGE_RIGTH}" option_type="radio">对</li>
-                 <li class="off" actual="true" pid="${i.id}" option_id="${i.item.id}_${ANSWER_JUDGE_WRONG}" option_value="${ANSWER_JUDGE_WRONG}" option_type="radio">错</li>
+                 <li class="off" actual="true" pid="${i.id}" s_item_id="${i.structureItemId?default(i.id)}" option_id="${i.item.id}_${ANSWER_JUDGE_RIGTH}" option_value="${ANSWER_JUDGE_RIGTH}" option_type="radio">对</li>
+                 <li class="off" actual="true" pid="${i.id}" s_item_id="${i.structureItemId?default(i.id)}" option_id="${i.item.id}_${ANSWER_JUDGE_WRONG}" option_value="${ANSWER_JUDGE_WRONG}" option_type="radio">错</li>
             	</ul>
               </div>
          </div>
+         <#if IS_SHOW_ANSWER>
          <div class="daanbox fl">
                <div class="zhankai-bg"></div>
                <div class="f-l fl"><i>参考答案：</i>
@@ -148,6 +152,7 @@
                     <div class="sure"><a href="#">确认保存</a></div>
               </div>-->
          </div>
+         </#if>
     </div>
 </#macro>
 <#macro item_qanda i index>
@@ -193,7 +198,7 @@
        			<div class="list">
           			<ul>
 		</#if>
-		<li><a href="javascript:void(0)" onclick="focusTo(this,${item_index+1})" item_id="${item.id}">${item_index+1}</a></li>
+		<li><a href="javascript:void(0)" onclick="focusTo(this,${item_index+1})" item_id="${item.id}" s_item_id="${item.structureItemId}">${item_index+1}</a></li>
 		<#if item_index != 0 && (item_index+1)%5==0>
 			 	</ul>
         	</div>

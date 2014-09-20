@@ -1,6 +1,7 @@
 package com.examw.test.front.service.impl;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
+import com.examw.model.Json;
 import com.examw.test.front.model.Constant;
 import com.examw.test.front.model.ItemScoreInfo;
 import com.examw.test.front.model.PaperInfo;
@@ -29,6 +31,7 @@ public class PaperServiceImpl implements IPaperService{
 	private String api_paperlist_url;
 	private String api_paperinfo_url;
 	private String api_paperitem_url;
+	private String api_papersubmit_url;
 	/**
 	 * 设置 试卷列表数据接口地址
 	 * @param api_paperlist_url
@@ -53,17 +56,26 @@ public class PaperServiceImpl implements IPaperService{
 	public void setApi_paperitem_url(String api_paperitem_url) {
 		this.api_paperitem_url = api_paperitem_url;
 	}
+	
+	/**
+	 * 设置 试卷提交数据接口地址
+	 * @param api_papersubmit_url
+	 * 
+	 */
+	public void setApi_papersubmit_url(String api_papersubmit_url) {
+		this.api_papersubmit_url = api_papersubmit_url;
+	}
 	/*
 	 * 加载试卷列表
 	 * @see com.examw.test.front.service.IPaperService#loadPaperList(java.lang.String, com.examw.test.front.model.PaperInfo)
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Object> loadPaperList(String productId, PaperInfo info) throws IOException {
+	public Map<String, Object> loadPaperList(String productId, PaperInfo info,String userId) throws IOException {
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷列表...");
 		if(StringUtils.isEmpty(productId))
 		return null;
-		String url = String.format(this.api_paperlist_url,productId);
+		String url = String.format(this.api_paperlist_url,productId,userId);
 		StringBuilder data = new StringBuilder();
 		if(info!=null){
 			//科目
@@ -151,8 +163,10 @@ public class PaperServiceImpl implements IPaperService{
 					}
 					result.addAll(item.getItem().getChildren());
 				}
-				else
+				else{
+					item.getItem().setStructureItemId(item.getId());
 					result.add(item.getItem());
+				}
 			}
 		}
 		return result;
@@ -164,7 +178,27 @@ public class PaperServiceImpl implements IPaperService{
 		Set<ItemScoreInfo> set = item.getItem().getChildren();
 		for(ItemScoreInfo info : set){
 			info.setParentContent(item.getContent());
+			info.setStructureItemId(item.getId()+"#"+info.getId());
 		}
 		item.getItem().setChildren(set);
+	}
+	
+	@Override
+	public Json sumbitPaper(Integer limitTime, String chooseAnswers,
+			String textAnswers,Integer model, String paperId, String userId)throws IOException {
+		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷基本信息...");
+		if(StringUtils.isEmpty(paperId) || StringUtils.isEmpty(userId))
+		return null;
+		String url = String.format(this.api_papersubmit_url,paperId,userId);
+		StringBuilder data = new StringBuilder();
+		data.append("model=").append(model);
+		data.append("&limitTime=").append(limitTime);
+		data.append("&chooseAnswers=").append(chooseAnswers==null?"":URLEncoder.encode(chooseAnswers,"utf-8"));
+		data.append("&textAnswers=").append(textAnswers==null?"":textAnswers);
+		String xml = HttpUtil.httpRequest(url,"POST",data.toString(),"utf-8");
+		if(!StringUtils.isEmpty(xml)){
+			return JSONUtil.JsonToObject(xml, Json.class);
+		}
+		return null;
 	}
 }

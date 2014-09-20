@@ -19,8 +19,8 @@
         	<div class="box fl yinying">
             	<div class="time" id="showtime">00:00:00</div>
                 <div class="hui-botton"><a href="javascript:void(0)" onclick="pause_do();">暂停</a></div>
-                <div class="hui-botton"><a href="#">下次再做</a></div>
-                <div class="jiaojuan-botton"><a href="#">提交试卷</a></div>
+                <div class="hui-botton"><a href="javascript:void(0)" onclick="answerNexttime()">下次再做</a></div>
+                <div class="jiaojuan-botton"><a href="javascript:void(0)" onclick="submitAnswer(1)">提交试卷</a></div>
                 <div class="h10"></div>
             </div>
             <div class="box fl yinying">
@@ -56,9 +56,9 @@
                     	<ul>
                     		<#list PAPER.structures as structure>
                     		<#if structure_index == 0>
-                        	<li class="bg">${structure.title}</li>
+                        	<li><a class="bg" href="javascript:void(0)" onclick="chooseRule(this,'${structure.id}');">${structure.title}</a></li>
                         	<#else>
-                        	<li><a href="javascript:void(0)" onclick="chooseRule('${structure.id}');">${structure.title}</a></li>
+                        	<li><a href="javascript:void(0)" onclick="chooseRule(this,'${structure.id}');">${structure.title}</a></li>
                         	</#if>
                         	</#list>
                         </ul>
@@ -70,7 +70,7 @@
             <#assign total = total + structure.total/> 
             <#assign xuhao = total-structure.total + 1 />
             <div class="tx-box fl" structure_id="${structure.id}">${structure.title}</div>
-            <#list structure.items as i>
+            <#list structure.items?sort_by(["orderNo"]) as i>
             	<#if i.type != TYPE_SHARE_TITLE_VALUE && i.type != TYPE_SHARE_ANSWER_VALUE>
             		<@show_item item=i index=(i_index+xuhao)/>
             	<#else>
@@ -139,6 +139,9 @@ $.fn.smartFloat = function(isTop) {
 $(function(){
 	//var obj = '${PAPERJSON}';
 	//console.info(obj);
+	window.tempChooseAnswer = "";
+	paperId = "${PAPER.id}";
+	var totalNum = Number("${PAPER.total}");
 	$("#answerCard").smartFloat(false);	//答题卡浮动
 	$("#leftArea").smartFloat(1);//左侧浮动
 	<!-- 答题卡点击显示  -->
@@ -157,20 +160,43 @@ $(function(){
 	<!-- 点击选项 -->
 	$("ul li[option_id]").click(function(){
 		var option_id = $(this).attr("option_id");
+		var s_item_id = $(this).attr("s_item_id");
 		if($(this).attr("option_type")=="radio") //互斥
 		{
-			if($(this).attr("class").indexOf("choose")!=-1) {
+			if($(this).attr("class").indexOf("choose")!=-1) {	//取消选择
 				$("li[option_id='"+option_id+"']").attr("class","out");
 				$("li[actual][option_id='"+option_id+"']").attr("class","off");
+				$("#answerCard a[s_item_id='"+s_item_id+"']").removeClass("yida");
 				return;
 			}
 			$("li[actual][option_id='"+option_id+"']").attr("class","choose");
 			$("li[option_id='"+option_id+"']").siblings().attr("class","out");
 			$("li[actual][option_id='"+option_id+"']").siblings().attr("class","off");
+			$("#answerCard a[s_item_id='"+s_item_id+"']").attr("class","yida");
 		}else{
-			$("li[actual][option_id='"+option_id+"']").attr("class","choose");
+			if($(this).attr("class").indexOf("choose")!=-1)
+			{
+				$("li[option_id='"+option_id+"']").attr("class","out");
+				$("li[actual][option_id='"+option_id+"']").attr("class","off");
+				if($(this).parent().children("li[class='choose']").length==0){
+					$("#answerCard a[s_item_id='"+s_item_id+"']").removeClass("yida");
+				}
+			}else{
+				$("li[actual][option_id='"+option_id+"']").attr("class","choose");
+				$("#answerCard a[s_item_id='"+s_item_id+"']").attr("class","yida");
+			}
 		}
-		
+		var choosen = $("li[actual][s_item_id='"+s_item_id+"'][class='choose']")
+		var answers = [];
+		$.each(choosen,function(i){
+			if($(choosen[i]).attr("option_value")==""){
+				answers.push($(choosen[i]).attr("option_value"));//判断题答案
+			}else
+				answers.push($(choosen[i]).attr("option_id")) ;
+		});
+		answers.join(",");
+		saveChooseAnswer(s_item_id,answers.toString());
+		//console.info(window.tempChooseAnswer);
 	}).mouseout(function(){
 		if($(this).attr("actual")){
 			if($(this).attr("class")=="choose") return;
@@ -201,7 +227,7 @@ $(function(){
 		$(this).siblings().removeClass("bg").attr("current",'false');
 	});
 	<!-- timer -->
-	window.limit_time = parseInt('${PAPER.time}')*60;        // 单位：秒
+	window.limit_time = parseInt('${PAPER.leftTime?c}');        // 单位：秒
 	window.timer         = setInterval(updateTime,1000);                          // 过1秒执行
 	function updateTime(){
 		/*
@@ -223,6 +249,7 @@ $(function(){
 			clearInterval(window.timer);
 			window.limit_time=0;
 			//xc.answer.submit();
+			submitAnswer(0);	//交卷
 		}
 		// 转换
 		var fillZero = function (num,n){
@@ -265,13 +292,16 @@ $(function(){
 		
 	}
 	<!-- 切换大题 -->
-	chooseRule = function(id){
+	chooseRule = function(obj,id){
 		var target = $("div[structure_id='" + id + "']");
+		$(obj).addClass("bg");
+		$(obj).parent().siblings().children().removeClass("bg");
 		$.scrollTo(target,800,{axis:'y', offset:-20 });
 	}
 	<!-- 查看材料 -->
 	showCommonTitle = function(id){
 		dialog({
+			id:'cailiaoDialog',
 			title: '查看材料',
 			drag: true,
 	        content: "<div class='cont-r'><div class='fenxiti fl' style='border:0px'>"+$("div[fenxi_item_id='"+id+"']").html()+"</div></div>",
@@ -288,6 +318,90 @@ $(function(){
 			target.hide();
 			$(obj).html("展开解析");
 			$(obj).parent().siblings("em").attr("class","jiexi");
+		}
+	}
+	<!-- 保存临时答案 -->
+	function saveChooseAnswer(s_item_id,answers){
+		if(window.tempChooseAnswer == "" || window.tempChooseAnswer.indexOf(s_item_id+"=")==-1){
+			window.tempChooseAnswer = window.tempChooseAnswer + s_item_id+"="+answers+"&";
+		}else{
+			var front = window.tempChooseAnswer.substring(0,window.tempChooseAnswer.indexOf(s_item_id+"="));
+			var temp = window.tempChooseAnswer.substring(window.tempChooseAnswer.indexOf(s_item_id+"="),window.tempChooseAnswer.length);
+			var after = temp.substring(temp.indexOf("&"),temp.length);
+			window.tempChooseAnswer = front + s_item_id +"="+answers+after;
+		}
+	}
+	<!-- 下次做提交  -->
+	answerNexttime = function(){
+			var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":0};
+			dialog({
+				id:'nexttimeDialog',
+				title: '下次再做',
+				drag: true,
+		        content: "<div><b>下次再做</b><p>如果你想下次再接着练习可以选择此功能，考试期间会暂停考试计时</p><p>可以在题库首页直接点击“继续练习”或者在“练习记录”中进入</p></div></div>",
+		        button: [
+		 	    {
+		 	        value: '继续做题'
+		 	    },
+		 	     {
+		 	        value: '下次再做',
+		 	        callback: function () {
+		 	           this.content('<div style="padding:20px 20px"><span class="ui-dialog-loading">Loading..</span></div>');
+		 	           this.title(null);
+		 	           this.button(null);
+		 	           $.ajax({
+		 	        	   type:"POST",
+		 	               url:'<@s.url "/library/paper/submit"/>',
+		 	               data:data,
+		 	               dataType:'json',
+		 	               success:function(data){
+		 	            	   if(data.success){
+		 	            		   alert(data.msg);
+		 	            	   }
+		 	               }
+		 	           });
+		 	          return false;
+		 	         },
+		 	          autofocus: true
+		 	      }]
+		 	   }).showModal();
+	}
+	<!-- 交卷 -->
+	submitAnswer = function(withTips){
+		var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswers,"paperId":paperId,"model":1};
+		if(withTips)
+			dialog({
+				id:'sumbitDialog',
+				title: '确认交卷',
+				drag: true,
+	       		content: "<div class='cont-r'>您还有<span style='color:red'>"+(totalNum-window.tempChooseAnswer.split("&").length-1)+"</span>道试题未作答，分数越高返回的积分将越多<br>是否选择确定交卷？</div></div>",
+	       		button: [
+	     		 	    {
+	     		 	         value: '继续做题'
+	     		 	    },
+	     		 	     {
+	     		 	        value: '交卷',
+	     		 	        callback: function () {
+	     		 	           this.content("提交中,请稍候");
+	     		 	           submit();
+	     		 	         },
+	     		 	          autofocus: true
+	     		 	      }]
+		}).showModal();
+		else{
+			submit();
+		}
+		//提交
+		function submit(){
+			 $.ajax({
+				 type:"POST",
+	             url:'<@s.url "/library/paper/submit"/>',
+	             data:data,
+	             dataType:'json',
+	             success:function(data){
+	            	   alert(data.msg);
+	               }
+	           });
 		}
 	}
 });

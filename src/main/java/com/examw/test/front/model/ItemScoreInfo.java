@@ -65,4 +65,23 @@ public class ItemScoreInfo extends BaseItemInfo<ItemScoreInfo> {
 	public void setChildren(Set<ItemScoreInfo> children) {
 		this.children = children;
 	}
+	/* 结构题目ID */
+	private String structureItemId;
+	/**
+	 * 获取 结构题目ID
+	 * @return structureItemId
+	 * 结构题目ID
+	 */
+	public String getStructureItemId() {
+		return structureItemId;
+	}
+	/**
+	 * 设置 结构题目ID
+	 * @param structureItemId
+	 * 结构题目ID
+	 */
+	public void setStructureItemId(String structureItemId) {
+		this.structureItemId = structureItemId;
+	}
+	
 }

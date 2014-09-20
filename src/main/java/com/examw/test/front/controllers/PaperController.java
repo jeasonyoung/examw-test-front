@@ -8,7 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.examw.model.Json;
 import com.examw.test.front.model.Constant;
 import com.examw.test.front.model.PaperPreview;
 import com.examw.test.front.service.IPaperService;
@@ -76,13 +78,21 @@ public class PaperController {
 			model.addAttribute("ANSWER_JUDGE_RIGTH",Constant.ANSWER_JUDGE_RIGTH);
 			//判断[错误]
 			model.addAttribute("ANSWER_JUDGE_WRONG",Constant.ANSWER_JUDGE_WRONG);
+			//是否显示答案
+			model.addAttribute("IS_SHOW_ANSWER",false);
+			
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情异常...");
 		}
 		return "multi_mode";
 	}
-	
+	/**
+	 * 单题模式
+	 * @param paperId
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value ="/do/single", method = {RequestMethod.GET,RequestMethod.POST})
 	public String paperDetailSigleModel(String paperId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情...");
@@ -111,6 +121,8 @@ public class PaperController {
 			model.addAttribute("ANSWER_JUDGE_RIGTH",Constant.ANSWER_JUDGE_RIGTH);
 			//判断[错误]
 			model.addAttribute("ANSWER_JUDGE_WRONG",Constant.ANSWER_JUDGE_WRONG);
+			//是否显示答案
+			model.addAttribute("IS_SHOW_ANSWER",false);
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情异常...");
@@ -118,6 +130,24 @@ public class PaperController {
 		return "single_mode";
 	}
 	
+	//保存答案 [下次再做]
+	@RequestMapping(value ="/submit", method = {RequestMethod.GET,RequestMethod.POST})
+	@ResponseBody
+	public Json sumbitForNextTime(HttpServletRequest request){
+		if(logger.isDebugEnabled()) logger.debug("试卷下次再做提交答案...");
+		String limitTime = request.getParameter("limitTime");
+		String chooseAnswers = request.getParameter("chooseAnswers");
+		String textAnswers = request.getParameter("textAnswers");
+		String paperId = request.getParameter("paperId");
+		String userId = getUserId(request);
+		try{
+			return this.paperService.sumbitPaper(Integer.valueOf(limitTime),chooseAnswers,textAnswers,0,paperId,userId);
+		}catch(Exception e){
+			e.printStackTrace();
+			if(logger.isDebugEnabled()) logger.debug("试卷下次再做提交答案异常...");
+		}
+		return null;
+	}
 	private String getUserId(HttpServletRequest request){
 		return "34c5421a-a629-4884-9b85-48609028e30b";
 	}

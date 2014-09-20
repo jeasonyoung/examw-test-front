@@ -180,7 +180,7 @@ $(function(){
 		$(this).siblings().removeClass("bg").attr("current",'false');
 	});
 	<!-- timer -->
-	window.limit_time = parseInt('${PAPER.time}')*60;        // 单位：秒
+	window.limit_time = parseInt('${PAPER.leftTime}');        // 单位：秒
 	window.timer         = setInterval(updateTime,1000);                          // 过1秒执行
 	function updateTime(){
 		/*
