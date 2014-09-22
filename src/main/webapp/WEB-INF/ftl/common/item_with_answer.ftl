@@ -21,7 +21,7 @@
 	</#if>
 </#macro>
 <#macro item_choose i input index>
-	<div class="box fl" item_type="${i.type}" item_id="${i.item.id?default(i.id)}">
+	<div class="box fl" item_type="${i.type}" item_id="${i.item.id?default(i.id)}" item_status="${i.item.answerStatus?default(i.answerStatus)}">
 		<#if i.item?? && i.parentContent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
@@ -33,39 +33,52 @@
               <em><span>[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${i.pid}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>
        </div>
        <div class="xz-daan fl" >
+       		<#if i.answerStatus??>
+       			<#if i.answerStatus == STATUS_RIGHT>
+       				<div class="dui"></div>
+       			<#else>	
+       				<div class="cuo"></div>
+       			</#if>
+       		<#elseif i.item.answerStatus??>
+       			<#if i.item.answerStatus == STATUS_RIGHT>
+       				<div class="dui"></div>
+       			<#else>	
+       				<div class="cuo"></div>
+       			</#if>
+       		</#if>
             <div class="list">
                 <ul>
                 <#if i.item.children??>
                 <!-- 按顺序输出?sort_by(["orderNo"]) -->
                 <#list i.item.children?sort_by(["orderNo"]) as option>
-                <li option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" <#if i.item.userAnswer?contains(option.id)>class="over"<#else>class="out"</#if>><i><@option_flag option_index/>.</i><em>${option.content}</em></li>
+                <li>
+                	<#if i.item.userAnswer?? && (i.item.answer?contains(i.item.userAnswer))>
+                	<span><@option_flag option_index/>.</span>
+                	<#else>
+                	<i><@option_flag option_index/>.</i>
+                	</#if>
+                	<em>${option.content}</em>
+                </li>
                 </#list>
                 <#else>
                 <#list i.children?sort_by(["orderNo"]) as option>
-                <li option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" <#if i.userAnswer?contains(option.id)>class="over"<#else>class="out"</#if>><i><@option_flag option_index/>.</i><em>${option.content}</em></li>
+                <li>
+                	<#if i.userAnswer?? && (i.answer?contains(i.userAnswer))>
+                	<span><@option_flag option_index/>.</span>
+                	<#else>
+                	<i><@option_flag option_index/>.</i>
+                	</#if>
+                	<em>${option.content}</em>
+                </li>
                 </#list>
                 </#if>
                 </ul>
             </div>
-            <div class="abcd">
-                <ul>
-                <#if i.item.children??>
-                <#list i.item.children?sort_by(["orderNo"]) as option>
-                <li <#if i.item.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" actual="true"><@option_flag option_index/></li>
-                </#list>
-                <#else>
-                <#list i.children?sort_by(["orderNo"]) as option>
-                <li <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" actual="true"><@option_flag option_index/></li>
-                </#list>
-                </#if>
-                </ul>
-             </div>
          </div>
-         <#if IS_SHOW_ANSWER>
          <div class="daanbox fl">
                <div class="zhankai-bg"></div>
-               <div class="f-l fl"><i>参考答案：</i><em class="dui"><@calculate_right_answer i/></em></div>
-               <div class="f-l fl"><i>我的答案：</i><em class="dui">C</em></div>
+               <div class="f-l fl"><i>参考答案：</i><@calculate_right_answer i/></div>
+               <div class="f-l fl"><i>我的答案：</i><@calculate_user_answer i/></div>
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.item.id?default(i.id)}')">收起解析</a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
@@ -87,11 +100,10 @@
                     <div class="sure"><a href="#">确认保存</a></div>
               </div>-->
          </div>
-         </#if>
     </div>
 </#macro>
 <#macro item_judge i index>
-	<div class="box fl" item_type="${i.type}" item_id="${i.item.id?default(i.id)}">
+	<div class="box fl" item_type="${i.type}" item_id="${i.item.id?default(i.id)}" item_status="${i.item.answerStatus?default(i.answerStatus)}">
 		<#if i.item?? && i.parentContent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
@@ -103,14 +115,20 @@
             <em><span>[${i.typeName}]</span>${i.content}</em>
         </div>
         <div class="xz-daan fl">
-            <div class="abcd">
-               <ul>
-                 <li <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_RIGTH)||(i.item?? && i.item.userAnswer == ANSWER_JUDGE_RIGTH)>class="choose"<#else>class="off"</#if> actual="true" pid="${i.id}" s_item_id="${i.structureItemId?default(i.id)}" option_id="${i.item.id}_${ANSWER_JUDGE_RIGTH}" option_value="${ANSWER_JUDGE_RIGTH}" option_type="radio">对</li>
-                 <li <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_WRONG)||(i.item?? && i.item.userAnswer == ANSWER_JUDGE_WRONG)>class="choose"<#else>class="off"</#if> actual="true" pid="${i.id}" s_item_id="${i.structureItemId?default(i.id)}" option_id="${i.item.id}_${ANSWER_JUDGE_WRONG}" option_value="${ANSWER_JUDGE_WRONG}" option_type="radio">错</li>
-            	</ul>
-              </div>
+        	<#if i.answerStatus??>
+       			<#if i.answerStatus == STATUS_RIGHT>
+       				<div class="dui"></div>
+       			<#else>	
+       				<div class="cuo"></div>
+       			</#if>
+       		<#elseif i.item.answerStatus??>
+       			<#if i.item.answerStatus == STATUS_RIGHT>
+       				<div class="dui"></div>
+       			<#else>	
+       				<div class="cuo"></div>
+       			</#if>
+       		</#if>
          </div>
-         <#if IS_SHOW_ANSWER>
          <div class="daanbox fl">
                <div class="zhankai-bg"></div>
                <div class="f-l fl"><i>参考答案：</i>
@@ -130,7 +148,41 @@
                			</#if>
                			</em>
                	</div>
-               <div class="f-l fl"><i>我的答案：</i><em class="dui">对</em></div>
+               <div class="f-l fl"><i>我的答案：</i>
+               		<#if i.item??>
+               			<#if !i.item.userAnswer?? || i.item.userAnswer == "">
+			 				<em class="weida">未作答</em>
+						<#else>
+							<#if i.item.answerStatus == STATUS_RIGHT>
+								<em class="dui">
+							<#else>
+								<em class="cuo">
+							</#if>	
+               				<#if i.item.userAnswer == ANSWER_JUDGE_RIGTH>
+               				对
+               				<#else>
+               				错
+               				</#if>
+               				</em>
+               			</#if>
+               		<#else>
+               			<#if !i.userAnswer?? || i.item.userAnswer == "">
+			 				<em class="weida">未作答</em>
+						<#else>
+							<#if i.item.answerStatus == STATUS_RIGHT>
+								<em class="dui">
+							<#else>
+								<em class="cuo">
+							</#if>	
+               				<#if i.userAnswer == ANSWER_JUDGE_RIGTH>
+               				对
+               				<#else>
+               				错
+               				</#if>
+               				</em>
+               			</#if>
+               		</#if>
+               </div>
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.item.id?default(i.id)}')">收起解析</a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
@@ -152,7 +204,6 @@
                     <div class="sure"><a href="#">确认保存</a></div>
               </div>-->
          </div>
-         </#if>
     </div>
 </#macro>
 <#macro item_qanda i index>
@@ -168,28 +219,66 @@
 </#macro>
 <#macro item_share_title i index>
 	<div class="fenxiti fl" fenxi_item_id = "${i.item.id}"><i>${i.typeName}</i><em>${i.content}</em></div>
-		<#list i.item.children?sort_by(["orderNo"]) as child>
+		<#list i.item.children as child>
         	<@show_item child index+child_index/>
         </#list>
         <#assign xuhao = xuhao + i.item.children?size />
 </#macro>
 <!-- 计算正确答案 -->
 <#macro calculate_right_answer i>
+	 <em class="dui">
 	 <#if i.item.children??>
-          <#list i.item.children as option>
+          <#list i.item.children?sort_by(["orderNo"]) as option>
           	<#if i.item.answer?index_of(option.id)!=-1>
           		<@option_flag option_index/>,
           	</#if>
           </#list>
      <#else>
-     	 <#list i.children as option>
+     	 <#list i.children?sort_by(["orderNo"]) as option>
           	<#if i.answer?index_of(option.id)!=-1>
           		<@option_flag option_index/>,
           	</#if>
          </#list>
      </#if>
+     </em>
 </#macro>
 
+<!-- 计算我的答案 -->
+<#macro calculate_user_answer i>
+	<#if i.item.children??>
+		<#if !i.item.userAnswer?? || i.item.userAnswer == "">
+			 <em class="weida">未作答</em>
+		<#else>
+			<#if i.item.answerStatus == STATUS_RIGHT>
+				<em class="dui">
+			<#else>
+				<em class="cuo">
+			</#if>
+          <#list i.item.children?sort_by(["orderNo"]) as option>
+          	<#if i.item.userAnswer?contains(option.id)>
+          		<@option_flag option_index/>,
+          	</#if>
+          </#list>
+          </em>
+        </#if>
+     <#else>
+     	<#if !i.userAnswer?? || i.userAnswer == "">
+			<em class="weida">未作答</em>
+		<#else>
+			<#if i.item.answerStatus == STATUS_RIGHT>
+				<em class="dui">
+			<#else>
+				<em class="cuo">
+			</#if>
+     	 <#list i.children?sort_by(["orderNo"]) as option>
+          	<#if i.userAnswer?index_of(option.id)!=-1>
+          		<@option_flag option_index/>,
+          	</#if>
+         </#list>
+         	</em>
+         </#if>
+     </#if>
+</#macro>
 <!-- 答题卡 -->
 <#macro answer_card items>
 	<#list items as item>
@@ -198,7 +287,7 @@
        			<div class="list">
           			<ul>
 		</#if>
-		<li><a <#if item.userAnswer ??>class="yida"</#if>href="javascript:void(0)" onclick="focusTo(this,${item_index+1})" item_id="${item.id}" s_item_id="${item.structureItemId}">${item_index+1}</a></li>
+		<li item_status="${item.answerStatus}"><a <#if item.answerStatus == STATUS_RIGHT>class="dui"<#elseif item.answerStatus == STATUS_WRONG>class="cuo"</#if> href="javascript:void(0)" onclick="focusTo(this,${item_index+1})" item_id="${item.id}" s_item_id="${item.structureItemId}">${item_index+1}</a></li>
 		<#if item_index != 0 && (item_index+1)%5==0>
 			 	</ul>
         	</div>

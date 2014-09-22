@@ -3,9 +3,10 @@ package com.examw.test.front.service.impl;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
@@ -13,6 +14,7 @@ import org.springframework.util.StringUtils;
 import com.examw.model.Json;
 import com.examw.test.front.model.Constant;
 import com.examw.test.front.model.ItemScoreInfo;
+import com.examw.test.front.model.PaperFrontInfo;
 import com.examw.test.front.model.PaperInfo;
 import com.examw.test.front.model.PaperPreview;
 import com.examw.test.front.model.StructureInfo;
@@ -32,6 +34,7 @@ public class PaperServiceImpl implements IPaperService{
 	private String api_paperinfo_url;
 	private String api_paperitem_url;
 	private String api_papersubmit_url;
+	private String api_paperanalysis_url;
 	/**
 	 * 设置 试卷列表数据接口地址
 	 * @param api_paperlist_url
@@ -64,6 +67,15 @@ public class PaperServiceImpl implements IPaperService{
 	 */
 	public void setApi_papersubmit_url(String api_papersubmit_url) {
 		this.api_papersubmit_url = api_papersubmit_url;
+	}
+	
+	/**
+	 * 设置 试卷解析地址
+	 * @param api_paperanalysis_url
+	 * 
+	 */
+	public void setApi_paperanalysis_url(String api_paperanalysis_url) {
+		this.api_paperanalysis_url = api_paperanalysis_url;
 	}
 	/*
 	 * 加载试卷列表
@@ -153,15 +165,21 @@ public class PaperServiceImpl implements IPaperService{
 		List<StructureInfo> structures = paper.getStructures();
 		if(structures == null || structures.size()==0) return result;
 		for(StructureInfo s:structures){
-			Set<StructureItemInfo> items = s.getItems();
+			
+			TreeSet<StructureItemInfo> items = new TreeSet<StructureItemInfo>(
+					new Comparator<StructureItemInfo>() {
+						@Override
+						public int compare(StructureItemInfo o1,
+								StructureItemInfo o2) {
+							return o1.getOrderNo() - o2.getOrderNo();
+						}
+					});
+			items.addAll(s.getItems());
 			if(items == null || items.size()==0) continue;
 			for(StructureItemInfo item : items){
 				if(item.getItem() == null) continue;
 				if(item.getType().equals(Constant.TYPE_SHARE_ANSWER)||item.getType().equals(Constant.TYPE_SHARE_TITLE)){
-					if(isSetCommonTitle){
-						setCommonItemTile(item); //设置题干
-					}
-					result.addAll(item.getItem().getChildren());
+					result.addAll(setCommonItemTile(item,isSetCommonTitle)); //设置题干
 				}
 				else{
 					item.getItem().setStructureItemId(item.getId());
@@ -174,13 +192,23 @@ public class PaperServiceImpl implements IPaperService{
 	/*
 	 * 设置共享题题干
 	 */
-	private void setCommonItemTile(StructureItemInfo item) {
-		Set<ItemScoreInfo> set = item.getItem().getChildren();
+	private List<ItemScoreInfo> setCommonItemTile(StructureItemInfo item,boolean isSetCommonTitle) {
+		List<ItemScoreInfo> list = new ArrayList<ItemScoreInfo>();
+		TreeSet<ItemScoreInfo> set = new TreeSet<ItemScoreInfo>(
+				new Comparator<ItemScoreInfo>() {
+					@Override
+					public int compare(ItemScoreInfo o1,
+							ItemScoreInfo o2) {
+						return o1.getOrderNo() - o2.getOrderNo();
+					}
+				});
+		set.addAll(item.getItem().getChildren());
 		for(ItemScoreInfo info : set){
-			info.setParentContent(item.getContent());
+			if(isSetCommonTitle)	info.setParentContent(item.getContent());
 			info.setStructureItemId(item.getId()+"#"+info.getId());
+			list.add(info);
 		}
-		item.getItem().setChildren(set);
+		return list;
 	}
 	
 	@Override
@@ -198,6 +226,20 @@ public class PaperServiceImpl implements IPaperService{
 		String xml = HttpUtil.httpRequest(url,"POST",data.toString(),"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToObject(xml, Json.class);
+		}
+		return null;
+	}
+	
+	@Override
+	public PaperFrontInfo loadPaperAnalysis(String paperId, String userId)
+			throws IOException {
+		if(logger.isDebugEnabled()) logger.debug("加载试卷解析...");
+		if(StringUtils.isEmpty(paperId) || StringUtils.isEmpty(userId))
+		return null;
+		String url = String.format(this.api_paperanalysis_url,paperId,userId);
+		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		if(!StringUtils.isEmpty(xml)){
+			return JSONUtil.JsonToObject(xml, PaperFrontInfo.class);
 		}
 		return null;
 	}

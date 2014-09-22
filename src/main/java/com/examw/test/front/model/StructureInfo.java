@@ -16,7 +16,7 @@ public class StructureInfo implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String pid,id,title;
 	private Integer type,orderNo;
-	private BigDecimal score;
+	private BigDecimal score,min;
 	private Set<StructureItemInfo> items;
 	private Set<StructureInfo> children;
 	/**
@@ -157,5 +157,20 @@ public class StructureInfo implements Serializable {
 	 */
 	public void setTotal(Integer total) {
 		this.total = total;
+	}
+	/**
+	 * 获取题目最小分数。
+	 * @return 题目最小分数。
+	 */
+	public BigDecimal getMin() {
+		return min;
+	}
+	/**
+	 * 设置题目最小分数。
+	 * @param min 
+	 *	  题目最小分数。
+	 */
+	public void setMin(BigDecimal min) {
+		this.min = min;
 	}
 }

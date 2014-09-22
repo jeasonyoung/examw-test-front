@@ -42,4 +42,20 @@ public class Constant {
 	 * 判断题答案[Type=TYPE_JUDGE] 0-错误。
 	 */
 	public static final int ANSWER_JUDGE_WRONG = 0;
+	/**
+	 * 答题状态[userStatus] -1:答错
+	 */
+	public static final int STATUS_WRONG = -1;
+	/**
+	 * 答题状态[userStatus] 0:没答
+	 */
+	public static final int STATUS_NULL = 0;
+	/**
+	 * 答题状态[userStatus] 1:答对
+	 */
+	public static final int STATUS_RIGHT = 1;
+	/**
+	 * 答题状态[userStatus] 2:少选了
+	 */
+	public static final int STATUS_LESS = 2;
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.examw.model.Json;
 import com.examw.test.front.model.ItemScoreInfo;
+import com.examw.test.front.model.PaperFrontInfo;
 import com.examw.test.front.model.PaperInfo;
 import com.examw.test.front.model.PaperPreview;
 
@@ -52,4 +53,12 @@ public interface IPaperService {
 	 */
 	Json sumbitPaper(Integer limitTime, String chooseAnswers,
 			String textAnswers,Integer model, String paperId,String userId)throws IOException;
+	/**
+	 * 加载试卷试题解析
+	 * @param paperId
+	 * @param userId
+	 * @return
+	 * @throws IOException
+	 */
+	PaperFrontInfo loadPaperAnalysis(String paperId,String userId)throws IOException;
 }

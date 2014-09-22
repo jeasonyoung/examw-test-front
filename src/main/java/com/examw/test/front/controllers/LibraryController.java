@@ -79,6 +79,8 @@ public class LibraryController {
 //			}
 			//包含科目集合
 			model.addAttribute("SUBJECTLIST", map.get("SUBJECTLIST"));
+			//包含地区
+			model.addAttribute("AREALIST", map.get("AREALIST"));
 			//试卷集合
 			model.addAttribute("PAPERLIST", map.get("PAPERLIST"));
 			//试卷类型

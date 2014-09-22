@@ -144,6 +144,12 @@ $(function(){
 	var totalNum = Number("${PAPER.total}");
 	$("#answerCard").smartFloat(false);	//答题卡浮动
 	$("#leftArea").smartFloat(1);//左侧浮动
+	//默认选择答案
+	<#list ITEMLIST as item>
+	<#if item.userAnswer?? && item.type!=TYPE_QANDA_VALUE>
+	saveChooseAnswer('${item.structureItemId}','${item.userAnswer}');
+	</#if>
+	</#list>
 	<!-- 答题卡点击显示  -->
 	$("#answerCard div").first().click(function(){
 		var card = $(this).siblings("div").last();
@@ -189,10 +195,10 @@ $(function(){
 		var choosen = $("li[actual][s_item_id='"+s_item_id+"'][class='choose']")
 		var answers = [];
 		$.each(choosen,function(i){
-			if($(choosen[i]).attr("option_value")==""){
-				answers.push($(choosen[i]).attr("option_value"));//判断题答案
+			if($(choosen[i]).attr("option_value")==undefined){
+				answers.push($(choosen[i]).attr("option_id"));
 			}else
-				answers.push($(choosen[i]).attr("option_id")) ;
+				answers.push($(choosen[i]).attr("option_value"));//判断题答案
 		});
 		answers.join(",");
 		saveChooseAnswer(s_item_id,answers.toString());
@@ -356,7 +362,7 @@ $(function(){
 		 	               dataType:'json',
 		 	               success:function(data){
 		 	            	   if(data.success){
-		 	            		   alert(data.msg);
+		 	            		   location='<@s.url "/library/simulate"/>';
 		 	            	   }
 		 	               }
 		 	           });
@@ -368,13 +374,18 @@ $(function(){
 	}
 	<!-- 交卷 -->
 	submitAnswer = function(withTips){
-		var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswers,"paperId":paperId,"model":1};
+		var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":1};
+		var leftNum = totalNum-window.tempChooseAnswer.split("&").length+1;
+		var content = "是否选择确定交卷?";
+		if(leftNum > 0){
+			content = "<div>您还有<span style='color:red'>"+(leftNum)+"</span>道试题未作答，<br>是否选择确定交卷？</div>";
+		}
 		if(withTips)
 			dialog({
 				id:'sumbitDialog',
 				title: '确认交卷',
 				drag: true,
-	       		content: "<div class='cont-r'>您还有<span style='color:red'>"+(totalNum-window.tempChooseAnswer.split("&").length-1)+"</span>道试题未作答，分数越高返回的积分将越多<br>是否选择确定交卷？</div></div>",
+	       		content: content,
 	       		button: [
 	     		 	    {
 	     		 	         value: '继续做题'
@@ -383,7 +394,7 @@ $(function(){
 	     		 	        value: '交卷',
 	     		 	        callback: function () {
 	     		 	           this.content("提交中,请稍候");
-	     		 	           submit();
+	     		 	           submit(data);
 	     		 	         },
 	     		 	          autofocus: true
 	     		 	      }]
@@ -392,14 +403,14 @@ $(function(){
 			submit();
 		}
 		//提交
-		function submit(){
+		function submit(data){
 			 $.ajax({
 				 type:"POST",
 	             url:'<@s.url "/library/paper/submit"/>',
 	             data:data,
 	             dataType:'json',
 	             success:function(data){
-	            	   alert(data.msg);
+	            	 //location='<@s.url "/library/paper/analysis"/>?paperId=${PAPER.id}';
 	               }
 	           });
 		}

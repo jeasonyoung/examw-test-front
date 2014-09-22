@@ -103,8 +103,18 @@
                         <div class="f-r fr">
                            <div class="list">
                                 <ul>
+                                	<#if !CURRENT_AREA??>
                                     <li class="bg">全部</li>
-                                    <li class="bg">全部</li>
+                                    <#else>
+                                    <li><a href="javascript:void(0)" onclick="choose('areaId','')">全部</a></li>
+                                    </#if>
+                                    <#list AREALIST as  area>
+                                     <#if area.id == CURRENT_AREA>
+                                    	<li class="bg">${area.id}</li>
+                                    <#else>
+                                    	<li><a href="javascript:void(0)" onclick="choose('areaId','${area.id}')">${area.name}</a></li>
+                                    </#if>
+                                    </#list>
                                 </ul>
                             </div>
                         </div>

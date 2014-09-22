@@ -22,5 +22,6 @@
 	    <property name="api_paperinfo_url" value="${api_paper_url}" />
 	    <property name="api_paperitem_url" value="${api_paperitem_url}" />
 	    <property name="api_papersubmit_url" value="${api_papersubmit_url}" />
+	    <property name="api_paperanalysis_url" value="${api_paperanalysis_url}" />
 	</bean>
 </beans>
