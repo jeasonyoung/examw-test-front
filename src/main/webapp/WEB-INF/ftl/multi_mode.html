@@ -202,6 +202,9 @@ $(function(){
 		});
 		answers.join(",");
 		saveChooseAnswer(s_item_id,answers.toString());
+		if($(this).attr("option_type")=="radio"){
+			focusTo(null,$(this).attr("item_index")+1);
+		}
 		//console.info(window.tempChooseAnswer);
 	}).mouseout(function(){
 		if($(this).attr("actual")){
@@ -293,7 +296,12 @@ $(function(){
 	
 	<!-- 滑动到目标题目 -->
 	focusTo = function(obj,index){
-		var target = $("div[item_id='"+$(obj).attr("item_id")+"']");
+		var target;
+		if(obj)
+		 	target = $("div[item_id='"+$(obj).attr("item_id")+"']");
+		else if(index){
+			target = $("div[item_index='"+index+"']");
+		}
 		$.scrollTo(target,800,{axis:'y', offset:-20 });
 		
 	}

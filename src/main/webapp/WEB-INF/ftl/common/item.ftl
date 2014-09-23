@@ -21,14 +21,14 @@
 	</#if>
 </#macro>
 <#macro item_choose i input index>
-	<div class="box fl" item_type="${i.type}" item_id="${i.item.id?default(i.id)}">
+	<div class="box fl" item_type="${i.type}" item_id="${i.item.id?default(i.id)}" item_index="${index}">
 		<#if i.item?? && i.parentContent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
 			<em>${i.parentContent}</em>
 		</div>
 		</#if>
-       <div class="timu fl" ><a name="1" id="1"></a>
+       <div class="timu fl" >
            <i>${index}.</i>
               <em><span>[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${i.pid}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>
        </div>
@@ -38,11 +38,11 @@
                 <#if i.item.children??>
                 <!-- 按顺序输出?sort_by(["orderNo"]) -->
                 <#list i.item.children?sort_by(["orderNo"]) as option>
-                <li option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" <#if i.item.userAnswer?contains(option.id)>class="over"<#else>class="out"</#if>><i><@option_flag option_index/>.</i><em>${option.content}</em></li>
+                <li item_index="${index}" option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" <#if i.item.userAnswer?contains(option.id)>class="over"<#else>class="out"</#if>><i><@option_flag option_index/>.</i><em>${option.content}</em></li>
                 </#list>
                 <#else>
                 <#list i.children?sort_by(["orderNo"]) as option>
-                <li option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" <#if i.userAnswer?contains(option.id)>class="over"<#else>class="out"</#if>><i><@option_flag option_index/>.</i><em>${option.content}</em></li>
+                <li item_index="${index}" option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" <#if i.userAnswer?contains(option.id)>class="over"<#else>class="out"</#if>><i><@option_flag option_index/>.</i><em>${option.content}</em></li>
                 </#list>
                 </#if>
                 </ul>
@@ -51,11 +51,11 @@
                 <ul>
                 <#if i.item.children??>
                 <#list i.item.children?sort_by(["orderNo"]) as option>
-                <li <#if i.item.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" actual="true"><@option_flag option_index/></li>
+                <li item_index="${index}" <#if i.item.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" actual="true"><@option_flag option_index/></li>
                 </#list>
                 <#else>
                 <#list i.children?sort_by(["orderNo"]) as option>
-                <li <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" actual="true"><@option_flag option_index/></li>
+                <li item_index="${index}" <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" actual="true"><@option_flag option_index/></li>
                 </#list>
                 </#if>
                 </ul>
@@ -91,22 +91,22 @@
     </div>
 </#macro>
 <#macro item_judge i index>
-	<div class="box fl" item_type="${i.type}" item_id="${i.item.id?default(i.id)}">
+	<div class="box fl" item_type="${i.type}" item_id="${i.item.id?default(i.id)}" item_index="${index}">
 		<#if i.item?? && i.parentContent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
 			<em>${i.parentContent}</em>
 		</div>
 		</#if>
-        <div class="timu fl" ><a name="10" id="10"></a>
+        <div class="timu fl" >
             <i>${index}.</i>
             <em><span>[${i.typeName}]</span>${i.content}</em>
         </div>
         <div class="xz-daan fl">
             <div class="abcd">
                <ul>
-                 <li <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_RIGTH)||(i.item?? && i.item.userAnswer == ANSWER_JUDGE_RIGTH)>class="choose"<#else>class="off"</#if> actual="true" pid="${i.id}" s_item_id="${i.structureItemId?default(i.id)}" option_id="${i.item.id}_${ANSWER_JUDGE_RIGTH}" option_value="${ANSWER_JUDGE_RIGTH}" option_type="radio">对</li>
-                 <li <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_WRONG)||(i.item?? && i.item.userAnswer == ANSWER_JUDGE_WRONG)>class="choose"<#else>class="off"</#if> actual="true" pid="${i.id}" s_item_id="${i.structureItemId?default(i.id)}" option_id="${i.item.id}_${ANSWER_JUDGE_WRONG}" option_value="${ANSWER_JUDGE_WRONG}" option_type="radio">错</li>
+                 <li item_index="${index}" <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_RIGTH)||(i.item?? && i.item.userAnswer == ANSWER_JUDGE_RIGTH)>class="choose"<#else>class="off"</#if> actual="true" pid="${i.id}" s_item_id="${i.structureItemId?default(i.id)}" option_id="${i.item.id}_${ANSWER_JUDGE_RIGTH}" option_value="${ANSWER_JUDGE_RIGTH}" option_type="radio">对</li>
+                 <li item_index="${index}" <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_WRONG)||(i.item?? && i.item.userAnswer == ANSWER_JUDGE_WRONG)>class="choose"<#else>class="off"</#if> actual="true" pid="${i.id}" s_item_id="${i.structureItemId?default(i.id)}" option_id="${i.item.id}_${ANSWER_JUDGE_WRONG}" option_value="${ANSWER_JUDGE_WRONG}" option_type="radio">错</li>
             	</ul>
               </div>
          </div>
@@ -156,7 +156,7 @@
     </div>
 </#macro>
 <#macro item_qanda i index>
-	<div class="box fl">
+	<div class="box fl" item_type="${i.type}" item_id="${i.item.id?default(i.id)}" item_index="${index}">
        <div class="timu fl" id="font14"><a name="13" id="13"></a>
            <i>${index}.</i>
            <em><span id="cailiao14">[${i.typeName}]<a></a></span>${i.content}</em>
@@ -178,13 +178,13 @@
 	 <#if i.item.children??>
           <#list i.item.children as option>
           	<#if i.item.answer?index_of(option.id)!=-1>
-          		<@option_flag option_index/>,
+          		<@option_flag option_index/> 
           	</#if>
           </#list>
      <#else>
      	 <#list i.children as option>
           	<#if i.answer?index_of(option.id)!=-1>
-          		<@option_flag option_index/>,
+          		<@option_flag option_index/> 
           	</#if>
          </#list>
      </#if>

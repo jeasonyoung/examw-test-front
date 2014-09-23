@@ -2,6 +2,7 @@ package com.examw.test.front.model;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
+
 import com.examw.model.Paging;
 /**
  * 知识点信息。

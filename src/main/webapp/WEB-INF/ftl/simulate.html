@@ -132,10 +132,11 @@
               		<li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
                         <div class="title">
                         	<em>
-                            	<div class="title"><a href="#链接到解析" target="_blank" title="${paper.name}">${paper.name}</a></div>
                             	<#if paper.userStatus == 1>
-                                <p class="red">得分：${paper.userScore}分</p><p class="red">用时：${paper.userTime/60}分钟</p><p>最高得分：${paper.maxScore}分</p><p>${paper.userSum}人参考</p><p>考试日期：${paper.userExamTime}</p>
+                            	<div class="title"><a href="<@s.url "/library/paper/analysis"/>?paperId=${paper.id}" target="_blank" title="${paper.name}">${paper.name}</a></div>
+                                <p class="red">得分：${paper.userScore}分</p><p class="red">用时：${(paper.userTime/60)?round}分钟</p><p>最高得分：${paper.maxScore}分</p><p>${paper.userSum}人参考</p><p>考试日期：${paper.userExamTime}</p>
                                 <#else>
+                                <div class="title"><a href="<@s.url "/library/paper/do/multi"/>?paperId=${paper.id}" target="_blank" title="${paper.name}">${paper.name}</a></div>
                                 <p>总题：${paper.total} 题</p><p>考试时长：${paper.time}分钟</p><p>总分：${paper.score}分</p><p>最高得分：${paper.maxScore}分</p><p>${paper.userSum}人参考</p>
                                 </#if>
                             </em>
@@ -168,7 +169,7 @@
         </div>
         <div class="h20"></div>
         <div style="width:100%">
-        <div id="pager" >
+        <div id="pager" class="pager-plugin">
         </div>
         </div>
   </div>

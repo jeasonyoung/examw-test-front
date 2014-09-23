@@ -87,18 +87,36 @@
                     <!--收藏后<div class="f-r fl"><em class="shoucang"></em><i><a href="#">收藏</a></i></div>-->
                </div>
          </div>
-         <div class="jiexi-box fl" name="jiexi" item_id="${i.item.id?default(i.id)}">
+         <div class="jiexi-box fl" name="jiexi" item_id="${i.item.id?default(i.id)}" <#if index != 1>style="display:none"</#if>>
               <div class="cankaobox fl">
                    <i>参考解析：</i>${i.item.analysis?default(i.analysis)}
               </div>
               <div class="h10"></div>
-              <!--<div class="bookbox fl">
-                    <div class="book-l fl"><span>第1题笔记</span>（本题共120条笔记）</div>
-                    <div class="sybook fr"><a href="#">查看所有笔记（120条）</a></div>
-                    <div class="mybook fr"><a href="#">查看我的笔记（0条）</a></div>
+              <div class="bookbox fl">
+                    <div class="book-l fl"><span>第${index}题笔记</span>（本题共120条笔记）</div>
+                    <div class="sybook fr"><a href="javascript:void(0)" onclick="showAllNote('${i.structureItemId?default(i.id)}','${index}')">查看所有笔记（120条）</a></div>
+                    <div class="mybook fr"><a href="javascript:void(0)" onclick="showMyNote('${i.structureItemId?default(i.id)}','${index}')">查看我的笔记（0条）</a></div>
                     <textarea name="" class="notebook" id="font14"></textarea>
                     <div class="sure"><a href="#">确认保存</a></div>
-              </div>-->
+              </div>
+              <div name="noteList" s_item_id="${i.structureItemId?default(i.id)}" style="display:none">
+              	<div name="content">
+              		<div class="textbook fl">
+                    	<div class="txt">
+                         <div class="pic-bg"><a href="#" target="_blank" title=""></a></div>
+                         <div class="pic"><img src="<@s.url "/resources/front-default/image/pic2.jpg"/>" width="70" height="70"></div>
+                         <div class="f-right">
+                             <div class="vipname fl"><a href="#" target="_blank" title="王艳阳">王艳阳</a><span>1小时前</span></div>
+                             <div class="pinglun fl">2—3年</div>
+                             <!--<div class="huifu"><a href="#" class="huifu">回复(0)</a></div>
+                             <div class="zan"><a href="#" class="zan">(0)</a></div>-->
+                         </div>
+                      </div>
+                    </div>
+               	</div>
+               <div class="h10"></div>
+                <div id="pager${index}" class="pager-plugin">
+               </div>
          </div>
     </div>
 </#macro>
@@ -191,18 +209,18 @@
                     <!--收藏后<div class="f-r fl"><em class="shoucang"></em><i><a href="#">收藏</a></i></div>-->
                </div>
          </div>
-         <div class="jiexi-box fl" name="jiexi" item_id="${i.item.id?default(i.id)}">
+         <div class="jiexi-box fl" name="jiexi" item_id="${i.item.id?default(i.id)}" <#if index != 1>style="display:none"</#if>>
               <div class="cankaobox fl">
                    <i>参考解析：</i>${i.item.analysis?default(i.analysis)}
               </div>
               <div class="h10"></div>
-              <!--<div class="bookbox fl">
-                    <div class="book-l fl"><span>第1题笔记</span>（本题共120条笔记）</div>
+              <div class="bookbox fl">
+                    <div class="book-l fl"><span>第${index}题笔记</span>（本题共120条笔记）</div>
                     <div class="sybook fr"><a href="#">查看所有笔记（120条）</a></div>
                     <div class="mybook fr"><a href="#">查看我的笔记（0条）</a></div>
                     <textarea name="" class="notebook" id="font14"></textarea>
                     <div class="sure"><a href="#">确认保存</a></div>
-              </div>-->
+              </div>
          </div>
     </div>
 </#macro>
@@ -230,13 +248,13 @@
 	 <#if i.item.children??>
           <#list i.item.children?sort_by(["orderNo"]) as option>
           	<#if i.item.answer?index_of(option.id)!=-1>
-          		<@option_flag option_index/>,
+          		<@option_flag option_index/> 
           	</#if>
           </#list>
      <#else>
      	 <#list i.children?sort_by(["orderNo"]) as option>
           	<#if i.answer?index_of(option.id)!=-1>
-          		<@option_flag option_index/>,
+          		<@option_flag option_index/> 
           	</#if>
          </#list>
      </#if>
@@ -256,7 +274,7 @@
 			</#if>
           <#list i.item.children?sort_by(["orderNo"]) as option>
           	<#if i.item.userAnswer?contains(option.id)>
-          		<@option_flag option_index/>,
+          		<@option_flag option_index/> 
           	</#if>
           </#list>
           </em>
@@ -272,7 +290,7 @@
 			</#if>
      	 <#list i.children?sort_by(["orderNo"]) as option>
           	<#if i.userAnswer?index_of(option.id)!=-1>
-          		<@option_flag option_index/>,
+          		<@option_flag option_index/> 
           	</#if>
          </#list>
          	</em>

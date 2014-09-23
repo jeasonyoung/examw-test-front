@@ -24,4 +24,14 @@
 	    <property name="api_papersubmit_url" value="${api_papersubmit_url}" />
 	    <property name="api_paperanalysis_url" value="${api_paperanalysis_url}" />
 	</bean>
+	<!-- 笔记 -->
+	<bean id="noteService" class="com.examw.test.front.service.impl.NoteServiceImpl">
+	    <property name="api_item_notes_url" value="${api_item_notes_url}" />
+	    <property name="api_add_note_url" value="${api_add_note_url}" />
+	</bean>
+	<!-- 收藏 -->
+	<bean id="collectionService" class="com.examw.test.front.service.impl.CollectionServiceImpl">
+	    <property name="api_collection_url" value="${api_item_collection_url}" />
+	</bean>
+	
 </beans>

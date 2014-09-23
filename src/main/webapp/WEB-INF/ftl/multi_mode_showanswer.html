@@ -8,6 +8,9 @@
 <script type="text/javascript" src="<@s.url "/resources/artDialog/dialog-min.js"/>"></script>
 <!-- scrollTo -->
 <script type="text/javascript" src="<@s.url "/resources/jquery.scrollTo.js"/>"></script>
+<!-- pager -->
+<link href="<@s.url "/resources/front-default/pager.css"/>" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<@s.url "/resources/jquery.pager.js"/>"></script>
 </head>
 <body>
 <#include "common/item_with_answer.ftl"/>
@@ -216,6 +219,72 @@ $(function(){
 			$("div[item_status='1']").hide();
 			$("#answerCard li[item_status='1']").css("visibility","hidden");
 		}
+	}
+	<!-- 分页 -->
+	var pageClick = [];
+	showNote = function(structureItemId,itemIndex,model){
+		$.ajax({
+			type:"POST",
+			url:"",
+			data:{"structureItemId":structureItemId,"page":1,"rows":3,"model":model},
+			dataType:"json",
+			success:function(data){
+				var arr = data.rows;
+				var total = data.total%3==0?(data.total/3):(data.total/3+1);
+				$.each(arr,function(i){
+					var note = arr[i];
+					var html = "<div class='textbook fl'><div class='txt'><div class='pic-bg'><a href='#' target='_blank' title=''></a></div><div class='pic'><img src='<@s.url '/resources/front-default/image/pic2.jpg'/>' width='70' height='70'></div><div class='f-right'><div class='vipname fl'><a href='#' target='_blank' title='note.username'>"+note.username+"</a><span>"+note.time+"</span></div><div class='pinglun fl'>"+note.content+"</div></div></div></div>"
+					var contentArea = $("div[name='noteList'][s_item_id='"+structureItemId+"']").find("div[name='content']");
+					contentArea.append(html);
+				});
+				if(data.total<=3){
+					$("#pager"+itemIndex).html("");
+				}else{
+					pageClick[index] = function(pageclickednumber){
+						$("#pager"+itemIndex).pager({ pagenumber: pageclickednumber, pagecount: total, buttonClickCallback: pageClick[index] });
+						$.ajax({
+							type:"POST",
+							url:"<@s.url "/library/item/notes"/>",
+							data:{"structureItemId":structureItemId,"page":pageclickednumber,"rows":3,"model":model},
+							dataType:"json",
+							success:function(data){
+								var arr = data.rows;
+								var total = data.total%3==0?(data.total/3):(data.total/3+1);
+								$.each(arr,function(i){
+									var note = arr[i];
+									var html = "<div class='textbook fl'><div class='txt'><div class='pic-bg'><a href='#' target='_blank' title=''></a></div><div class='pic'><img src='<@s.url '/resources/front-default/image/pic2.jpg'/>' width='70' height='70'></div><div class='f-right'><div class='vipname fl'><a href='#' target='_blank' title='note.username'>"+note.username+"</a><span>"+note.time+"</span></div><div class='pinglun fl'>"+note.content+"</div></div></div></div>"
+									var contentArea = $("div[name='noteList'][s_item_id='"+structureItemId+"']").find("div[name='content']");
+									contentArea.append(html);
+								});
+							}
+						});
+					}
+					$("#pager"+itemIndex).pager({ pagenumber: 1, pagecount: total, buttonClickCallback: pageClick[index]});
+				}
+			}
+		});	//获取数据
+		var index = pageClick.length;
+		var data = {"total":7,"rows":[{"username":"hahaha1","time":"一分钟前","content":"爱的发生大幅度发生的"},
+		                              {"username":"hahaha6","time":"一分钟前","content":"爱的发生大幅度发生的"},
+		                              {"username":"hahaha","time":"一分钟前","content":"爱的发生大幅度发生的"}]};
+		var arr = data.rows;
+		var total = data.total%3==0?(data.total/3):(data.total/3+1);
+		var contentArea = $("div[name='noteList'][s_item_id='"+structureItemId+"']").find("div[name='content']");
+		contentArea.html("");
+		$.each(arr,function(i){
+			var note = arr[i];
+			var html = "<div class='textbook fl'><div class='txt'><div class='pic-bg'><a href='#' target='_blank' title=''></a></div><div class='pic'><img src='<@s.url '/resources/front-default/image/pic2.jpg'/>' width='70' height='70'></div><div class='f-right'><div class='vipname fl'><a href='#' target='_blank' title='note.username'>"+note.username+"</a><span>"+note.time+"</span></div><div class='pinglun fl'>"+note.content+"</div></div></div></div>"
+			contentArea.append(html);
+		});
+		if(data.total<=3){
+			$("#pager"+itemIndex).html("");
+		}else{
+			pageClick[index] = function(pageclickednumber){
+				$("#pager"+itemIndex).pager({ pagenumber: pageclickednumber, pagecount: total, buttonClickCallback: pageClick[index] });
+			}
+			$("#pager"+itemIndex).pager({ pagenumber: 1, pagecount: total, buttonClickCallback: pageClick[index]});
+		}
+		$("div[name='noteList'][s_item_id='"+structureItemId+"']").show();
 	}
 	<!-- 保存临时答案 -->
 	<!-- 下次做提交  -->
