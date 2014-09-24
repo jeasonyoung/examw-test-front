@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.model.Json;
-import com.examw.test.front.model.Note;
 import com.examw.test.front.model.NoteInfo;
 import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.service.INoteService;
@@ -45,7 +44,7 @@ public class ItemController {
 		return null;
 	}
 	
-	@RequestMapping(value ="collect", method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value ="notes", method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
 	public Map<String,Object> findNotes(NoteInfo info,String model){
 		if(logger.isDebugEnabled()) logger.debug("查询笔记数据...");
@@ -65,9 +64,9 @@ public class ItemController {
 		return null;
 	}
 	
-	@RequestMapping(value ="collect", method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value ="addnote", method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
-	public Json addNote(Note info){
+	public Json addNote(NoteInfo info){
 		if(logger.isDebugEnabled()) logger.debug("添加笔记数据...");
 		String userId = getUserId(null);
 		try{

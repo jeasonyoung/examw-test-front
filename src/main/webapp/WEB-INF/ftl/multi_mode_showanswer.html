@@ -152,7 +152,7 @@ $(function(){
 	var totalNum = Number("${PAPER.total}");
 	$("#answerCard").smartFloat(false);	//答题卡浮动
 	$("#leftArea").smartFloat(1);//左侧浮动
-	<!-- 答题卡点击显示  -->
+	//<!-- 答题卡点击显示  -->
 	$("#answerCard div").first().click(function(){
 		var card = $(this).siblings("div").last();
 		if(card.is(":hidden"))
@@ -165,28 +165,28 @@ $(function(){
 			card.hide();
 		}
 	});
-	<!-- 字体选择 -->
+	//<!-- 字体选择 -->
 	$("#fontset li").click(function(){
 		if($(this)==$("#fontset li[current='true']")) return;
 		$(this).addClass("bg").attr("current",'true');
 		$("#paper_body").addClass($(this).attr("id")).removeClass($("#fontset li[current='true']").attr("id"));
 		$(this).siblings().removeClass("bg").attr("current",'false');
 	});
-	<!-- timer -->
-	<!-- 滑动到目标题目 -->
+	//<!-- timer -->
+	//<!-- 滑动到目标题目 -->
 	focusTo = function(obj,index){
 		var target = $("div[item_id='"+$(obj).attr("item_id")+"']");
 		$.scrollTo(target,800,{axis:'y', offset:-20 });
 		
 	}
-	<!-- 切换大题 -->
+	//<!-- 切换大题 -->
 	chooseRule = function(obj,id){
 		var target = $("div[structure_id='" + id + "']");
 		$(obj).addClass("bg");
 		$(obj).parent().siblings().children().removeClass("bg");
 		$.scrollTo(target,800,{axis:'y', offset:-20 });
 	}
-	<!-- 查看材料 -->
+	//<!-- 查看材料 -->
 	showCommonTitle = function(id){
 		dialog({
 			id:'cailiaoDialog',
@@ -195,20 +195,22 @@ $(function(){
 	        content: "<div class='cont-r'><div class='fenxiti fl' style='border:0px'>"+$("div[fenxi_item_id='"+id+"']").html()+"</div></div>",
 	    }).show();
 	}
-	<!-- 显示收起解析 -->
+	//<!-- 显示收起解析 -->
 	toggleAnalysis = function(obj,id){
 		var target = $("div[name='jiexi'][item_id='"+id+"']");
 		if(target.is(":hidden")){
 			target.show();
 			$(obj).html("收起解析");
 			$(obj).parent().siblings("em").attr("class","jiexi-h");
+			$("div[class='zhankai-bg'][item_id='"+id+"']").show();
 		}else{
 			target.hide();
 			$(obj).html("展开解析");
 			$(obj).parent().siblings("em").attr("class","jiexi");
+			$("div[class='zhankai-bg'][item_id='"+id+"']").hide();
 		}
 	}
-	<!-- 只看错题 -->
+	//<!-- 只看错题 -->
 	showOnlyWrong = function(obj){
 		if($(obj).find("em").attr("class")=="kancuo-h"){
 			$(obj).find("em").attr("class","kancuo-a");
@@ -220,21 +222,24 @@ $(function(){
 			$("#answerCard li[item_status='1']").css("visibility","hidden");
 		}
 	}
-	<!-- 分页 -->
+	//<!-- 分页 -->
 	var pageClick = [];
 	showNote = function(structureItemId,itemIndex,model){
+		var index = pageClick.length;
 		$.ajax({
 			type:"POST",
-			url:"",
+			url:'<@s.url "/library/item/notes"/>',
 			data:{"structureItemId":structureItemId,"page":1,"rows":3,"model":model},
 			dataType:"json",
 			success:function(data){
+				if(data.total == 0) return;
 				var arr = data.rows;
 				var total = data.total%3==0?(data.total/3):(data.total/3+1);
+				var contentArea = $("div[name='noteList'][s_item_id='"+structureItemId+"']").find("div[name='content']");
+				contentArea.html("");
 				$.each(arr,function(i){
 					var note = arr[i];
 					var html = "<div class='textbook fl'><div class='txt'><div class='pic-bg'><a href='#' target='_blank' title=''></a></div><div class='pic'><img src='<@s.url '/resources/front-default/image/pic2.jpg'/>' width='70' height='70'></div><div class='f-right'><div class='vipname fl'><a href='#' target='_blank' title='note.username'>"+note.username+"</a><span>"+note.time+"</span></div><div class='pinglun fl'>"+note.content+"</div></div></div></div>"
-					var contentArea = $("div[name='noteList'][s_item_id='"+structureItemId+"']").find("div[name='content']");
 					contentArea.append(html);
 				});
 				if(data.total<=3){
@@ -248,12 +253,14 @@ $(function(){
 							data:{"structureItemId":structureItemId,"page":pageclickednumber,"rows":3,"model":model},
 							dataType:"json",
 							success:function(data){
+								if(data.total == 0) return;
 								var arr = data.rows;
 								var total = data.total%3==0?(data.total/3):(data.total/3+1);
+								var contentArea = $("div[name='noteList'][s_item_id='"+structureItemId+"']").find("div[name='content']");
+								contentArea.html("");
 								$.each(arr,function(i){
 									var note = arr[i];
 									var html = "<div class='textbook fl'><div class='txt'><div class='pic-bg'><a href='#' target='_blank' title=''></a></div><div class='pic'><img src='<@s.url '/resources/front-default/image/pic2.jpg'/>' width='70' height='70'></div><div class='f-right'><div class='vipname fl'><a href='#' target='_blank' title='note.username'>"+note.username+"</a><span>"+note.time+"</span></div><div class='pinglun fl'>"+note.content+"</div></div></div></div>"
-									var contentArea = $("div[name='noteList'][s_item_id='"+structureItemId+"']").find("div[name='content']");
 									contentArea.append(html);
 								});
 							}
@@ -263,31 +270,64 @@ $(function(){
 				}
 			}
 		});	//获取数据
-		var index = pageClick.length;
-		var data = {"total":7,"rows":[{"username":"hahaha1","time":"一分钟前","content":"爱的发生大幅度发生的"},
-		                              {"username":"hahaha6","time":"一分钟前","content":"爱的发生大幅度发生的"},
-		                              {"username":"hahaha","time":"一分钟前","content":"爱的发生大幅度发生的"}]};
-		var arr = data.rows;
-		var total = data.total%3==0?(data.total/3):(data.total/3+1);
-		var contentArea = $("div[name='noteList'][s_item_id='"+structureItemId+"']").find("div[name='content']");
-		contentArea.html("");
-		$.each(arr,function(i){
-			var note = arr[i];
-			var html = "<div class='textbook fl'><div class='txt'><div class='pic-bg'><a href='#' target='_blank' title=''></a></div><div class='pic'><img src='<@s.url '/resources/front-default/image/pic2.jpg'/>' width='70' height='70'></div><div class='f-right'><div class='vipname fl'><a href='#' target='_blank' title='note.username'>"+note.username+"</a><span>"+note.time+"</span></div><div class='pinglun fl'>"+note.content+"</div></div></div></div>"
-			contentArea.append(html);
-		});
-		if(data.total<=3){
-			$("#pager"+itemIndex).html("");
-		}else{
-			pageClick[index] = function(pageclickednumber){
-				$("#pager"+itemIndex).pager({ pagenumber: pageclickednumber, pagecount: total, buttonClickCallback: pageClick[index] });
-			}
-			$("#pager"+itemIndex).pager({ pagenumber: 1, pagecount: total, buttonClickCallback: pageClick[index]});
-		}
 		$("div[name='noteList'][s_item_id='"+structureItemId+"']").show();
 	}
-	<!-- 保存临时答案 -->
-	<!-- 下次做提交  -->
+	//<!-- 收藏或取消收藏 -->
+	collectOrCancel = function(obj,structureItemId,itemId){
+		$.ajax({
+			type:"POST",
+			url:'<@s.url "/library/item/collect"/>',
+			data:{"structureItemId":structureItemId,"itemId":itemId},
+			dataType:'json',
+			success:function(data){
+				if(data.success){
+					if(data.data == 0) //取消收藏成功
+					{
+						$(obj).parent().siblings().attr("class","shoucang");
+						$(obj).html("收藏");
+						showTips(obj,"取消收藏成功!");
+					}
+					else{
+						$(obj).parent().siblings().attr("class","shoucang-h");
+						$(obj).html("移除此收藏");
+						showTips(obj,"收藏成功，您可以到“练习记录中”去查看收藏的试题！");
+					}
+				}
+			}
+		});
+	}
+	//显示提示
+	function showTips(obj,msg){
+		var d = dialog({
+		    content: msg,
+		    quickClose: true// 点击空白处快速关闭
+		});
+		d.show(obj);
+	}
+	// 添加笔记
+	addNote = function(obj){
+		var textarea = $(obj).parent().parent().find("textarea");
+		if(!$.trim(textarea.val()) || textarea.val().length<6){
+			showTips(obj,"请输入笔记内容(至少5个字)!");
+			return;
+		}
+		$.ajax({
+			type:"POST",
+			url:"<@s.url "/library/item/addnote"/>",
+			data:{"content":textarea.val(),"structureItemId":textarea.attr("s_item_id"),"itemId":textarea.attr("item_id")},
+			dataType:"json",
+			success:function(data){
+				if(data.success){
+					var note = data.data;
+					var html = "<div class='textbook fl'><div class='txt'><div class='pic-bg'><a href='#' target='_blank' title=''></a></div><div class='pic'><img src='<@s.url '/resources/front-default/image/pic2.jpg'/>' width='70' height='70'></div><div class='f-right'><div class='vipname fl'><a href='#' target='_blank' title='note.username'>"+note.username+"</a><span>"+note.time+"</span></div><div class='pinglun fl'>"+note.content+"</div></div></div></div>"
+					var contentArea = $("div[name='noteList'][s_item_id='"+textarea.attr("s_item_id")+"']").find("div[name='content']");
+					contentArea.prepend(html);
+					$("div[name='noteList'][s_item_id='"+textarea.attr("s_item_id")+"']").show();
+					textarea.val("");
+				}
+			}			
+		});
+	}
 });
 </script>
 </html>

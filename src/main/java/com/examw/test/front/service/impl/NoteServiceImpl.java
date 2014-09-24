@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 import com.examw.model.Json;
-import com.examw.test.front.model.Note;
 import com.examw.test.front.model.NoteInfo;
 import com.examw.test.front.service.INoteService;
 import com.examw.test.front.support.HttpUtil;
@@ -47,7 +46,10 @@ public class NoteServiceImpl implements INoteService{
 	public Map<String, Object> findNotes(NoteInfo info) throws IOException {
 		if(logger.isDebugEnabled()) logger.debug("加载笔记信息...");
 		String url = String.format(this.api_item_notes_url,info.getStructureItemId());
-		String data = "itemId="+info.getItemId();
+		String data = "page="+info.getPage()+"&rows="+info.getRows();
+		if(!StringUtils.isEmpty(info.getItemId())){
+			data = data+"&itemId="+info.getItemId();
+		}
 		if(!StringUtils.isEmpty(info.getUserId())){
 			data = "&userId="+info.getUserId();
 		}
@@ -58,7 +60,7 @@ public class NoteServiceImpl implements INoteService{
 		return null;
 	}
 	
-	public Json addNote(Note info) throws IOException{
+	public Json addNote(NoteInfo info) throws IOException{
 		if(logger.isDebugEnabled()) logger.debug("添加笔记...");
 		String url = String.format(this.api_add_note_url,info.getStructureItemId(),info.getUserId());
 		String data = "itemId="+info.getItemId()+"&content="+URLEncoder.encode(info.getContent(), "utf-8");

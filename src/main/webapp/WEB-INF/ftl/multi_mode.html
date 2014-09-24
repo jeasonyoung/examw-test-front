@@ -150,7 +150,7 @@ $(function(){
 	saveChooseAnswer('${item.structureItemId}','${item.userAnswer}');
 	</#if>
 	</#list>
-	<!-- 答题卡点击显示  -->
+	//<!-- 答题卡点击显示  -->
 	$("#answerCard div").first().click(function(){
 		var card = $(this).siblings("div").last();
 		if(card.is(":hidden"))
@@ -163,7 +163,7 @@ $(function(){
 			card.hide();
 		}
 	});
-	<!-- 点击选项 -->
+	//<!-- 点击选项 -->
 	$("ul li[option_id]").click(function(){
 		var option_id = $(this).attr("option_id");
 		var s_item_id = $(this).attr("s_item_id");
@@ -203,7 +203,7 @@ $(function(){
 		answers.join(",");
 		saveChooseAnswer(s_item_id,answers.toString());
 		if($(this).attr("option_type")=="radio"){
-			focusTo(null,$(this).attr("item_index")+1);
+			focusTo(0,Number($(this).attr("item_index"))+1);
 		}
 		//console.info(window.tempChooseAnswer);
 	}).mouseout(function(){
@@ -228,14 +228,14 @@ $(function(){
 		}
 		$(this).addClass("over");
 	});
-	<!-- 字体选择 -->
+	//<!-- 字体选择 -->
 	$("#fontset li").click(function(){
 		if($(this)==$("#fontset li[current='true']")) return;
 		$(this).addClass("bg").attr("current",'true');
 		$("#paper_body").addClass($(this).attr("id")).removeClass($("#fontset li[current='true']").attr("id"));
 		$(this).siblings().removeClass("bg").attr("current",'false');
 	});
-	<!-- timer -->
+	//<!-- timer -->
 	window.limit_time = parseInt('${PAPER.leftTime?c}');        // 单位：秒
 	window.timer         = setInterval(updateTime,1000);                          // 过1秒执行
 	function updateTime(){
@@ -281,7 +281,7 @@ $(function(){
 		$('#showtime').html(sTime);
 		window.limit_time--;
 	}
-	<!-- 暂停 -->
+	//<!-- 暂停 -->
 	pause_do = function(){
 		window.clearInterval(timer);
 		dialog({
@@ -294,7 +294,7 @@ $(function(){
 	    }).showModal();
 	}
 	
-	<!-- 滑动到目标题目 -->
+	//<!-- 滑动到目标题目 -->
 	focusTo = function(obj,index){
 		var target;
 		if(obj)
@@ -305,23 +305,23 @@ $(function(){
 		$.scrollTo(target,800,{axis:'y', offset:-20 });
 		
 	}
-	<!-- 切换大题 -->
+	//<!-- 切换大题 -->
 	chooseRule = function(obj,id){
 		var target = $("div[structure_id='" + id + "']");
 		$(obj).addClass("bg");
 		$(obj).parent().siblings().children().removeClass("bg");
 		$.scrollTo(target,800,{axis:'y', offset:-20 });
 	}
-	<!-- 查看材料 -->
+	//<!-- 查看材料 -->
 	showCommonTitle = function(id){
 		dialog({
 			id:'cailiaoDialog',
 			title: '查看材料',
 			drag: true,
-	        content: "<div class='cont-r'><div class='fenxiti fl' style='border:0px'>"+$("div[fenxi_item_id='"+id+"']").html()+"</div></div>",
+	        content: "<div class='cont-r'><div class='fenxiti fl' style='border:0px'>"+$("div[fenxi_item_id='"+id+"']").html()+"</div></div>"
 	    }).show();
 	}
-	<!-- 显示收起解析 -->
+	//<!-- 显示收起解析 -->
 	toggleAnalysis = function(obj,id){
 		var target = $("div[name='jiexi'][item_id='"+id+"']");
 		if(target.is(":hidden")){
@@ -334,18 +334,21 @@ $(function(){
 			$(obj).parent().siblings("em").attr("class","jiexi");
 		}
 	}
-	<!-- 保存临时答案 -->
+	//<!-- 保存临时答案 -->
 	function saveChooseAnswer(s_item_id,answers){
 		if(window.tempChooseAnswer == "" || window.tempChooseAnswer.indexOf(s_item_id+"=")==-1){
 			window.tempChooseAnswer = window.tempChooseAnswer + s_item_id+"="+answers+"&";
 		}else{
 			var front = window.tempChooseAnswer.substring(0,window.tempChooseAnswer.indexOf(s_item_id+"="));
 			var temp = window.tempChooseAnswer.substring(window.tempChooseAnswer.indexOf(s_item_id+"="),window.tempChooseAnswer.length);
-			var after = temp.substring(temp.indexOf("&"),temp.length);
-			window.tempChooseAnswer = front + s_item_id +"="+answers+after;
+			var after = temp.substring(temp.indexOf("&")+1,temp.length);
+			if($.trim(answers)=="")
+				window.tempChooseAnswer = front + after;
+			else
+				window.tempChooseAnswer = front + s_item_id +"="+answers+"&"+after;
 		}
 	}
-	<!-- 下次做提交  -->
+	//<!-- 下次做提交  -->
 	answerNexttime = function(){
 			var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":0};
 			dialog({
@@ -380,7 +383,7 @@ $(function(){
 		 	      }]
 		 	   }).showModal();
 	}
-	<!-- 交卷 -->
+	//<!-- 交卷 -->
 	submitAnswer = function(withTips){
 		var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":1};
 		var leftNum = totalNum-window.tempChooseAnswer.split("&").length+1;

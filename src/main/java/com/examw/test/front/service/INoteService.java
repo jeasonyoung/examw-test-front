@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.examw.model.Json;
-import com.examw.test.front.model.Note;
 import com.examw.test.front.model.NoteInfo;
 
 /**
@@ -27,5 +26,5 @@ public interface INoteService {
 	 * @return
 	 * @throws IOException 
 	 */
-	Json addNote(Note info) throws IOException;
+	Json addNote(NoteInfo info) throws IOException;
 }

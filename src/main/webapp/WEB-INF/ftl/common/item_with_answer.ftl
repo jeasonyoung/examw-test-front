@@ -76,49 +76,21 @@
             </div>
          </div>
          <div class="daanbox fl">
-               <div class="zhankai-bg"></div>
+               <div class="zhankai-bg" item_id="${i.item.id?default(i.id)}" <#if index != 1>style="display:none"</#if>></div>
                <div class="f-l fl"><i>参考答案：</i><@calculate_right_answer i/></div>
                <div class="f-l fl"><i>我的答案：</i><@calculate_user_answer i/></div>
                <div class="fr" id="font14">
-                    <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.item.id?default(i.id)}')">收起解析</a></i><em class="jiexi-h"></em></div>
+                    <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.item.id?default(i.id)}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
                     <div class="f-r fr"><em class="jiucuo"></em><i><a href="#">纠错</a></i></div>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="#">移除此收藏</a></i></div>
-                    <!--收藏后<div class="f-r fl"><em class="shoucang"></em><i><a href="#">收藏</a></i></div>-->
+                    <#if i.item.isCollected?default(i.isCollected)>
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.structureItemId?default(i.id)}','${i.item.id?default(i.id)}');">移除此收藏</a></i></div>
+                    <#else>
+                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.structureItemId?default(i.id)}','${i.item.id?default(i.id)}');">收藏</a></i></div>
+                    </#if>
                </div>
          </div>
-         <div class="jiexi-box fl" name="jiexi" item_id="${i.item.id?default(i.id)}" <#if index != 1>style="display:none"</#if>>
-              <div class="cankaobox fl">
-                   <i>参考解析：</i>${i.item.analysis?default(i.analysis)}
-              </div>
-              <div class="h10"></div>
-              <div class="bookbox fl">
-                    <div class="book-l fl"><span>第${index}题笔记</span>（本题共120条笔记）</div>
-                    <div class="sybook fr"><a href="javascript:void(0)" onclick="showAllNote('${i.structureItemId?default(i.id)}','${index}')">查看所有笔记（120条）</a></div>
-                    <div class="mybook fr"><a href="javascript:void(0)" onclick="showMyNote('${i.structureItemId?default(i.id)}','${index}')">查看我的笔记（0条）</a></div>
-                    <textarea name="" class="notebook" id="font14"></textarea>
-                    <div class="sure"><a href="#">确认保存</a></div>
-              </div>
-              <div name="noteList" s_item_id="${i.structureItemId?default(i.id)}" style="display:none">
-              	<div name="content">
-              		<div class="textbook fl">
-                    	<div class="txt">
-                         <div class="pic-bg"><a href="#" target="_blank" title=""></a></div>
-                         <div class="pic"><img src="<@s.url "/resources/front-default/image/pic2.jpg"/>" width="70" height="70"></div>
-                         <div class="f-right">
-                             <div class="vipname fl"><a href="#" target="_blank" title="王艳阳">王艳阳</a><span>1小时前</span></div>
-                             <div class="pinglun fl">2—3年</div>
-                             <!--<div class="huifu"><a href="#" class="huifu">回复(0)</a></div>
-                             <div class="zan"><a href="#" class="zan">(0)</a></div>-->
-                         </div>
-                      </div>
-                    </div>
-               	</div>
-               <div class="h10"></div>
-                <div id="pager${index}" class="pager-plugin">
-               </div>
-         </div>
-    </div>
+         <@item_analysis i index/>
 </#macro>
 <#macro item_judge i index>
 	<div class="box fl" item_type="${i.type}" item_id="${i.item.id?default(i.id)}" item_status="${i.item.answerStatus?default(i.answerStatus)}">
@@ -148,7 +120,7 @@
        		</#if>
          </div>
          <div class="daanbox fl">
-               <div class="zhankai-bg"></div>
+               <div class="zhankai-bg" item_id="${i.item.id?default(i.id)}" <#if index != 1>style="display:none"</#if>></div>
                <div class="f-l fl"><i>参考答案：</i>
                			<em class="dui">
                			<#if i.item??>
@@ -202,26 +174,17 @@
                		</#if>
                </div>
                <div class="fr" id="font14">
-                    <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.item.id?default(i.id)}')">收起解析</a></i><em class="jiexi-h"></em></div>
+                    <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.item.id?default(i.id)}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
-                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="#">纠错</a></i></div>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="#">移除此收藏</a></i></div>
+                    <#if i.item.isCollected?default(i.isCollected)>
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.structureItemId?default(i.id)}','${i.item.id?default(i.id)}');">移除此收藏</a></i></div>
+                    <#else>
+                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.structureItemId?default(i.id)}','${i.item.id?default(i.id)}');">收藏</a></i></div>
+                    </#if>
                     <!--收藏后<div class="f-r fl"><em class="shoucang"></em><i><a href="#">收藏</a></i></div>-->
                </div>
          </div>
-         <div class="jiexi-box fl" name="jiexi" item_id="${i.item.id?default(i.id)}" <#if index != 1>style="display:none"</#if>>
-              <div class="cankaobox fl">
-                   <i>参考解析：</i>${i.item.analysis?default(i.analysis)}
-              </div>
-              <div class="h10"></div>
-              <div class="bookbox fl">
-                    <div class="book-l fl"><span>第${index}题笔记</span>（本题共120条笔记）</div>
-                    <div class="sybook fr"><a href="#">查看所有笔记（120条）</a></div>
-                    <div class="mybook fr"><a href="#">查看我的笔记（0条）</a></div>
-                    <textarea name="" class="notebook" id="font14"></textarea>
-                    <div class="sure"><a href="#">确认保存</a></div>
-              </div>
-         </div>
+         <@item_analysis i index/>
     </div>
 </#macro>
 <#macro item_qanda i index>
@@ -296,6 +259,40 @@
          	</em>
          </#if>
      </#if>
+</#macro>
+<#macro item_analysis i index>
+	<div class="jiexi-box fl" name="jiexi" item_id="${i.item.id?default(i.id)}" <#if index != 1>style="display:none"</#if>>
+              <div class="cankaobox fl">
+                   <i>参考解析：</i>${i.item.analysis?default(i.analysis)}
+              </div>
+              <div class="h10"></div>
+              <div class="bookbox fl">
+                    <div class="book-l fl"><span>第${index}题笔记</span>（本题共${i.item.totalNoteNum?default(0)}条笔记）</div>
+                    <div class="sybook fr"><a href="javascript:void(0)" onclick="showNote('${i.structureItemId?default(i.id)}','${index}','all')">查看所有笔记（${i.item.totalNoteNum?default(0)}条）</a></div>
+                    <div class="mybook fr"><a href="javascript:void(0)" onclick="showNote('${i.structureItemId?default(i.id)}','${index}','mine')">查看我的笔记（${i.item.userNoteNum?default(0)}条）</a></div>
+                    <textarea name="" class="notebook" id="font14" s_item_id="${i.structureItemId?default(i.id)}" item_id = "${i.item.id?default(i.id)}"></textarea>
+                    <div class="sure"><a href="javascript:void(0)" onclick="addNote(this);">确认保存</a></div>
+              </div>
+              <div name="noteList" s_item_id="${i.structureItemId?default(i.id)}" style="display:none">
+              	<div name="content">
+              		<div class="textbook fl">
+                    	<div class="txt">
+                         <div class="pic-bg"><a href="#" target="_blank" title=""></a></div>
+                         <div class="pic"><img src="<@s.url "/resources/front-default/image/pic2.jpg"/>" width="70" height="70"></div>
+                         <div class="f-right">
+                             <div class="vipname fl"><a href="#" target="_blank" title="王艳阳">王艳阳</a><span>1小时前</span></div>
+                             <div class="pinglun fl">2—3年</div>
+                             <!--<div class="huifu"><a href="#" class="huifu">回复(0)</a></div>
+                             <div class="zan"><a href="#" class="zan">(0)</a></div>-->
+                         </div>
+                      </div>
+                    </div>
+               	</div>
+               <div class="h10"></div>
+                <div id="pager${index}" class="pager-plugin">
+               </div>
+         </div>
+    </div>
 </#macro>
 <!-- 答题卡 -->
 <#macro answer_card items>
