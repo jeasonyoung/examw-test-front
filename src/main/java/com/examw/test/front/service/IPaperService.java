@@ -9,6 +9,7 @@ import com.examw.test.front.model.ItemScoreInfo;
 import com.examw.test.front.model.PaperFrontInfo;
 import com.examw.test.front.model.PaperInfo;
 import com.examw.test.front.model.PaperPreview;
+import com.examw.test.front.model.PaperSubmitInfo;
 
 /**
  * 试卷服务接口
@@ -35,7 +36,7 @@ public interface IPaperService {
 	 * @return
 	 * @throws IOException
 	 */
-	PaperPreview loadPaperDetail(String paperId,String userId)throws IOException;
+	PaperPreview loadPaperDetail(String paperId,String userId,String productId)throws IOException;
 	/**
 	 * 加载试卷试题的集合
 	 * @param paper
@@ -44,15 +45,9 @@ public interface IPaperService {
 	List<ItemScoreInfo> loadItemsList(PaperPreview paper,boolean isSetCommonTitle);
 	/**
 	 * 下次再做的提交
-	 * @param limitTime 	剩余时间[秒]
-	 * @param chooseAnswers	选择题答案  id=answer&id=answer 形式
-	 * @param textAnswers	文字题答案
-	 * @param model			提交模式[0:下次做,1:交卷]	
-	 * @param paperId		试卷的ID
-	 * @param userId		用户的ID
+	 * @param info 提交试卷答案信息
 	 */
-	Json sumbitPaper(Integer limitTime, String chooseAnswers,
-			String textAnswers,Integer model, String paperId,String userId)throws IOException;
+	Json sumbitPaper(PaperSubmitInfo info)throws IOException;
 	/**
 	 * 加载试卷试题解析
 	 * @param paperId
@@ -60,5 +55,5 @@ public interface IPaperService {
 	 * @return
 	 * @throws IOException
 	 */
-	PaperFrontInfo loadPaperAnalysis(String paperId,String userId)throws IOException;
+	PaperFrontInfo loadPaperAnalysis(String paperId,String userId,String productId)throws IOException;
 }

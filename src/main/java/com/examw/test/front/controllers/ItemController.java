@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.model.Json;
+import com.examw.test.front.model.Collection;
 import com.examw.test.front.model.NoteInfo;
 import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.service.INoteService;
@@ -32,11 +33,13 @@ public class ItemController {
 	
 	@RequestMapping(value ="collect", method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
-	public Json collectOrCancel(String structureItemId,String itemId){
+	public Json collectOrCancel(Collection info){
 		if(logger.isDebugEnabled()) logger.debug("收藏或取消收藏...");
+		if(info == null) return null;
 		String userId = getUserId(null);
 		try{
-			return this.collectionService.collectOrCancel(structureItemId,itemId,userId);
+			info.setUserId(userId);
+			return this.collectionService.collectOrCancel(info);
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("收藏或取消收藏失败...");

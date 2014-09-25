@@ -140,7 +140,8 @@ $(function(){
 	//var obj = '${PAPERJSON}';
 	//console.info(obj);
 	window.tempChooseAnswer = "";
-	paperId = "${PAPER.id}";
+	var paperId = "${PAPER.id}";
+	var productId ="${PRODUCTID}"; 
 	var totalNum = Number("${PAPER.total}");
 	$("#answerCard").smartFloat(false);	//答题卡浮动
 	$("#leftArea").smartFloat(1);//左侧浮动
@@ -350,7 +351,7 @@ $(function(){
 	}
 	//<!-- 下次做提交  -->
 	answerNexttime = function(){
-			var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":0};
+			var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":0,"prodouctId":productId};
 			dialog({
 				id:'nexttimeDialog',
 				title: '下次再做',
@@ -385,7 +386,7 @@ $(function(){
 	}
 	//<!-- 交卷 -->
 	submitAnswer = function(withTips){
-		var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":1};
+		var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":1,"productId":productId};
 		var leftNum = totalNum-window.tempChooseAnswer.split("&").length+1;
 		var content = "是否选择确定交卷?";
 		if(leftNum > 0){
@@ -421,7 +422,7 @@ $(function(){
 	             data:data,
 	             dataType:'json',
 	             success:function(data){
-	            	 //location='<@s.url "/library/paper/analysis"/>?paperId=${PAPER.id}';
+	            	 location='<@s.url "/library/paper/analysis"/>?paperId=${PAPER.id}&productId=${PRODUCTID}';
 	               }
 	           });
 		}

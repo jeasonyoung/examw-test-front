@@ -26,172 +26,68 @@
                 <div class="recordsift fl">
                     <div class="sift fl">
                     	<div class="siftbox fl">
-                            <div class="f-l fl">考试：</div>
+                            <div class="f-l fl">产品：</div>
                             <div class="f-r fr">
                                <div class="list">
                                     <ul>
-                                        <li class="bg">会计从业资格</li>
-                                        <li><a href="#">政法干警</a></li>
-                                        <li><a href="#">一级建筑师</a></li>
-                                        <li><a href="#">二级建筑师</a></li>
-                                        <li><a href="#">基金销售从业</a></li>
-                                        <li><a href="#">政法干警</a></li>
-                                        <li><a href="#">一级建筑师</a></li>
-                                        <li><a href="#">二级建筑师</a></li>
-                                        <li><a href="#">基金销售从业</a></li>
+                                    	<#list PRODUCTLIST as product>
+                                    		<#if product_index == 0>
+                                       		<li><a href="#" class="bg">${product.name}</a></li>
+                                        	<#else>
+                                        	<li><a href="#">${product.name}</a></li>
+                                        	</#if>
+                                        </#list>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                         <div class="siftbox fl">
                             <div class="f-l fl">科目：</div>
-                            <div class="f-r fr">
-                               <div class="list">
+                            <#list PRODUCTLIST as product>
+                            <div class="f-r fr" <#if product_index == 0>style="display:none"</#if>>
+                               	<div class="list">
                                     <ul>
+                                    	<#list product.subjects as subject>
+                                    	<li><a href="#"><em>${subject.id}</em></a></li>
+                                    	</#list>
                                         <li><a href="#"><em>全部</em></a></li>
-                                        <li class="bg"><em>中级经济师</em><i class="shang"></i></li>
-                                        <li><a href="#"><em>初级经济师</em><i class="cheng"></i><i class="xia"></i></a></li><!--鼠标移动上去去掉<i class="cheng"></i>-->
+                                        <li class="bg"><em>中级经济师</em></li>
+                                        <li><a href="#"><em>初级经济师</em></a></li><!--鼠标移动上去去掉<i class="cheng"></i>-->
                                     </ul>
                                 </div>
-                                <div class="erji fl">
-                                    <div class="list">
-                                        <ul>
-                                            <li><a href="#">中级经济师</a></li>
-                                            <li><a href="#">章节练习</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
                             </div>
+                            </#list>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="box fl">
                 <!--无错题情况下<div class="moni-list">
-                    <ul>
-                        <li class="line">亲爱的同学，暂无您的错题记录</li>
-                    </ul>
                 </div>-->
                 <div class="moni-list">
+            		<#if ITEMLIST??>
                     <ul>
+                    	<#list ITEMLIST as item>
                         <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
                             <div class="title">
                                 <ol>
-                                    <div class="title">2014年经济师考试《经济师》具体到单个名称</div>
-                                    <p>3小时前</p>
+                                    <div class="title">${item.content}</div>
+                                    <p>${item.createTime}</p>
                                 </ol>
                                 <span><a href="单个答案页面.html" class="red">查看解析</a></span>
                                 <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
                             </div>
                         </li>
-                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                            <div class="title">
-                                <ol>
-                                    <div class="title">2014年经济师考试《经济师》具体到单个名称</div>
-                                    <p>2014-09-01</p>
-                                </ol>
-                                <span><a href="#" class="red">查看解析</a></span>
-                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
-                            </div>
-                        </li>
-                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                            <div class="title">
-                                <ol>
-                                    <div class="title">2014年经济师考试《经济师》具体到单个名称</div>
-                                    <p>2014-09-01</p>
-                                </ol>
-                                <span><a href="#" class="red">查看解析</a></span>
-                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
-                            </div>
-                        </li>
-                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                            <div class="title">
-                                <ol>
-                                    <div class="title">2014年经济师考试《经济师》具体到单个名称</div>
-                                    <p>2014-09-01</p>
-                                </ol>
-                                <span><a href="#" class="red">查看解析</a></span>
-                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
-                            </div>
-                        </li>
-                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                            <div class="title">
-                                <ol>
-                                    <div class="title">2014年经济师考试《经济师》具体到单个名称</div>
-                                    <p>2014-09-01</p>
-                                </ol>
-                                <span><a href="#" class="red">查看解析</a></span>
-                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
-                            </div>
-                        </li>
-                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                            <div class="title">
-                                <ol>
-                                    <div class="title">2014年经济师考试《经济师》具体到单个名称</div>
-                                    <p>2014-09-01</p>
-                                </ol>
-                                <span><a href="#" class="red">查看解析</a></span>
-                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
-                            </div>
-                        </li>
-                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                            <div class="title">
-                                <ol>
-                                    <div class="title">2014年经济师考试《经济师》具体到单个名称</div>
-                                    <p>2014-09-01</p>
-                                </ol>
-                                <span><a href="#" class="red">查看解析</a></span>
-                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
-                            </div>
-                        </li>
-                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                            <div class="title">
-                                <ol>
-                                    <div class="title">2014年经济师考试《经济师》具体到单个名称</div>
-                                    <p>2014-09-01</p>
-                                </ol>
-                                <span><a href="#" class="red">查看解析</a></span>
-                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
-                            </div>
-                        </li>
-                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                            <div class="title">
-                                <ol>
-                                    <div class="title">2014年经济师考试《经济师》具体到单个名称</div>
-                                    <p>2014-09-01</p>
-                                </ol>
-                                <span><a href="#" class="red">查看解析</a></span>
-                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
-                            </div>
-                        </li>
-                        <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                            <div class="title">
-                                <ol>
-                                    <div class="title">2014年经济师考试《经济师》具体到单个名称</div>
-                                    <p>2014-09-01</p>
-                                </ol>
-                                <span><a href="#" class="red">查看解析</a></span>
-                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
-                            </div>
-                        </li>
+                        </#list>
                     </ul>
+                    <#else>
+                    <ul>
+                        <li class="line">亲爱的同学，暂无您的错题记录</li>
+                    </ul>
+                    </#if>
                 </div>
                 <div class="h20"></div>
-                <div class="page fl">
-                    <a href="#">上一页</a>
-                    <a href="#">1</a>
-                    <em>...</em>
-                    <span>8</span>
-                    <a href="#">9</a>
-                    <a href="#">10</a>
-                    <a href="#">11</a>
-                    <a href="#">12</a>
-                    <a href="#">13</a>
-                    <a href="#">14</a>
-                    <em>...</em>
-                    <a href="#">28</a>
-                    <a href="#">下一页</a>
-                </div>
+                <div class="pager-plugin" id="pager"></div>
                 <div class="h20"></div>
             </div>
         </div>

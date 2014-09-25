@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 import com.examw.model.Json;
+import com.examw.test.front.model.Collection;
 import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.support.HttpUtil;
 import com.examw.test.front.support.JSONUtil;
@@ -31,10 +32,12 @@ public class CollectionServiceImpl implements ICollectionService{
 	 * @see com.examw.test.front.service.ICollectionService#collectOrCancel(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Json collectOrCancel(String structureItemId, String itemId,String userId) throws IOException {
-		if(logger.isDebugEnabled()) logger.debug("加载笔记信息...");
-		String url = String.format(this.api_collection_url,structureItemId);
-		String data = "itemId="+itemId+"&userId="+userId;
+	public Json collectOrCancel(Collection info) throws IOException {
+		if(logger.isDebugEnabled()) logger.debug("收藏或取消收藏...");
+		if(StringUtils.isEmpty(info.getStructureItemId()) || StringUtils.isEmpty(info.getUserId())) 
+			return null;
+		String url = String.format(this.api_collection_url,info.getStructureItemId());
+		String data = "itemId="+info.getItemId()+"&userId="+info.getUserId()+"&productId="+info.getProductId();
 		String xml = HttpUtil.httpRequest(url,"GET",data,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToObject(xml, Json.class);

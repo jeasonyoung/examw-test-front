@@ -1,7 +1,6 @@
 package com.examw.test.front.service.impl;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -17,6 +16,7 @@ import com.examw.test.front.model.ItemScoreInfo;
 import com.examw.test.front.model.PaperFrontInfo;
 import com.examw.test.front.model.PaperInfo;
 import com.examw.test.front.model.PaperPreview;
+import com.examw.test.front.model.PaperSubmitInfo;
 import com.examw.test.front.model.StructureInfo;
 import com.examw.test.front.model.StructureItemInfo;
 import com.examw.test.front.service.IPaperService;
@@ -143,12 +143,12 @@ public class PaperServiceImpl implements IPaperService{
 	 * @see com.examw.test.front.service.IPaperService#loadPaperDetail(java.lang.String)
 	 */
 	@Override
-	public PaperPreview loadPaperDetail(String paperId,String userId) throws IOException {
+	public PaperPreview loadPaperDetail(String paperId,String userId,String productId) throws IOException {
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷基本信息...");
-		if(StringUtils.isEmpty(paperId) || StringUtils.isEmpty(userId))
+		if(StringUtils.isEmpty(paperId) || StringUtils.isEmpty(userId) || StringUtils.isEmpty(productId))
 		return null;
 		String url = String.format(this.api_paperitem_url,paperId,userId);
-		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		String xml = HttpUtil.httpRequest(url,"GET",("productId="+productId),"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToObject(xml, PaperPreview.class);
 		}
@@ -212,18 +212,11 @@ public class PaperServiceImpl implements IPaperService{
 	}
 	
 	@Override
-	public Json sumbitPaper(Integer limitTime, String chooseAnswers,
-			String textAnswers,Integer model, String paperId, String userId)throws IOException {
+	public Json sumbitPaper(PaperSubmitInfo info)throws IOException {
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷基本信息...");
-		if(StringUtils.isEmpty(paperId) || StringUtils.isEmpty(userId))
+		if(!info.isSafe())
 		return null;
-		String url = String.format(this.api_papersubmit_url,paperId,userId);
-		StringBuilder data = new StringBuilder();
-		data.append("model=").append(model);
-		data.append("&limitTime=").append(limitTime);
-		data.append("&chooseAnswers=").append(chooseAnswers==null?"":URLEncoder.encode(chooseAnswers,"utf-8"));
-		data.append("&textAnswers=").append(textAnswers==null?"":textAnswers);
-		String xml = HttpUtil.httpRequest(url,"POST",data.toString(),"utf-8");
+		String xml = HttpUtil.httpRequest(this.api_papersubmit_url,"POST",info.createSubmitData(),"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToObject(xml, Json.class);
 		}
@@ -231,13 +224,13 @@ public class PaperServiceImpl implements IPaperService{
 	}
 	
 	@Override
-	public PaperFrontInfo loadPaperAnalysis(String paperId, String userId)
+	public PaperFrontInfo loadPaperAnalysis(String paperId, String userId,String productId)
 			throws IOException {
 		if(logger.isDebugEnabled()) logger.debug("加载试卷解析...");
 		if(StringUtils.isEmpty(paperId) || StringUtils.isEmpty(userId))
 		return null;
 		String url = String.format(this.api_paperanalysis_url,paperId,userId);
-		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		String xml = HttpUtil.httpRequest(url,"GET",("productId="+productId),"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToObject(xml, PaperFrontInfo.class);
 		}

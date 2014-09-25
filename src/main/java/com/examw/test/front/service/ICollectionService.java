@@ -3,6 +3,7 @@ package com.examw.test.front.service;
 import java.io.IOException;
 
 import com.examw.model.Json;
+import com.examw.test.front.model.Collection;
 
 /**
  * 收藏服务接口
@@ -18,7 +19,7 @@ public interface ICollectionService {
 	 * @return
 	 * @throws IOException 
 	 */
-	Json collectOrCancel(String structureItemId, String itemId, String userId) throws IOException;
+	Json collectOrCancel(Collection info) throws IOException;
 
 
 }

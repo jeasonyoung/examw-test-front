@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.examw.model.Json;
 import com.examw.test.front.model.Constant;
 import com.examw.test.front.model.PaperPreview;
+import com.examw.test.front.model.PaperSubmitInfo;
 import com.examw.test.front.service.IPaperService;
 
 /**
@@ -33,11 +34,12 @@ public class PaperController {
 	 * @return
 	 */
 	@RequestMapping(value ="", method = {RequestMethod.GET,RequestMethod.POST})
-	public String paperInfo(String paperId,Model model){
+	public String paperInfo(String paperId,HttpServletRequest request,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷基本信息...");
 		try{
 			PaperPreview info = this.paperService.loadPaperInfo(paperId);
 			model.addAttribute("PAPER", info);
+			model.addAttribute("PRODUCTID",request.getAttribute("productId"));
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载试卷基本信息...");
@@ -51,13 +53,13 @@ public class PaperController {
 	 * @return
 	 */
 	@RequestMapping(value ="/do/multi", method = {RequestMethod.GET,RequestMethod.POST})
-	public String paperDetail(String paperId,Model model,HttpServletRequest request){
+	public String paperDetail(String paperId,String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情...");
 		//TODO 模拟一个用户ID
 		String userId = getUserId(null);
 		//TODO 判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
 		try{
-			PaperPreview info = this.paperService.loadPaperDetail(paperId,userId);
+			PaperPreview info = this.paperService.loadPaperDetail(paperId,userId,productId);
 			model.addAttribute("PAPER", info);
 			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info,false));
 			//单选
@@ -80,7 +82,8 @@ public class PaperController {
 			model.addAttribute("ANSWER_JUDGE_WRONG",Constant.ANSWER_JUDGE_WRONG);
 			//是否显示答案
 			model.addAttribute("IS_SHOW_ANSWER",false);
-			
+			//productID
+			model.addAttribute("PRODUCTID",request.getAttribute("productId"));
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情异常...");
@@ -94,13 +97,13 @@ public class PaperController {
 	 * @return
 	 */
 	@RequestMapping(value ="/do/single", method = {RequestMethod.GET,RequestMethod.POST})
-	public String paperDetailSigleModel(String paperId,Model model){
+	public String paperDetailSigleModel(String paperId,String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情...");
 		//TODO 模拟一个用户ID
 		String userId = getUserId(null);
 		//TODO 判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
 		try{
-			PaperPreview info = this.paperService.loadPaperDetail(paperId,userId);
+			PaperPreview info = this.paperService.loadPaperDetail(paperId,userId,productId);
 			model.addAttribute("PAPER", info);
 			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info,true));
 			//单选
@@ -123,6 +126,8 @@ public class PaperController {
 			model.addAttribute("ANSWER_JUDGE_WRONG",Constant.ANSWER_JUDGE_WRONG);
 			//是否显示答案
 			model.addAttribute("IS_SHOW_ANSWER",false);
+			
+			model.addAttribute("PRODUCTID",request.getAttribute("productId"));
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情异常...");
@@ -133,16 +138,13 @@ public class PaperController {
 	//保存答案 [下次再做]
 	@RequestMapping(value ="/submit", method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
-	public Json sumbitForNextTime(HttpServletRequest request){
+	public Json sumbitForNextTime(PaperSubmitInfo info,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("试卷下次再做提交答案...");
-		String limitTime = request.getParameter("limitTime");
-		String model = request.getParameter("model");
-		String chooseAnswers = request.getParameter("chooseAnswers");
-		String textAnswers = request.getParameter("textAnswers");
-		String paperId = request.getParameter("paperId");
+		if(info == null) return null;
 		String userId = getUserId(request);
 		try{
-			return this.paperService.sumbitPaper(Integer.valueOf(limitTime),chooseAnswers,textAnswers,Integer.valueOf(model),paperId,userId);
+			info.setUserId(userId);
+			return this.paperService.sumbitPaper(info);
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("试卷下次再做提交答案异常...");
@@ -151,12 +153,12 @@ public class PaperController {
 	}
 	
 	@RequestMapping(value ="/analysis", method = {RequestMethod.GET,RequestMethod.POST})
-	public String paperAnalysis(String paperId,Model model){
+	public String paperAnalysis(String paperId,String productId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题解析详情...");
 		//TODO 模拟一个用户ID
 		String userId = getUserId(null);
 		try{
-			PaperPreview info = this.paperService.loadPaperAnalysis(paperId,userId);
+			PaperPreview info = this.paperService.loadPaperAnalysis(paperId,userId,productId);
 			model.addAttribute("PAPER", info);
 			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info,true));
 			//单选

@@ -1,10 +1,8 @@
 <#assign answerflag=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]/>
 <#assign xuhao = 0/>	<!-- 计算序号 -->
-<#assign total = 0/>	<!-- 总数 -->
 <#macro option_flag index>
 	${answerflag[index]}
 </#macro>
-
 <#macro show_item item index>
 	<#if item.type == TYPE_SINGLE_VALUE>
 		<@item_choose i=item input="radio" index=index/>
@@ -21,7 +19,7 @@
 	</#if>
 </#macro>
 <#macro item_choose i input index>
-	<div name="item_whole" class="box fl" item_type="${i.type}" item_id="${i.item.id?default(i.id)}" item_status="${i.item.answerStatus?default(i.answerStatus)}">
+	<div class="box fl" item_type="${i.type}" item_id="${i.item.id?default(i.id)}" item_status="${i.item.answerStatus?default(i.answerStatus)}">
 		<#if i.item?? && i.parentContent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
@@ -33,41 +31,20 @@
               <em><span>[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${i.pid}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>
        </div>
        <div class="xz-daan fl" >
-       		<#if i.answerStatus??>
-       			<#if i.answerStatus == STATUS_RIGHT>
-       				<div class="dui"></div>
-       			<#else>	
-       				<div class="cuo"></div>
-       			</#if>
-       		<#elseif i.item.answerStatus??>
-       			<#if i.item.answerStatus == STATUS_RIGHT>
-       				<div class="dui"></div>
-       			<#else>	
-       				<div class="cuo"></div>
-       			</#if>
-       		</#if>
             <div class="list">
                 <ul>
                 <#if i.item.children??>
                 <!-- 按顺序输出?sort_by(["orderNo"]) -->
                 <#list i.item.children?sort_by(["orderNo"]) as option>
                 <li>
-                	<#if i.item.answer?contains(option.id)>
-                	<span><@option_flag option_index/>.</span>
-                	<#else>
                 	<i><@option_flag option_index/>.</i>
-                	</#if>
                 	<em>${option.content}</em>
                 </li>
                 </#list>
                 <#else>
                 <#list i.children?sort_by(["orderNo"]) as option>
                 <li>
-                	<#if i.answer?contains(option.id)>
-                	<span><@option_flag option_index/>.</span>
-                	<#else>
                 	<i><@option_flag option_index/>.</i>
-                	</#if>
                 	<em>${option.content}</em>
                 </li>
                 </#list>
@@ -77,16 +54,18 @@
          </div>
          <div class="daanbox fl">
                <div class="zhankai-bg" item_id="${i.item.id?default(i.id)}" <#if index != 1>style="display:none"</#if>></div>
+               <div item_id="${i.item.id?default(i.id)}" name="answer" style="display:none">
                <div class="f-l fl"><i>参考答案：</i><@calculate_right_answer i/></div>
                <div class="f-l fl"><i>我的答案：</i><@calculate_user_answer i/></div>
+               </div>
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.item.id?default(i.id)}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
                     <div class="f-r fr"><em class="jiucuo"></em><i><a href="#">纠错</a></i></div>
                     <#if i.item.isCollected?default(i.isCollected)>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.structureItemId?default(i.id)}','${i.item.id?default(i.id)}','${i.item.userAnswer?default(i.userAnswer)}');">移除此收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.structureItemId?default(i.id)}','${i.item.id?default(i.id)}');">移除此收藏</a></i></div>
                     <#else>
-                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.structureItemId?default(i.id)}','${i.item.id?default(i.id)}','${i.item.userAnswer?default(i.userAnswer)}');">收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.structureItemId?default(i.id)}','${i.item.id?default(i.id)}');">收藏</a></i></div>
                     </#if>
                </div>
          </div>
@@ -105,22 +84,10 @@
             <em><span>[${i.typeName}]</span>${i.content}</em>
         </div>
         <div class="xz-daan fl">
-        	<#if i.answerStatus??>
-       			<#if i.answerStatus == STATUS_RIGHT>
-       				<div class="dui"></div>
-       			<#else>	
-       				<div class="cuo"></div>
-       			</#if>
-       		<#elseif i.item.answerStatus??>
-       			<#if i.item.answerStatus == STATUS_RIGHT>
-       				<div class="dui"></div>
-       			<#else>	
-       				<div class="cuo"></div>
-       			</#if>
-       		</#if>
          </div>
          <div class="daanbox fl">
                <div class="zhankai-bg" item_id="${i.item.id?default(i.id)}" <#if index != 1>style="display:none"</#if>></div>
+               <div item_id="${i.item.id?default(i.id)}" name="answer">
                <div class="f-l fl"><i>参考答案：</i>
                			<em class="dui">
                			<#if i.item??>
@@ -173,13 +140,14 @@
                			</#if>
                		</#if>
                </div>
+               <div>
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.item.id?default(i.id)}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
                     <#if i.item.isCollected?default(i.isCollected)>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.structureItemId?default(i.id)}','${i.item.id?default(i.id)}','${i.item.userAnswer?default(i.userAnswer)}');">移除此收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.structureItemId?default(i.id)}','${i.item.id?default(i.id)}');">移除此收藏</a></i></div>
                     <#else>
-                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.structureItemId?default(i.id)}','${i.item.id?default(i.id)}','${i.item.userAnswer?default(i.userAnswer)}');">收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.structureItemId?default(i.id)}','${i.item.id?default(i.id)}');">收藏</a></i></div>
                     </#if>
                     <!--收藏后<div class="f-r fl"><em class="shoucang"></em><i><a href="#">收藏</a></i></div>-->
                </div>
@@ -293,26 +261,4 @@
                </div>
          </div>
     </div>
-</#macro>
-<!-- 答题卡 -->
-<#macro answer_card items>
-	<#list items as item>
-		<#if item_index == 0>
-			<div class="five fl">
-       			<div class="list">
-          			<ul>
-		</#if>
-		<li item_status="${item.answerStatus}"><a <#if item.answerStatus == STATUS_RIGHT>class="dui"<#elseif item.answerStatus == STATUS_WRONG>class="cuo"</#if> href="javascript:void(0)" onclick="focusTo(this,${item_index+1})" item_id="${item.id}" s_item_id="${item.structureItemId}">${item_index+1}</a></li>
-		<#if item_index != 0 && (item_index+1)%5==0>
-			 	</ul>
-        	</div>
-     	</div>
-     	<div class="five fl">
-       			<div class="list">
-          			<ul>
-		</#if>
-	</#list>
-           </ul>
-        </div>
-     </div>
 </#macro>

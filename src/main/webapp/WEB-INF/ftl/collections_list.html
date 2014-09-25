@@ -24,42 +24,32 @@
                 </div>
             </div>
             <div class="box fl">
+            	<#if PRODUCTLIST?? && (PRODUCTLIST?size > 0)>
+            	<#list PRODUCTLIST as product>
                 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="collect-box">
                     <tr>
-                        <td class="collect-fl">会计从业资格</td>
+                        <td class="collect-fl">${product.name}</td>
                         <td class="collect-fr">
                             <div class="collectlist">
                             	<ul>
+                            		<#list product.subjectList as subject>
                                 	<li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'">
-                                    	<em>会计基础</em><em>共 <font class="red">2</font> 道收藏试题</em><i><div class="hei-botton"><a href="我的收藏题库页面.html">点击查看</a></div></i>
+                                    	<em>${subject.name}</em><em>共 <font class="red">${subject.userCollectionNum}</font> 道收藏试题</em><i><div class="hei-botton"><a href="我的收藏题库页面.html">点击查看</a></div></i>
                                     </li>
-                                    <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'">
-                                    	<em>财经法规</em><em>共 <font class="red">6</font> 道收藏试题</em><i><div class="hei-botton"><a href="我的收藏题库页面.html">点击查看</a></div></i>
-                                    <li class="out bb-no" onMouseOver="this.className='over bb-no'" onMouseOut="this.className='out bb-no'">
-                                    	<em>会计电算化</em><em>共 <font class="red">20</font> 道收藏试题</em><i><div class="hei-botton"><a href="我的收藏题库页面.html">点击查看</a></div></i>
-                                    </li>
+                                    </#list>
                                 </ul>
                             </div>
                         </td>
                     </tr>
                 </table>
-                <table width="100%" border="0" cellpadding="0" cellspacing="0" class="collect-box">
-                    <tr>
-                        <td class="collect-fl">政法干警</td>
-                        <td class="collect-fr">
-                            <div class="collectlist">
-                            	<ul>
-                                	<li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'">
-                                    	<em>申论</em><em>共 <font class="red">2</font> 道收藏试题</em><i><div class="hei-botton"><a href="我的收藏题库页面.html">点击查看</a></div></i>
-                                    </li>
-                                    <li class="out bb-no" onMouseOver="this.className='over bb-no'" onMouseOut="this.className='out bb-no'">
-                                    	<em>法规</em><em>共 <font class="red">6</font> 道收藏试题</em><i><div class="hei-botton"><a href="我的收藏题库页面.html">点击查看</a></div></i>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
+                </#list>
+                <#else>
+            	<div class="moni-list">
+            		<ul>
+                  	 	<li class="line">亲爱的同学，暂无您的收藏记录<a href="<@s.url "/library/simulate"/>?productId=${PRODUCTID}" class="red">立即练习</a></li>
+                	</ul>
+            	</div>
+            	</#if>
             </div>
         </div>
     </div>
