@@ -25,6 +25,8 @@
 *
 * The included Pager.CSS file is a dependancy but can obviously tweaked to your wishes
 * Tested in IE6 IE7 Firefox & Safari. Any browser strangeness, please report.
+* *****************
+*  <div class="pager-plugin" id="pager"></div>
 */
 (function($) {
 
