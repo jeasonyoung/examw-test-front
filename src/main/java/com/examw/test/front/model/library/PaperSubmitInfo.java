@@ -1,4 +1,4 @@
-package com.examw.test.front.model;
+package com.examw.test.front.model.library;
 
 import java.io.Serializable;
 import java.net.URLEncoder;

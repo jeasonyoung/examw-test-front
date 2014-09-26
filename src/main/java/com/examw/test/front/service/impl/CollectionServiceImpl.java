@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 import com.examw.model.Json;
-import com.examw.test.front.model.Collection;
+import com.examw.test.front.model.record.Collection;
 import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.support.HttpUtil;
 import com.examw.test.front.support.JSONUtil;

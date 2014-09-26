@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.examw.test.front.model.ProductInfo;
+import com.examw.test.front.model.product.FrontProductInfo;
 import com.examw.test.front.service.IProductService;
 
 /**
@@ -34,7 +34,7 @@ public class ProductController {
 	public String products(String examId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载products...");
 		try{
-			List<ProductInfo> list = this.productService.loadProducts(examId);
+			List<FrontProductInfo> list = this.productService.loadProducts(examId);
 			model.addAttribute("PRODUCTLIST", list);
 		}catch(Exception e){
 			e.printStackTrace();

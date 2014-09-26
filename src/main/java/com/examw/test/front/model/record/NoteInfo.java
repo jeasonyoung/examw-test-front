@@ -1,4 +1,4 @@
-package com.examw.test.front.model;
+package com.examw.test.front.model.record;
 
 import java.util.Date;
 

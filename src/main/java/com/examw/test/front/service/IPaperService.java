@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.examw.model.Json;
-import com.examw.test.front.model.ItemScoreInfo;
-import com.examw.test.front.model.PaperFrontInfo;
-import com.examw.test.front.model.PaperInfo;
-import com.examw.test.front.model.PaperPreview;
-import com.examw.test.front.model.PaperSubmitInfo;
+import com.examw.test.front.model.library.ItemScoreInfo;
+import com.examw.test.front.model.library.PaperFrontInfo;
+import com.examw.test.front.model.library.PaperInfo;
+import com.examw.test.front.model.library.PaperPreview;
+import com.examw.test.front.model.library.PaperSubmitInfo;
 
 /**
  * 试卷服务接口

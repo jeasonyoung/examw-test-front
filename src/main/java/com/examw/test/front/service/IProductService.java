@@ -3,7 +3,7 @@ package com.examw.test.front.service;
 import java.io.IOException;
 import java.util.List;
 
-import com.examw.test.front.model.ProductInfo;
+import com.examw.test.front.model.product.FrontProductInfo;
 
 
 /**
@@ -18,12 +18,12 @@ public interface IProductService{
 	 * @return
 	 * @throws IOException
 	 */
-	List<ProductInfo> loadProducts(String examId) throws IOException;
+	List<FrontProductInfo> loadProducts(String examId) throws IOException;
 	/**
 	 * 根据ID加载产品信息
 	 * @param id
 	 * @return
 	 * @throws IOException
 	 */
-	ProductInfo loadProduct(String id)throws IOException;
+	FrontProductInfo loadProduct(String id)throws IOException;
 }

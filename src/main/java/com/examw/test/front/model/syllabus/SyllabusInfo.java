@@ -1,4 +1,4 @@
-package com.examw.test.front.model;
+package com.examw.test.front.model.syllabus;
 
 import java.util.Set;
 

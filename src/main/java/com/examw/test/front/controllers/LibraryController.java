@@ -13,8 +13,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.examw.test.front.model.PaperInfo;
-import com.examw.test.front.model.ProductInfo;
+import com.examw.test.front.model.library.PaperInfo;
+import com.examw.test.front.model.product.ProductInfo;
 import com.examw.test.front.service.IPaperService;
 import com.examw.test.front.service.IProductService;
 /**

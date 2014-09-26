@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.examw.test.front.model.CategoryFrontInfo;
+import com.examw.test.front.model.product.FrontCategoryInfo;
 import com.examw.test.front.service.ICategoryService;
 
 /**
@@ -33,7 +33,7 @@ public class IndexController {
 	public String index(Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载index...");
 		try{
-			List<CategoryFrontInfo> list = this.categoryService.loadAllCategoryAndExams();
+			List<FrontCategoryInfo> list = this.categoryService.loadAllCategoryAndExams();
 			model.addAttribute("CATEGORYLIST", list);
 		}catch(Exception e){
 			e.printStackTrace();

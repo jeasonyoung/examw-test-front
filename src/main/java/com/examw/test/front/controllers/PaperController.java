@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.model.Json;
 import com.examw.test.front.model.Constant;
-import com.examw.test.front.model.PaperPreview;
-import com.examw.test.front.model.PaperSubmitInfo;
+import com.examw.test.front.model.library.PaperPreview;
+import com.examw.test.front.model.library.PaperSubmitInfo;
 import com.examw.test.front.service.IPaperService;
 
 /**

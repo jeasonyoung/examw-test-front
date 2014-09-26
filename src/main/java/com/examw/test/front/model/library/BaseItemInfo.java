@@ -1,4 +1,4 @@
-package com.examw.test.front.model;
+package com.examw.test.front.model.library;
 
 import java.math.BigDecimal;
 import java.util.Set;

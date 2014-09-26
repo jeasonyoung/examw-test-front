@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
-	<!-- dao -->
+       
+    <!-- 在spring里配置cache就和在spring配置数据库一样， -->
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+    	<property name="configLocation">  
+        	<value>classpath:spring-examw-test-front-ehcache-conf.xml</value>  
+      	</property> 
+    </bean>
+
+    <bean id="methodCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+        <property name="cacheManager" ref="cacheManager"/>
+        <property name="cacheName">
+            <value>com.examw.MethodCache</value>
+        </property>
+    </bean>
+    
+    <bean id="methodCacheInterceptor" class="com.examw.test.front.intercepter.MethodCacheInterceptor">
+        <property name="cache" ref="methodCache"/>
+    </bean>
+
+    <bean id="methodCachePointCut" class="org.springframework.aop.support.RegexpMethodPointcutAdvisor">
+        <property name="advice" ref="methodCacheInterceptor"/>
+        <!-- 下面的配置就使得在数据访问时，cache将拦截从数据库获取的数据，与cache数据比较，如有就不放入cache，没有就放入，更新到数据库去，也是先存入cache，再更新到数据库中去 -->
+        <property name="patterns">
+            <list>
+                 <value>com.examw.test.front.service.*Impl.load*.*</value>
+            </list>
+        </property>
+    </bean>
 	
+    <!--切面配置-->
+	<!-- <aop:config>
+		<aop:pointcut id="methodCachePointCut" expression="execution(* com.examw.test.front.service..*Impl.*(..))" />
+		<aop:advisor pointcut-ref="methodCachePointCut" />
+	</aop:config> -->
+
 </beans>

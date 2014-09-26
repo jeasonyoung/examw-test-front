@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
-import com.examw.test.front.model.ProductInfo;
+import com.examw.test.front.model.product.FrontProductInfo;
 import com.examw.test.front.service.IProductService;
 import com.examw.test.front.support.HttpUtil;
 import com.examw.test.front.support.JSONUtil;
@@ -44,26 +44,26 @@ public class ProductServiceImpl implements IProductService{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<ProductInfo> loadProducts(String examId) throws IOException {
+	public List<FrontProductInfo> loadProducts(String examId) throws IOException {
 		if(logger.isDebugEnabled()) logger.debug("加载产品列表信息...");
 		if(StringUtils.isEmpty(examId))
 		return null;
 		String xml = HttpUtil.httpRequest(api_product_list_url,"GET","examId="+examId,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
-			return JSONUtil.JsonToCollection(xml,List.class,ProductInfo.class);
+			return JSONUtil.JsonToCollection(xml,List.class,FrontProductInfo.class);
 		}
 		return null;
 	}
 	
 	@Override
-	public ProductInfo loadProduct(String id) throws IOException {
+	public FrontProductInfo loadProduct(String id) throws IOException {
 		if(logger.isDebugEnabled()) logger.debug("加载选中产品信息....");
 		if(StringUtils.isEmpty(id))
 		return null;
 		String url = String.format(this.api_product_detail_url,id);
 		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
-			return JSONUtil.JsonToObject(xml,ProductInfo.class);
+			return JSONUtil.JsonToObject(xml,FrontProductInfo.class);
 		}
 		return null;
 	}

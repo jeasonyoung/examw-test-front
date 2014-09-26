@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import com.examw.model.Json;
-import com.examw.test.front.model.NoteInfo;
+import com.examw.test.front.model.record.NoteInfo;
 
 /**
  * 笔记服务接口

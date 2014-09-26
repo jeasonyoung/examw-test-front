@@ -48,13 +48,7 @@
                 			<#else>
                 			<ul name="category_children" id="${c.id}" style="display:none">
                 		</#if>
-                		<#list c.exams as child>
-                        	<li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'" data-examid="${child.id}">
-                        		<div class="pic"><img src="<@s.url "/resources/front-default/image/class.png"/>" width="66" height="74"></div>
-                            	<em>${child.name}</em>
-                            	<input name="examId" value="${child.id}" type="hidden" disabled="disabled"/>
-                        	</li>
-                       	</#list>
+                		<@createCategory c/>
                     	</ul>
                     </#list>
                     <!-- 已选择 -->
@@ -69,6 +63,27 @@
     </div>
     </form>
 </div>
+<#macro createExams exams>
+	<#if exams?? && (exams?size>0)>
+		<#list exams as exam>
+			<#if exam??>
+              <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'" data-examid="${exam.id}">
+                <div class="pic"><img src="<@s.url "/resources/front-default/image/class.png"/>" width="66" height="74"></div>
+                <em>${exam.name}</em>
+                <input name="examId" value="${exam.id}" type="hidden" disabled="disabled"/>
+              </li>
+           </#if>
+        </#list>
+	</#if>
+</#macro>
+<#macro createCategory cate>
+	<#if cate.chidren?? && (cate.children?size>0)>
+		<#list cate.chidren as child>
+			<@createCategory child/>
+		</#list>
+	</#if>
+	<@createExams cate.exams/>
+</#macro>
 <div class="h30"></div>
 <#include "common/foot.html"/>
 </body>

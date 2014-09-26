@@ -3,7 +3,7 @@ package com.examw.test.front.service;
 import java.io.IOException;
 import java.util.List;
 
-import com.examw.test.front.model.CategoryFrontInfo;
+import com.examw.test.front.model.product.FrontCategoryInfo;
 /**
  * 考试分类服务接口
  * @author fengwei
@@ -14,6 +14,5 @@ public interface ICategoryService {
 	 * 加载所有的考试类型-考试
 	 * @return
 	 */
-	List<CategoryFrontInfo> loadAllCategoryAndExams() throws IOException;
-	
+	List<FrontCategoryInfo> loadAllCategoryAndExams() throws IOException;
 }

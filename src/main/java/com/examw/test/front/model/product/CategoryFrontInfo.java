@@ -1,4 +1,4 @@
-package com.examw.test.front.model;
+package com.examw.test.front.model.product;
 
 import java.util.List;
 

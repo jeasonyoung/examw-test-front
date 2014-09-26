@@ -1,4 +1,4 @@
-package com.examw.test.front.model;
+package com.examw.test.front.model.library;
 
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;

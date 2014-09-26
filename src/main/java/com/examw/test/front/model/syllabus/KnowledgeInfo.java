@@ -1,4 +1,4 @@
-package com.examw.test.front.model;
+package com.examw.test.front.model.syllabus;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;

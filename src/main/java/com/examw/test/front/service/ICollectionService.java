@@ -3,7 +3,7 @@ package com.examw.test.front.service;
 import java.io.IOException;
 
 import com.examw.model.Json;
-import com.examw.test.front.model.Collection;
+import com.examw.test.front.model.record.Collection;
 
 /**
  * 收藏服务接口

@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 import com.examw.model.Json;
-import com.examw.test.front.model.NoteInfo;
+import com.examw.test.front.model.record.NoteInfo;
 import com.examw.test.front.service.INoteService;
 import com.examw.test.front.support.HttpUtil;
 import com.examw.test.front.support.JSONUtil;

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.util.StringUtils;
 
-import com.examw.test.front.model.CategoryFrontInfo;
+import com.examw.test.front.model.product.FrontCategoryInfo;
 import com.examw.test.front.service.ICategoryService;
 import com.examw.test.front.support.HttpUtil;
 import com.examw.test.front.support.JSONUtil;
@@ -29,12 +29,11 @@ public class CategoryServiceImpl implements ICategoryService{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<CategoryFrontInfo> loadAllCategoryAndExams() throws IOException {
+	public List<FrontCategoryInfo> loadAllCategoryAndExams() throws IOException {
 		String xml = HttpUtil.httpRequest(api_url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
-			return JSONUtil.JsonToCollection(xml,List.class,CategoryFrontInfo.class);
+			return JSONUtil.JsonToCollection(xml,List.class,FrontCategoryInfo.class);
 		}
 		return null;
 	}
-	
 }
