@@ -10,6 +10,7 @@
 	<bean id="productService" class="com.examw.test.front.service.impl.ProductServiceImpl">
 	    <property name="api_product_list_url" value="${api_products_url}" />
 	    <property name="api_product_detail_url" value="${api_product_url}" />
+	    <property name="cacheHelper" ref="cacheHelper"></property>
 	</bean>
 	<!-- 章节 -->
 	<bean id="chapterService" class="com.examw.test.front.service.impl.ChapterServiceImpl">
@@ -33,5 +34,4 @@
 	<bean id="collectionService" class="com.examw.test.front.service.impl.CollectionServiceImpl">
 	    <property name="api_collection_url" value="${api_item_collection_url}" />
 	</bean>
-	
 </beans>

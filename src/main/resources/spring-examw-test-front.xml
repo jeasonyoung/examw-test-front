@@ -10,8 +10,10 @@
 		<!-- <import resource="spring-examw-test-front-hibernate.xml" /> -->
 		<!-- dao -->
 		<!-- <import resource="spring-examw-test-front-dao.xml" /> -->
+		<import resource="spring-examw-test-front-ehcache.xml" />
 		<!-- service -->
 		<import resource="spring-examw-test-front-service.xml" />
+		
 		<!-- shiro -->
 		<!-- <import resource="spring-examw-test-front-shiro.xml" /> -->
 </beans>

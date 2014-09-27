@@ -1,5 +1,6 @@
 package com.examw.test.front.model.product;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import com.examw.model.Paging;
@@ -9,12 +10,12 @@ import com.examw.model.Paging;
  * @author fengwei.
  * @since 2014年8月12日 上午11:37:23.
  */
-public class ProductInfo extends Paging{
+public class ProductInfo extends Paging implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private String id,name,content;
 	private String examId,examName;
 	private String[] subjectId;
-	private String subjectName;
+	private String[] subjectName;
 	private BigDecimal price,discount;
 	private String createTime,lastTime;
 	private Integer status;
@@ -229,7 +230,7 @@ public class ProductInfo extends Paging{
 	 * @return subjectName
 	 * 
 	 */
-	public String getSubjectName() {
+	public String[] getSubjectName() {
 		return subjectName;
 	}
 	/**
@@ -237,7 +238,7 @@ public class ProductInfo extends Paging{
 	 * @param subjectName
 	 * 
 	 */
-	public void setSubjectName(String subjectName) {
+	public void setSubjectName(String[] subjectName) {
 		this.subjectName = subjectName;
 	}
 	

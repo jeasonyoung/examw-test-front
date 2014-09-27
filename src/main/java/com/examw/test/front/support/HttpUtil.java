@@ -3,10 +3,14 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.net.ssl.X509TrustManager;
 
 import org.apache.log4j.Logger;
+
+import com.examw.model.Json;
 /**
  * HTTP访问工具类。
  * @author yangyong.
@@ -105,5 +109,23 @@ public final class HttpUtil {
 	 * */
 	public static String httpRequest(String requestUrl, String requestMethod, String data) throws IOException{
 		return httpRequest(requestUrl, requestMethod, data, null);
+	}
+	/**
+	 * 上传数据方法
+	 * @param requestUrl		请求地址	
+	 * @param data				请求参数对象[必须能够序列化]
+	 * @return
+	 * @throws Exception	
+	 */
+	public static Json upload(String requestUrl, Object data) throws Exception {
+		String post = JSONUtil.ObjectToJson(data);
+		Map<String, String> headers = new HashMap<String, String>();
+		headers.put("Content-type","application/json;charset=UTF-8");
+		String callback = com.examw.utils.HttpUtil.sendRequest(requestUrl,headers, "POST", post);
+		Json json = JSONUtil.JsonToObject(callback, Json.class);
+		if(json == null){
+			throw new Exception("反馈收据转换失败！callback=>" + callback);
+		}
+		return json;
 	}
 }

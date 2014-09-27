@@ -1,6 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
-	<!-- dao -->
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 	
+	<!-- 在spring里配置cache就和在spring配置数据库一样， -->  
+    <!-- 缓存管理器 -->     
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <!-- 缓存配置文件位置 -->  
+        <property name="configLocation">    
+            <value>classpath:spring-examw-test-front-ehcache-conf.xml</value>    
+        </property>   
+    </bean>  
+    <!-- 使用缓存的配置 -->
+    <bean id="methodCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">  
+        <property name="cacheManager" ref="cacheManager"/>  
+        <property name="cacheName">  
+            <value>com.examw.MethodCache</value>  
+        </property>  
+    </bean>  
+    <!-- 方法拦截器 -->
+    <bean id="methodCacheInterceptor" class="com.examw.test.front.interceptor.MethodCacheInterceptor">  
+        <property name="cache" ref="methodCache"/>  
+    </bean>  
+   <!-- 定义切入点 -->
+    <bean id="methodCachePointCut" class="org.springframework.aop.support.NameMatchMethodPointcutAdvisor">  
+        <property name="advice">  
+            <ref local="methodCacheInterceptor"/>  
+        </property>  
+        <!-- 下面的配置就使得在数据访问时，cache将拦截从数据库获取的数据，与cache数据比较，如有就不放入cache，没有就放入，更新到数据库去，也是先存入cache，再更新到数据库中去 -->  
+        <property name="mappedNames">  
+            <list>  
+                <value>load*</value>
+            </list>  
+        </property>  
+    </bean>
+    <!-- 代理 -->
+    <bean id="methodCacheProxy" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">  
+     	<property name="beanNames">  
+            <list>  
+                <value>*Service</value>
+            </list>  
+     	</property>
+        <property name="interceptorNames">  
+            <list>  
+                <value>methodCachePointCut</value>  
+            </list>  
+        </property>  
+    </bean>  
+    
+    <!-- 缓存帮助类 -->
+	<bean id="cacheHelper" class="com.examw.test.front.support.MethodCacheHelper">
+	    <property name="cache" ref="methodCache"/>
+	</bean>
 </beans>

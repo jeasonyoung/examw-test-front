@@ -10,6 +10,10 @@
 <link href="<@s.url "/resources/front-default/home.css"/>" rel="stylesheet" type="text/css">
 <!-- jquery -->
 <script type="text/javascript" src="<@s.url "/resources/jquery.min.1.11.1.js"/>"></script>
+<!-- pager -->
+<link href="<@s.url "/resources/front-default/pager.css"/>" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<@s.url "/resources/jquery.pager.js"/>"></script>
+<!-- pager -->
 </head>
 <body>
 <#include "common/head.html"/>
@@ -18,7 +22,7 @@
 	<div class="content fl">
     	<div class="width998 yinying">
             <div class="porduct-list">
-              	<ul>
+              	<ul id="productList">
                 	<li class="porduct-top">
                         <div class="title">
                             <em class="txt">产品名称</em>
@@ -27,21 +31,6 @@
                             <span class="f-bold">未购/已购</span>
                         </div>
                     </li>
-                    <#list PRODUCTLIST as p>
-                    <li class="porduct-out" onMouseOver="this.className='porduct-over'" onMouseOut="this.className='porduct-out'">
-                        <div class="title">
-                            <em>&middot;<a href="#" target="_blank" title="${p.name}">${p.name}</a></em>
-                            <span class="red">${p.discount}元</span>
-                            <span>${p.itemNum}题</span>
-                            <span>
-                            	<div class="shiyong-botton"><div class="hei-cheng"><a href="<@s.url "/library"/>?productId=${p.id}">试用</a></div></div>
-                                <div class="shiyong-botton"><div class="t-cheng"><a href="#">购买</a></div></div>
-                            </span>
-                            <!-- 已经购买的情况 -->
-                           <!--  <span><div class="buy-botton"><div class="hong-botton"><a href="题库首页.html">点击进入</a></div></div></span> -->
-                        </div>
-                    </li>
-                    </#list>
                 </ul>
             </div>
             <div class="h20"></div>
@@ -53,4 +42,48 @@
 </div>
 <#include "common/foot.html"/>
 </body>
+<script type="text/javascript">
+	$(function(){
+		var pagesize = 4;
+		var totalPage = 0;
+		$.ajax({
+			type:"POST",
+	    	url:"<@s.url "/product/list"/>",
+	    	data:{"page":1,"examId":"${EXAMID}","rows":pagesize},
+	    	dataType:"json",
+	    	success:function(data){
+	    		var list = data.rows;
+	    		$("li[name='product']").remove();
+	    		$.each(list,function(i){
+	    			var p = list[i];
+	    			var li = "<li name='product' class='porduct-out' onMouseOver='this.className=\"porduct-over\"' onMouseOut='this.className=\"porduct-out\"'><div class='title'><em>&middot;<a href='#' target='_blank' title='"+p.name+"'>"+p.name+"</a></em><span class='red'>"+p.discount+"元</span><span>"+p.itemCount+"题</span><span><div class='shiyong-botton'><div class='hei-cheng'><a href='<@s.url "/library/"/>"+p.id+"'>试用</a></div></div><div class='shiyong-botton'><div class='t-cheng'><a href='#'>购买</a></div></div></span><!-- 已经购买的情况 --><!--  <span><div class='buy-botton'><div class='hong-botton'><a href='题库首页.html'>点击进入</a></div></div></span> --></div></li>";
+	    			$("#productList").append(li);
+	    		});
+	    		//分页
+	    		var total = data.total;
+	    		totalPage = total%pagesize==0?total/pagesize:(total/pagesize+1);
+	    		$("#pager").pager({ pagenumber: 1, pagecount: totalPage, buttonClickCallback: PageClick });
+	    	}
+		});
+		PageClick = function(pageclickednumber) {
+		    $("#pager").pager({ pagenumber: pageclickednumber, pagecount: totalPage, buttonClickCallback: PageClick });
+		    $.ajax({
+		    	type:"POST",
+		    	url:"<@s.url "/product/list"/>",
+		    	data:{"page":pageclickednumber,"examId":"${EXAMID}","rows":pagesize},
+		    	dataType:"json",
+		    	success:function(data){
+		    		var list = data.rows;
+		    		$("li[name='product']").remove();
+		    		$.each(list,function(i){
+		    			var p = list[i];
+		    			var li = "<li name='product' class='porduct-out' onMouseOver='this.className=\"porduct-over\"' onMouseOut='this.className=\"porduct-out\"'><div class='title'><em>&middot;<a href='#' target='_blank' title='"+p.name+"'>"+p.name+"</a></em><span class='red'>"+p.discount+"元</span><span>"+p.itemCount+"题</span><span><div class='shiyong-botton'><div class='hei-cheng'><a href='<@s.url "/library/"/>"+p.id+"'>试用</a></div></div><div class='shiyong-botton'><div class='t-cheng'><a href='#'>购买</a></div></div></span><!-- 已经购买的情况 --><!--  <span><div class='buy-botton'><div class='hong-botton'><a href='题库首页.html'>点击进入</a></div></div></span> --></div></li>";
+		    			$("#productList").append(li);
+		    		});
+		    	}
+		    	
+		    });
+		}
+	});
+</script>
 </html>

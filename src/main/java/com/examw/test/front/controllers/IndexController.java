@@ -41,6 +41,10 @@ public class IndexController {
 		}
 		return "index";
 	}
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String login(Model model){
+		return "login";
+	}
 	/**
 	 * 获取每日一练
 	 * @param model

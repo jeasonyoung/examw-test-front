@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<title>考试类选择页 考试系统题库</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<!-- css -->
+<link href="<@s.url "/resources/front-default/pub.css"/>" rel="stylesheet" type="text/css">
+<link href="<@s.url "/resources/front-default/home.css"/>" rel="stylesheet" type="text/css">
+<!-- js -->
+<script type="text/javascript" src="<@s.url "/resources/jquery.min.1.11.1.js"/>"></script>
+<script type="text/javascript" src="<@s.url "/resources/jquery.cookie.js"/>"></script>
+</head>
+
+<body>
+<#include "common/head.html"/>
+<div class="container">
+    <div class="Login-box">
+        <h2 class="Login-title">登录</h2>
+		<div class="Login-form">
+			<form class="Form">
+                <p style="display:none" class="error">您输入的密码和账户名不匹配，请重新输入。</p>
+                <div class="cell">
+                    <label for="mobile_ipt" style="display: none;">输入手机号/邮箱/用户名</label>
+                    <input type="text" class="text" id="js-mobile_ipt" name="mobile">
+                </div>
+                <div class="cell">
+                    <label for="mobile_pwd_ipt">输入密码</label>
+                    <input type="password" class="text" id="js-mobile_pwd_ipt" name="passwd">
+                </div>
+                <!--<div class="cell cell1">
+                    <input type="checkbox" class="qiek" name="js-mail_chk" id="js-mail_chk" checked="true"><label class="next">下次自动登录</label>
+                    <a class="f-fr" href="/account/resetpwd/">忘记密码？</a>
+                </div>-->
+                <div class="bottom"><a class="button" href="javascript:;" going="0" id="js-mobile_btn">登&nbsp;&nbsp;录</a></div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="h30"></div>
+<#include "common/foot.html"/>
+</body>
+</html>

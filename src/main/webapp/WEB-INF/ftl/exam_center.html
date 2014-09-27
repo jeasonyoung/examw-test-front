@@ -26,13 +26,13 @@
                     <div class="name fl">${PRODUCT.name}</div>
                     <div class="ti">
                         <ul>
-                            <li>您可以做&nbsp;<span>${PRODUCT.paperNum}</span>&nbsp;套模拟试卷</li>
-                            <li>您可以做&nbsp;<span>${PRODUCT.itemNum}</span>&nbsp;道试题</li>
+                            <li>您可以做&nbsp;<span>${PRODUCT.paperCount}</span>&nbsp;套模拟试卷</li>
+                            <li>您可以做&nbsp;<span>${PRODUCT.itemCount}</span>&nbsp;道试题</li>
                         </ul>
                     </div>
                 </div>
                 <div class="f-r fl">
-                	<div class="botton"><div class="hei-botton"><a href="分类产品列表.html">返回产品中心</a></div></div>
+                	<div class="botton"><div class="hei-botton"><a href="<@s.url "/products"/>?examId=${EXAMID}</a>">返回产品中心</a></div></div>
                 </div>
             </div>
             <div class="hbg"></div>
@@ -49,7 +49,7 @@
                             <li>历年真题：<span><#if PRODUCT.hasRealItem>有<#else>无</#if></span></li>
                             <li>更新时间：<span>${PRODUCT.lastTime?substring(0,11)}</span></li>
                             <li>产品价格：<span>${PRODUCT.discount}元</span></li>
-                            <li>试题数量：<span>${PRODUCT.itemNum}题</span></li>
+                            <li>试题数量：<span>${PRODUCT.itemCount}题</span></li>
                         </ul>
                     </div>
                 </div>
