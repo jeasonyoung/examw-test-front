@@ -1,5 +1,4 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
 <head>
 <title>考试类选择页 考试系统题库</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -11,34 +10,80 @@
 <!-- js -->
 <script type="text/javascript" src="<@s.url "/resources/jquery.min.1.11.1.js"/>"></script>
 <script type="text/javascript" src="<@s.url "/resources/jquery.cookie.js"/>"></script>
+<!-- dialog -->
+<link href="<@s.url "/resources/artDialog/ui-dialog.css"/>" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<@s.url "/resources/artDialog/dialog-min.js"/>"></script>
+<!-- dialog end -->
+<style type="text/css">
+form input{background: none repeat scroll 0 0 #fff;border: 1px solid #cececf;box-shadow: 0 2px rgba(100, 100, 100, 0.1) inset;font-size: 16px;height: 48px;line-height: 48px;width: 80%;float:right;}
+</style>
 </head>
-
 <body>
 <#include "common/head.html"/>
-<div class="container">
-    <div class="Login-box">
-        <h2 class="Login-title">登录</h2>
-		<div class="Login-form">
-			<form class="Form">
-                <p style="display:none" class="error">您输入的密码和账户名不匹配，请重新输入。</p>
-                <div class="cell">
-                    <label for="mobile_ipt" style="display: none;">输入手机号/邮箱/用户名</label>
-                    <input type="text" class="text" id="js-mobile_ipt" name="mobile">
-                </div>
-                <div class="cell">
-                    <label for="mobile_pwd_ipt">输入密码</label>
-                    <input type="password" class="text" id="js-mobile_pwd_ipt" name="passwd">
-                </div>
-                <!--<div class="cell cell1">
-                    <input type="checkbox" class="qiek" name="js-mail_chk" id="js-mail_chk" checked="true"><label class="next">下次自动登录</label>
-                    <a class="f-fr" href="/account/resetpwd/">忘记密码？</a>
-                </div>-->
-                <div class="bottom"><a class="button" href="javascript:;" going="0" id="js-mobile_btn">登&nbsp;&nbsp;录</a></div>
-            </form>
+<div class="main">
+	<div class="h30"></div>
+	<div style="float:right">
+    	<div class="width998 yinying" style="width:445px">
+            <div class="porduct-list">
+				<div style="clear:both;height:30px;margin:20px 20px">
+					<div>登   录</div>
+				</div>
+				<form action="" method="post">
+				<div style="clear:both;height:50px;margin:20px 20px;">
+					<span>用户名</span>
+					<input name="username"/>
+				</div>
+				<div style="clear:both;height:50px;margin:20px 20px">
+					<span>密码</span>
+					<input name="password" type="password"/>
+				</div>
+				<div style="clear:both;height:50px;margin:5px 50px">
+					<div class="t-cheng">
+						<a href="javascript:void(0)" id="login" style="padding:10px 5px">登   录</a>
+					</div>
+				</div>
+				</form>
+            </div>  	
         </div>
     </div>
+    <div class="h30"></div>
 </div>
 <div class="h30"></div>
 <#include "common/foot.html"/>
 </body>
+<script type="text/javascript">
+<!--
+	$(function(){
+		$("#login").click(function(){
+			var username = $("input[name='username']").val();
+			if($.trim(username)==""){
+				tips($("input[name='username']")[0],"请输入用户名");
+				return;
+			}
+			var password = $("input[name='password']").val();
+			if(password == ""){
+				tips($("input[name='password']")[0],"请输入密码");
+				return;
+			}
+			var d = dialog({
+				title:"登录中...",
+			    width: 200,
+			    cancel: false
+			});
+			d.showModal();
+			$.ajax({
+				
+			});
+		});
+	});
+	function tips(obj,msg){
+		var d = dialog({
+			align: 'right bottom',
+			content: msg,
+			quickClose: true// 点击空白处快速关闭
+		});
+		d.show(obj);
+	}
+//-->
+</script>
 </html>

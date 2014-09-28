@@ -18,6 +18,12 @@ import com.examw.test.front.model.library.PaperSubmitInfo;
  */
 public interface IPaperService {
 	/**
+	 * 获取试卷的类型
+	 * @return
+	 * @throws IOException
+	 */
+	Map<String,String> loadPaperType() throws IOException;
+	/**
 	 * 根据条件加载试卷信息
 	 * @param info
 	 * @return
@@ -56,4 +62,5 @@ public interface IPaperService {
 	 * @throws IOException
 	 */
 	PaperFrontInfo loadPaperAnalysis(String paperId,String userId,String productId)throws IOException;
+	
 }

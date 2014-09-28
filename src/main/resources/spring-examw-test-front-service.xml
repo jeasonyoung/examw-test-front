@@ -10,12 +10,15 @@
 	<bean id="productService" class="com.examw.test.front.service.impl.ProductServiceImpl">
 	    <property name="api_product_list_url" value="${api_products_url}" />
 	    <property name="api_product_detail_url" value="${api_product_url}" />
+	    <property name="api_product_subjects_url" value="${api_product_subjects_url}" />
+	    <property name="api_product_areas_url" value="${api_product_areas_url}" />
 	    <property name="cacheHelper" ref="cacheHelper"></property>
 	</bean>
 	<!-- 章节 -->
 	<bean id="chapterService" class="com.examw.test.front.service.impl.ChapterServiceImpl">
 	    <property name="api_list_url" value="${api_chapters_url}" />
-	    <property name="api_detail_url" value="${api_chapter_url}" />
+	    <property name="api_chapter_detail_url" value="${api_chapter_url}" />
+	    <property name="api_knowledge_detail_url" value="${api_knowledge_url}" />
 	</bean>
 	<!-- 试卷 -->
 	<bean id="paperService" class="com.examw.test.front.service.impl.PaperServiceImpl">
@@ -34,4 +37,9 @@
 	<bean id="collectionService" class="com.examw.test.front.service.impl.CollectionServiceImpl">
 	    <property name="api_collection_url" value="${api_item_collection_url}" />
 	</bean>
+	<!-- 用户 -->
+	<bean id="userService" class="com.examw.test.front.service.impl.UserServiceImpl">
+	    <property name="login_url" value="${login_url}" />
+	</bean>
+	
 </beans>

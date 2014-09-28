@@ -7,7 +7,9 @@ import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 import com.examw.model.DataGrid;
+import com.examw.test.front.model.product.AreaInfo;
 import com.examw.test.front.model.product.FrontProductInfo;
+import com.examw.test.front.model.product.SubjectInfo;
 import com.examw.test.front.service.IProductService;
 import com.examw.test.front.support.HttpUtil;
 import com.examw.test.front.support.JSONUtil;
@@ -22,6 +24,8 @@ public class ProductServiceImpl implements IProductService{
 	private static final Logger logger = Logger.getLogger(ProductServiceImpl.class);
 	private String api_product_list_url;
 	private String api_product_detail_url;
+	private String api_product_subjects_url;
+	private String api_product_areas_url;
 	private MethodCacheHelper cacheHelper;
 	/**
 	 * 设置 数据接口请求地址
@@ -41,6 +45,25 @@ public class ProductServiceImpl implements IProductService{
 		this.api_product_detail_url = api_product_detail_url;
 	}
 	
+	
+	/**
+	 * 设置 产品包含科目请求地址
+	 * @param api_product_subjects_url
+	 * 
+	 */
+	public void setApi_product_subjects_url(String api_product_subjects_url) {
+		this.api_product_subjects_url = api_product_subjects_url;
+	}
+	
+	/**
+	 * 设置 产品包含地区请求地址
+	 * @param api_product_areas_url
+	 * 
+	 */
+	public void setApi_product_areas_url(String api_product_areas_url) {
+		this.api_product_areas_url = api_product_areas_url;
+	}
+
 	/**
 	 * 获取 缓存帮助类
 	 * @return cacheHelper
@@ -115,5 +138,34 @@ public class ProductServiceImpl implements IProductService{
 				datagrid.setRows(list.subList((page-1)*rows, page*rows>total?total:page*rows));
 		}
 		return datagrid;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<SubjectInfo> loadProductSubjects(String productId)
+			throws IOException {
+		if(logger.isDebugEnabled()) logger.debug("加载选中产品信息....");
+		if(StringUtils.isEmpty(productId))
+		return null;
+		String url = String.format(this.api_product_subjects_url,productId);
+		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		if(!StringUtils.isEmpty(xml)){
+			return JSONUtil.JsonToCollection(xml,List.class,SubjectInfo.class);
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<AreaInfo> loadProductAreas(String productId) throws IOException {
+		if(logger.isDebugEnabled()) logger.debug("加载选中产品信息....");
+		if(StringUtils.isEmpty(productId))
+		return null;
+		String url = String.format(this.api_product_areas_url,productId);
+		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		if(!StringUtils.isEmpty(xml)){
+			return JSONUtil.JsonToCollection(xml,List.class,SubjectInfo.class);
+		}
+		return null;
 	}
 }

@@ -79,7 +79,7 @@
                         		<#else>
                         		<div class="jian"></div>	
                         		</#if>
-                           	 	<em>${father.text}</em>
+                           	 	<em>${father.title}</em>
                            	 	</div>
                             	<span>5 / 203</span>
                             	<span class="red">3</span>
@@ -96,7 +96,7 @@
                         			<#else>
                         				<div class="jian kong"></div>	
                         			</#if>
-                            			<i>${sun.text}</i></div>
+                            			<i>${sun.title}</i></div>
                             				<span>0 / 53</span>
                             				<span>0</span>
                             				<span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
@@ -107,10 +107,10 @@
                     			<li class="chapter-out" tpid="${father.id}" pid="${sun.id}" style="display:none;overflow:hidden;" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
                         			<div class="title">
                         				<div class="jian kong bg-no"></div>
-                            			<i>&middot; <a href="<@s.url "/library/chapter/detail?pid=${sun.id}&id=${grandsun.id}"/>" target="_blank" title="${grandsun.text}">${grandsun.text}</a></i>
+                            			<i>&middot; <a href="<@s.url "/library/chapter/detail/${sun.id}/${grandsun.id}"/>" target="_blank" title="${grandsun.title}">${grandsun.title}</a></i>
                             			<span></span>
                             			<span></span>
-                            			<span><div class="buy-botton"><div class="hei-botton"><a href="<@s.url "/library/chapter/detail?pid=${sun.id}&id=${grandsun.id}"/>" target="_blank">查看知识点</a></div></div></span>
+                            			<span><div class="buy-botton"><div class="hei-botton"><a href="<@s.url "/library/chapter/detail/${sun.id}/${grandsun.id}"/>" target="_blank">查看知识点</a></div></div></span>
                         			</div>
                     			</li>
                     			</#list>

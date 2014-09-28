@@ -43,10 +43,17 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	        return true;  
 	    }  
 	          
-	    //2、TODO 比如退出、首页等页面无需登录，即此处要放行 允许游客的请求  
-	          
+	    //2、TODO 比如退出、首页等页面无需登录，即此处要放行 允许游客的请求  静态资源
+	    if(request.getServletPath().startsWith("/resources"))
+	    {
+	    	return true;
+	    }
+	    if(request.getServletPath().equals("/"))
+	    {
+	    	return true;
+	    }      
 	    //3、如果用户已经登录 放行    
-	    User user = (User) request.getSession().getAttribute("user");
+	    User user = (User) request.getSession().getAttribute("USER");
 	    if(user != null) {  
 	        //更好的实现方式的使用cookie  
 	    	if(handler instanceof HandlerMethod){

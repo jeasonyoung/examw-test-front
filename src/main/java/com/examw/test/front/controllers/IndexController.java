@@ -3,15 +3,20 @@ package com.examw.test.front.controllers;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.examw.model.Json;
 import com.examw.test.front.model.product.FrontCategoryInfo;
+import com.examw.test.front.model.user.User;
 import com.examw.test.front.service.ICategoryService;
+import com.examw.test.front.service.IUserService;
 
 /**
  * 题库首页
@@ -23,6 +28,8 @@ public class IndexController {
 	private static final Logger logger = Logger.getLogger(IndexController.class);
 	@Resource
 	private ICategoryService categoryService;
+	@Resource
+	private IUserService userService;
 	
 	/**
 	 * 获取首页。
@@ -44,6 +51,26 @@ public class IndexController {
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String login(Model model){
 		return "login";
+	}
+	
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@ResponseBody
+	public Json login(User user,HttpServletRequest request){
+		Json json = new Json();
+		try{
+			User stu = this.userService.login(user);
+			if(stu == null){
+				json.setMsg("登录失败,用户名或密码错误");
+			}else{
+				json.setSuccess(true);
+				json.setMsg("登录成功");
+				request.getSession().setAttribute("USER", stu);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			json.setMsg("登录失败");
+		}
+		return json;
 	}
 	/**
 	 * 获取每日一练

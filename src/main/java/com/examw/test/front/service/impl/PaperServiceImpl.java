@@ -35,6 +35,7 @@ public class PaperServiceImpl implements IPaperService{
 	private String api_paperitem_url;
 	private String api_papersubmit_url;
 	private String api_paperanalysis_url;
+	private String api_papertype_url;
 	/**
 	 * 设置 试卷列表数据接口地址
 	 * @param api_paperlist_url
@@ -77,6 +78,21 @@ public class PaperServiceImpl implements IPaperService{
 	public void setApi_paperanalysis_url(String api_paperanalysis_url) {
 		this.api_paperanalysis_url = api_paperanalysis_url;
 	}
+	/**
+	 * 设置 试卷类型地址
+	 * @param api_papertype_url
+	 * 
+	 */
+	public void setApi_papertype_url(String api_papertype_url) {
+		this.api_papertype_url = api_papertype_url;
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public Map<String, String> loadPaperType() throws IOException {
+		String xml = HttpUtil.httpRequest(this.api_papertype_url, "GET", null, "utf-8");
+		if(StringUtils.isEmpty(xml)) return null;
+		return JSONUtil.JsonToCollection(xml, Map.class, String.class,String.class);
+	}
 	/*
 	 * 加载试卷列表
 	 * @see com.examw.test.front.service.IPaperService#loadPaperList(java.lang.String, com.examw.test.front.model.PaperInfo)
@@ -87,7 +103,7 @@ public class PaperServiceImpl implements IPaperService{
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷列表...");
 		if(StringUtils.isEmpty(productId))
 		return null;
-		String url = String.format(this.api_paperlist_url,productId,userId);
+		String url = String.format(this.api_paperlist_url,productId);
 		StringBuilder data = new StringBuilder();
 		if(info!=null){
 			//科目
@@ -165,7 +181,6 @@ public class PaperServiceImpl implements IPaperService{
 		List<StructureInfo> structures = paper.getStructures();
 		if(structures == null || structures.size()==0) return result;
 		for(StructureInfo s:structures){
-			
 			TreeSet<StructureItemInfo> items = new TreeSet<StructureItemInfo>(
 					new Comparator<StructureItemInfo>() {
 						@Override
@@ -236,4 +251,46 @@ public class PaperServiceImpl implements IPaperService{
 		}
 		return null;
 	}
+	/**
+	 * 前端分页条件查询
+	 * @param info
+	 * @param list
+	 * @return
+	 */
+//	private DataGrid<FrontPaperInfo> dataGrid(FrontPaperInfo info,List<FrontPaperInfo> list){
+//		DataGrid<FrontPaperInfo> datagrid = new DataGrid<FrontPaperInfo>();
+//		List<FrontPaperInfo> result = new ArrayList<FrontPaperInfo>();
+//		for(FrontPaperInfo paper : list){
+//			boolean flag = true;
+//			if(flag && !StringUtils.isEmpty(info.getSubjectId())){
+//				flag = paper.getSubjectId().equalsIgnoreCase(info.getSubjectId());
+//			}
+//			if(flag && !StringUtils.isEmpty(info.getAreaId())){
+//				flag = paper.getAreaId().equalsIgnoreCase(info.getAreaId());
+//			}
+//			if(flag && info.getType() != null){
+//				flag = paper.getType().equals(info.getType());
+//			}
+//			if(flag && info.getYear() != null){
+//				flag = paper.getYear().equals(info.getYear());
+//			}
+//			if(flag){
+//				result.add(paper);
+//			}
+//		}
+//		int total = result.size();
+//		int page = info.getPage()==null?0:info.getPage();
+//		int rows = info.getRows()==null?0:info.getRows();
+//		if(total > 0){
+//			datagrid.setTotal((long) total);
+//			Integer totalPage = total%rows==0?total/rows:(total/rows+1);
+//			page = page > totalPage?totalPage:page;
+//			if(list.size() <= rows)
+//			{
+//				datagrid.setRows(result);
+//			}else
+//				datagrid.setRows(result.subList((page-1)*rows, page*rows>total?total:page*rows));
+//		}
+//		return datagrid;
+//	}
 }

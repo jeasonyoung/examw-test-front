@@ -52,14 +52,14 @@ public class LibraryController {
 		return "collections_list";
 	}
 	
-	@RequestMapping(value = "error", method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value = "/error", method = {RequestMethod.GET,RequestMethod.POST})
 	public String error(String productId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载错题界面...");
 		return "error_records";
 	}
 	
-	@RequestMapping(value = "simulate", method = {RequestMethod.GET,RequestMethod.POST})
-	public String simulate(String productId,PaperInfo info,Model model){
+	@RequestMapping(value = "/simulate/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String simulate(@PathVariable String productId,PaperInfo info,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考试界面...");
 		try{
 			String userId = this.getUserId(null);
@@ -79,13 +79,13 @@ public class LibraryController {
 //				model.addAttribute("CURRENT_AREA_ID", info.getAearId());
 //			}
 			//包含科目集合
-			model.addAttribute("SUBJECTLIST", map.get("SUBJECTLIST"));
+			model.addAttribute("SUBJECTLIST", this.productService.loadProductSubjects(productId));
 			//包含地区
-			model.addAttribute("AREALIST", map.get("AREALIST"));
+			model.addAttribute("AREALIST", this.productService.loadProductAreas(productId));
 			//试卷集合
 			model.addAttribute("PAPERLIST", map.get("PAPERLIST"));
 			//试卷类型
-			model.addAttribute("PAPERTYPE", map.get("PAPERTYPE"));
+			model.addAttribute("PAPERTYPE", this.paperService.loadPaperType());
 			//页码
 			model.addAttribute("PAGE",info.getPage()==null?1:info.getPage());
 			//总条数

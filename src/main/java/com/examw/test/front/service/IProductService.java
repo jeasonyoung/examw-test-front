@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import com.examw.model.DataGrid;
+import com.examw.test.front.model.product.AreaInfo;
 import com.examw.test.front.model.product.FrontProductInfo;
+import com.examw.test.front.model.product.SubjectInfo;
 
 
 /**
@@ -34,4 +36,17 @@ public interface IProductService{
 	 * @throws IOException
 	 */
 	FrontProductInfo loadProduct(String id)throws IOException;
+	/**
+	 * 根据产品ID查找包含的科目信息
+	 * @param productId
+	 * @return
+	 * @throws IOException
+	 */
+	List<SubjectInfo> loadProductSubjects(String productId) throws IOException;
+	/**
+	 * 查询产品地区集合
+	 * @param productId
+	 * @return
+	 */
+	List<AreaInfo> loadProductAreas(String productId) throws IOException;
 }

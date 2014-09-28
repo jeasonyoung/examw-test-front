@@ -1,10 +1,12 @@
 package com.examw.test.front.service.impl;
 
-import java.util.Map;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
+import com.examw.test.front.model.syllabus.KnowledgeInfo;
+import com.examw.test.front.model.syllabus.SyllabusInfo;
 import com.examw.test.front.service.IChapterService;
 import com.examw.test.front.support.HttpUtil;
 import com.examw.test.front.support.JSONUtil;
@@ -17,7 +19,8 @@ import com.examw.test.front.support.JSONUtil;
 public class ChapterServiceImpl implements IChapterService{
 	private static final Logger logger = Logger.getLogger(ProductServiceImpl.class);
 	private String api_list_url;
-	private String api_detail_url;
+	private String api_knowledge_detail_url;
+	private String api_chapter_detail_url;
 	/**
 	 * 设置 章节列表数据接口地址
 	 * @param api_url
@@ -32,10 +35,18 @@ public class ChapterServiceImpl implements IChapterService{
 	 * @param api_detail_url
 	 * 
 	 */
-	public void setApi_detail_url(String api_detail_url) {
-		this.api_detail_url = api_detail_url;
+	public void setApi_knowledge_detail_url(String knowledge_detail_url) {
+		this.api_knowledge_detail_url = knowledge_detail_url;
 	}
 
+	/**
+	 * 设置 知识点集合数据接口地址
+	 * @param api_knowledge_list_url
+	 * 
+	 */
+	public void setApi_chapter_detail_url(String api_chapter_detail_url) {
+		this.api_chapter_detail_url = api_chapter_detail_url;
+	}
 
 	/*
 	 * 加载考试,科目和章节的信息
@@ -43,31 +54,46 @@ public class ChapterServiceImpl implements IChapterService{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Object> loadExamAndChapterInfo(String examId,String subjectId)
+	public List<SyllabusInfo> loadChapterInfo(String subjectId)
 			throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("加载章节信息....");
-		if(StringUtils.isEmpty(examId))
+		if(StringUtils.isEmpty(subjectId))
 		return null;
-		String url = String.format(this.api_list_url,examId);
-		if(StringUtils.isEmpty(subjectId)) subjectId = "";
-		String xml = HttpUtil.httpRequest(url,"GET","subjectId="+subjectId,"utf-8");
+		String url = String.format(this.api_list_url,subjectId);
+		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
-			return JSONUtil.JsonToCollection(xml, Map.class, String.class,Object.class);
+			return JSONUtil.JsonToCollection(xml, List.class, SyllabusInfo.class);
 		}
 		return null;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, Object> loadChapterDetail(String pid, String id)
-			throws Exception {
-		if(logger.isDebugEnabled()) logger.debug("加载章节详情信息....");
-		if(StringUtils.isEmpty(pid)||StringUtils.isEmpty(id))
+	public KnowledgeInfo loadKnowledgeDetail(String id) throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("加载知识点详情信息....");
+		if(StringUtils.isEmpty(id))
 		return null;
-		String url = String.format(this.api_detail_url,pid,id);
+		String url = String.format(this.api_knowledge_detail_url,id);
 		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
-			return JSONUtil.JsonToCollection(xml, Map.class, String.class,Object.class);
+			List<KnowledgeInfo> list = JSONUtil.JsonToCollection(xml,List.class, KnowledgeInfo.class);
+			if(list!=null && list.size()>0){
+				return list.get(0);
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public SyllabusInfo loadKnowledges(String chapterId)
+			throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("加载知识点集合信息....");
+		if(StringUtils.isEmpty(chapterId))
+		return null;
+		String url = String.format(this.api_chapter_detail_url,chapterId);
+		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		if(!StringUtils.isEmpty(xml)){
+			return JSONUtil.JsonToObject(xml, SyllabusInfo.class);
 		}
 		return null;
 	}

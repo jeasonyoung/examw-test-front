@@ -1,6 +1,9 @@
 package com.examw.test.front.service;
 
-import java.util.Map;
+import java.util.List;
+
+import com.examw.test.front.model.syllabus.KnowledgeInfo;
+import com.examw.test.front.model.syllabus.SyllabusInfo;
 
 /**
  * 章节练习服务接口
@@ -11,10 +14,10 @@ public interface IChapterService {
 	/**
 	 * 加载考试,科目和章节的信息
 	 * @param examId	考试ID
-	 * @return 一个数据的映射 
+	 * @return 章节信息的集合
 	 * @throws Exception
 	 */
-	Map<String,Object> loadExamAndChapterInfo(String examId,String subjectId)throws Exception;
+	List<SyllabusInfo> loadChapterInfo(String subjectId)throws Exception;
 	/**
 	 * 加载章节详情
 	 * @param pid	上级章节ID
@@ -22,5 +25,12 @@ public interface IChapterService {
 	 * @return	
 	 * @throws Exception
 	 */
-	Map<String,Object> loadChapterDetail(String pid ,String id)throws Exception;
+	KnowledgeInfo loadKnowledgeDetail(String id)throws Exception;
+	/**
+	 * 加载某小节信息
+	 * @param pid
+	 * @return
+	 * @throws Exception
+	 */
+	SyllabusInfo loadKnowledges(String chapterId) throws Exception;
 }
