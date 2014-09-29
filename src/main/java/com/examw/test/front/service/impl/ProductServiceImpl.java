@@ -119,11 +119,11 @@ public class ProductServiceImpl implements IProductService{
 		if(logger.isDebugEnabled()) logger.debug("加载产品分页列表信息...");
 		Integer page = info.getPage()==null?1:info.getPage();
 		Integer rows = info.getRows()==null?10:info.getRows();
-		List<FrontProductInfo> list = (List<FrontProductInfo>) this.cacheHelper.getCache("", this.getClass().getName()+"loadProducts", new Object[]{info.getExamId()});
+		List<FrontProductInfo> list = (List<FrontProductInfo>) this.cacheHelper.getCache(FrontProductInfo.class.getName(), this.getClass().getName()+"loadProducts", new Object[]{info.getExamId()});
 		if(list == null){
 			list = this.loadProducts(info.getExamId());
 			if(list!=null)
-				this.cacheHelper.putCache("", this.getClass().getName()+".loadProducts", new Object[]{info.getExamId()}, list);
+				this.cacheHelper.putCache(FrontProductInfo.class.getName(), this.getClass().getName()+"loadProducts", new Object[]{info.getExamId()}, list);
 		}
 		DataGrid<FrontProductInfo> datagrid = new DataGrid<FrontProductInfo>();
 		if(list != null && list.size()>0){

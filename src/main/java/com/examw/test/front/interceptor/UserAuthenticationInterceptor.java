@@ -1,15 +1,20 @@
 package com.examw.test.front.interceptor;
 
+import java.net.URLDecoder;
+
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.core.NamedThreadLocal;
+import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.examw.aware.IUserAware;
 import com.examw.test.front.model.user.User;
+import com.examw.test.front.support.TaoBaoMD5;
 /**
  * 用户认证拦截器。
  * @author yangyong.
@@ -51,28 +56,68 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	    if(request.getServletPath().equals("/"))
 	    {
 	    	return true;
-	    }      
+	    }  
+	    if(request.getServletPath().equals("/getUserInfo"))
+	    {
+	    	return true;
+	    }  
 	    //3、如果用户已经登录 放行    
-	    User user = (User) request.getSession().getAttribute("USER");
-	    if(user != null) {  
+	    Cookie[] cookies = request.getCookies();
+	    String users = null;
+	    if(cookies!=null){
+	    	for(Cookie c:cookies){
+	    		if("Examwww".equals(c.getName())){
+	    			users = c.getValue();
+	    			if(logger.isDebugEnabled())
+	    				logger.debug(users);
+	    		}
+	    	}
+	    }
+	    if(!StringUtils.isEmpty(users)) {  
 	        //更好的实现方式的使用cookie  
-	    	if(handler instanceof HandlerMethod){
-				HandlerMethod hm = (HandlerMethod)handler;
-				if(hm != null && (hm.getBean() instanceof IUserAware)){
-					IUserAware userAware = (IUserAware)hm.getBean();
-					if(logger.isDebugEnabled())logger.debug("准备注入用户信息...");
-					userAware.setUserId(user.getId());
-					userAware.setUserName(user.getName());
-					if(logger.isDebugEnabled())logger.debug(String.format("注入[%1$s]用户信息:id=%2$s;name=%3$s;nick=%4$s", user.getUsername(), user.getId(), user.getName()));
-				}
-			}
-	        return true;
+	    	String[] arr = users.split("#");
+	    	String md5key = "4q3i07f12u5i8R1nU";
+	    	String userStr = URLDecoder.decode(arr[0], "utf-8");
+	    	try{
+	    	if(arr[1].equals(TaoBaoMD5.sign(userStr, md5key, "gbk"))){
+	    		//表示已经登陆
+	    		User user = this.createUser(users);
+	    		if(user!=null){
+	    			if(handler instanceof HandlerMethod){
+	    				HandlerMethod hm = (HandlerMethod)handler;
+	    				if(hm != null && (hm.getBean() instanceof IUserAware)){
+	    					IUserAware userAware = (IUserAware)hm.getBean();
+	    					if(logger.isDebugEnabled())logger.debug("准备注入用户信息...");
+	    					userAware.setUserId(user.getId());
+	    					userAware.setUserName(user.getName());
+	    					if(logger.isDebugEnabled())logger.debug(String.format("注入[%1$s]用户信息:id=%2$s;name=%3$s;nick=%4$s", user.getUsername(), user.getId(), user.getName()));
+	    				}
+	    			}
+	    		}
+	    		return true;
+	    	}}catch(Exception e){
+	    		
+	    	}
 	    }
 	    //4、非法请求 即这些请求需要登录后才能访问  
 	    //重定向到登录页面  
-	    response.sendRedirect(request.getContextPath() + loginUrl);  
-	    return false;  
+	    response.sendRedirect("http://test.examw.com/user/c.asp");
+	    return false; 
 	}
+	    private User createUser(String users){
+			if(StringUtils.isEmpty(users)) return null;
+			//fw121fw42$462144$2$0$普通会员$10$$$
+			String[] arr = users.split("$");
+			try{
+				User user = new User();
+				user.setId(arr[1]);
+				user.setUsername(arr[0]);
+				user.setCoin(Integer.valueOf(arr[2]));
+			}catch(Exception e){
+				
+			}
+			return null;
+		}
 	/*
 	 * 业务处理完全处理完后被调用。
 	 * @see org.springframework.web.servlet.handler.HandlerInterceptorAdapter#afterCompletion(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, java.lang.Exception)

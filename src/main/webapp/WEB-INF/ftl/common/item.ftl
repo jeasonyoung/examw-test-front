@@ -17,6 +17,7 @@
 	<#elseif item.type == TYPE_SHARE_TITLE_VALUE>
 		<@item_share_title i=item index=index/>
 	<#elseif item.type == TYPE_SHARE_ANSWER_VALUE>
+		<@item_share_answer i=item index=index/>
 	<#else>
 	</#if>
 </#macro>
@@ -61,33 +62,6 @@
                 </ul>
              </div>
          </div>
-         <#if IS_SHOW_ANSWER>
-         <div class="daanbox fl">
-               <div class="zhankai-bg"></div>
-               <div class="f-l fl"><i>参考答案：</i><em class="dui"><@calculate_right_answer i/></em></div>
-               <div class="f-l fl"><i>我的答案：</i><em class="dui">C</em></div>
-               <div class="fr" id="font14">
-                    <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.item.id?default(i.id)}')">收起解析</a></i><em class="jiexi-h"></em></div>
-                    <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
-                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="#">纠错</a></i></div>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="#">移除此收藏</a></i></div>
-                    <!--收藏后<div class="f-r fl"><em class="shoucang"></em><i><a href="#">收藏</a></i></div>-->
-               </div>
-         </div>
-         <div class="jiexi-box fl" name="jiexi" item_id="${i.item.id?default(i.id)}">
-              <div class="cankaobox fl">
-                   <i>参考解析：</i>${i.item.analysis?default(i.analysis)}
-              </div>
-              <div class="h10"></div>
-              <!--<div class="bookbox fl">
-                    <div class="book-l fl"><span>第1题笔记</span>（本题共120条笔记）</div>
-                    <div class="sybook fr"><a href="#">查看所有笔记（120条）</a></div>
-                    <div class="mybook fr"><a href="#">查看我的笔记（0条）</a></div>
-                    <textarea name="" class="notebook" id="font14"></textarea>
-                    <div class="sure"><a href="#">确认保存</a></div>
-              </div>-->
-         </div>
-         </#if>
     </div>
 </#macro>
 <#macro item_judge i index>
@@ -110,49 +84,6 @@
             	</ul>
               </div>
          </div>
-         <#if IS_SHOW_ANSWER>
-         <div class="daanbox fl">
-               <div class="zhankai-bg"></div>
-               <div class="f-l fl"><i>参考答案：</i>
-               			<em class="dui">
-               			<#if i.item??>
-               				<#if i.item.answer == ANSWER_JUDGE_RIGTH>
-               				对
-               				<#else>
-               				错
-               				</#if>
-               			<#else>
-               				<#if i.answer == ANSWER_JUDGE_RIGTH>
-               				对
-               				<#else>
-               				错
-               				</#if>
-               			</#if>
-               			</em>
-               	</div>
-               <div class="f-l fl"><i>我的答案：</i><em class="dui">对</em></div>
-               <div class="fr" id="font14">
-                    <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.item.id?default(i.id)}')">收起解析</a></i><em class="jiexi-h"></em></div>
-                    <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
-                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="#">纠错</a></i></div>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="#">移除此收藏</a></i></div>
-                    <!--收藏后<div class="f-r fl"><em class="shoucang"></em><i><a href="#">收藏</a></i></div>-->
-               </div>
-         </div>
-         <div class="jiexi-box fl" name="jiexi" item_id="${i.item.id?default(i.id)}">
-              <div class="cankaobox fl">
-                   <i>参考解析：</i>${i.item.analysis?default(i.analysis)}
-              </div>
-              <div class="h10"></div>
-              <!--<div class="bookbox fl">
-                    <div class="book-l fl"><span>第1题笔记</span>（本题共120条笔记）</div>
-                    <div class="sybook fr"><a href="#">查看所有笔记（120条）</a></div>
-                    <div class="mybook fr"><a href="#">查看我的笔记（0条）</a></div>
-                    <textarea name="" class="notebook" id="font14"></textarea>
-                    <div class="sure"><a href="#">确认保存</a></div>
-              </div>-->
-         </div>
-         </#if>
     </div>
 </#macro>
 <#macro item_qanda i index>
@@ -166,12 +97,64 @@
        </div>
     </div>
 </#macro>
+<!-- 共享题干 -->
 <#macro item_share_title i index>
 	<div class="fenxiti fl" fenxi_item_id = "${i.item.id}"><i>${i.typeName}</i><em>${i.content}</em></div>
 		<#list i.item.children?sort_by(["orderNo"]) as child>
         	<@show_item child index+child_index/>
         </#list>
         <#assign xuhao = xuhao + i.item.children?size />
+</#macro>
+<!-- 共享答案 -->
+<#macro item_share_answer i index>
+	<div class="fenxiti fl" fenxi_item_id = "${i.item.id}">
+		<i>${i.typeName}</i>
+		<em>${i.content}<br/>
+		<#list i.item.children?sort_by(["orderNo"]) as child>
+			<#if child_index != (i.item.children?size - 1)>
+				${child.content}<br/>
+			</#if>
+		</#list>
+		</em>
+	</div>
+		<#assign share_answer_item = i.item.children?last/>
+		<@show_share_answer_item share_answer_item i index/>
+        <#assign xuhao = xuhao + share_answer_item.children?size />
+</#macro>
+<#macro show_share_answer_item items parent index>
+	<#list items.children as i>
+		<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_index="${index+i_index}">
+		<#if i.item?? && i.parentContent??>
+		<div id="font14" class="fenxiti fl">
+			<i>材料题</i>
+			<em>${i.parentContent}</em>
+		</div>
+		</#if>
+       <div class="timu fl" >
+           <i>${index+i_index}.</i>
+              <em><span>[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${i.pid}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>
+       </div>
+       <div class="xz-daan fl" >
+            <div class="abcd">
+                <ul>
+                <#if parent.item.children??>
+                <#list parent.item.children?sort_by(["orderNo"]) as option>
+                <#if i_index != (parent.item.children?size-1)>
+                <li item_index="${index+i_index}" <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" actual="true"><@option_flag option_index/></li>
+                </#if>
+                </#list>
+                <#else>
+                <#list parent.children?sort_by(["orderNo"]) as option>
+                <#if i_index != (parent.children?size-1)>
+                <li item_index="${index+i_index}" <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}" s_item_id="${i.structureItemId?default(i.id)}" option_type="${input}" actual="true"><@option_flag option_index/></li>
+                </#if>
+                </#list>
+                </#if>
+                </ul>
+             </div>
+         </div>
+    </div>
+	</#list>
 </#macro>
 <!-- 计算正确答案 -->
 <#macro calculate_right_answer i>
