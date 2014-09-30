@@ -3,6 +3,13 @@
 <head>
 <title>每日一练  考试系统题库</title>
 <#include "common/loadPageJS.ftl" />
+<style type="text/css">
+.week_today{
+	background: none;
+    border-top: 0px solid #b1b1b1;
+    padding-top: 0px;
+}
+</style>
 </head>
 <body>
 <#include "common/head.html" />
@@ -11,7 +18,7 @@
 	<div class="content fl">
     	<div class="width998 yinying">
         	<div class="week">
-            	<ul>
+            	<ul id="week">
        				<li><a href="#">星期五<br>2014-08-29</a></li>
                     <li><a href="#">星期六<br>2014-08-30</a></li>
                     <li><a href="#">星期天<br>2014-08-31</a></li>
@@ -125,7 +132,7 @@
  */
 Date.prototype.format = function(format)
  {
-	/*	format="yyyy-MM-dd hh:mm:ss";	*/
+	/*	format="yyyy-MM-dd hh:mm:ss eee";	*/
 	var o = {
 			"M+" : this.getMonth() + 1,
 			"d+" : this.getDate(),
@@ -154,5 +161,21 @@ Date.prototype.format = function(format)
 	}
 	return format;
  } 
+ $(function(){
+		$("#week").html("");
+		var current_date = "2014/09/28";
+		for(var i = 0;i<7;i++){
+			var d = new Date();
+			d.setDate(d.getDate()-i);
+			var li = $("<li><a href='javascript:void(0)'>"+d.format("eee")+"<br/>"+d.format("yyyy-MM-dd")+"</a></li>");
+			if(i == 0){
+				li = $("<li><a href='javascript:void(0)'>今天<br/>"+d.format("yyyy-MM-dd")+"</a></li>");
+			}
+			if(d.format("yyyy/MM/dd") == current_date){
+				li.attr("class","mr-no bg");
+			} 
+			$("#week").prepend(li);
+		}
+ })
 </script>
 </html>

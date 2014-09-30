@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.examw.model.Json;
 import com.examw.test.front.model.library.ItemScoreInfo;
-import com.examw.test.front.model.library.PaperFrontInfo;
+import com.examw.test.front.model.library.PaperRecordInfo;
 import com.examw.test.front.model.library.PaperInfo;
 import com.examw.test.front.model.library.PaperPreview;
 import com.examw.test.front.model.library.PaperSubmitInfo;
@@ -61,6 +61,6 @@ public interface IPaperService {
 	 * @return
 	 * @throws IOException
 	 */
-	PaperFrontInfo loadPaperAnalysis(String paperId,String userId,String productId)throws IOException;
+	PaperRecordInfo loadPaperAnalysis(String paperId,String userId,String productId)throws IOException;
 	
 }

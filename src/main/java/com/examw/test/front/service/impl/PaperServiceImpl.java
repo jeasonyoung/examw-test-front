@@ -13,7 +13,7 @@ import org.springframework.util.StringUtils;
 import com.examw.model.Json;
 import com.examw.test.front.model.Constant;
 import com.examw.test.front.model.library.ItemScoreInfo;
-import com.examw.test.front.model.library.PaperFrontInfo;
+import com.examw.test.front.model.library.PaperRecordInfo;
 import com.examw.test.front.model.library.PaperInfo;
 import com.examw.test.front.model.library.PaperPreview;
 import com.examw.test.front.model.library.PaperSubmitInfo;
@@ -239,7 +239,7 @@ public class PaperServiceImpl implements IPaperService{
 	}
 	
 	@Override
-	public PaperFrontInfo loadPaperAnalysis(String paperId, String userId,String productId)
+	public PaperRecordInfo loadPaperAnalysis(String paperId, String userId,String productId)
 			throws IOException {
 		if(logger.isDebugEnabled()) logger.debug("加载试卷解析...");
 		if(StringUtils.isEmpty(paperId) || StringUtils.isEmpty(userId))
@@ -247,7 +247,7 @@ public class PaperServiceImpl implements IPaperService{
 		String url = String.format(this.api_paperanalysis_url,paperId,userId);
 		String xml = HttpUtil.httpRequest(url,"GET",("productId="+productId),"utf-8");
 		if(!StringUtils.isEmpty(xml)){
-			return JSONUtil.JsonToObject(xml, PaperFrontInfo.class);
+			return JSONUtil.JsonToObject(xml, PaperRecordInfo.class);
 		}
 		return null;
 	}

@@ -110,14 +110,16 @@
 	<div class="fenxiti fl" fenxi_item_id = "${i.item.id}">
 		<i>${i.typeName}</i>
 		<em>${i.content}<br/>
+		<div class="share_answer">
 		<#list i.item.children?sort_by(["orderNo"]) as child>
 			<#if child_index != (i.item.children?size - 1)>
-				${child.content}<br/>
+				<@option_flag child_index/>. ${child.content}<br/>
 			</#if>
 		</#list>
+		</div>
 		</em>
 	</div>
-		<#assign share_answer_item = i.item.children?last/>
+		<#assign share_answer_item = (i.item.children?sort_by(["orderNo"]))?last/>
 		<@show_share_answer_item share_answer_item i index/>
         <#assign xuhao = xuhao + share_answer_item.children?size />
 </#macro>

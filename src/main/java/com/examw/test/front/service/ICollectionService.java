@@ -1,8 +1,10 @@
 package com.examw.test.front.service;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.examw.model.Json;
+import com.examw.test.front.model.library.ItemScoreInfo;
 import com.examw.test.front.model.record.Collection;
 
 /**
@@ -20,6 +22,11 @@ public interface ICollectionService {
 	 * @throws IOException 
 	 */
 	Json collectOrCancel(Collection info) throws IOException;
-
-
+	/**
+	 * 加载收藏题目的集合
+	 * @param info
+	 * @return
+	 * @throws IOException
+	 */
+	List<ItemScoreInfo> loadCollectionItems(Collection info) throws IOException;
 }

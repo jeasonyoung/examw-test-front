@@ -14,6 +14,7 @@
 <link href="<@s.url "/resources/front-default/pager.css"/>" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="<@s.url "/resources/jquery.pager.js"/>"></script>
 <!-- pager -->
+<link href="<@s.url "/resources/artDialog/ui-dialog.css"/>" rel="stylesheet" type="text/css">
 </head>
 <body>
 <#include "common/head.html"/>
@@ -31,6 +32,7 @@
                             <span class="f-bold">未购/已购</span>
                         </div>
                     </li>
+                    <li name='product'><span class="ui-dialog-loading">Loading..</span></li>
                 </ul>
             </div>
             <div class="h20"></div>
@@ -43,6 +45,7 @@
 <#include "common/foot.html"/>
 </body>
 <script type="text/javascript">
+	<!-- ajax分页  -->
 	$(function(){
 		var pagesize = 4;
 		var totalPage = 0;
@@ -81,7 +84,6 @@
 		    			$("#productList").append(li);
 		    		});
 		    	}
-		    	
 		    });
 		}
 	});

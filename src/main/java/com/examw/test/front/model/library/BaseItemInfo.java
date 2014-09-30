@@ -14,8 +14,8 @@ import com.examw.model.Paging;
 public abstract class BaseItemInfo<T extends BaseItemInfo<T>>  extends Paging {
 	private static final long serialVersionUID = 1L;
 	private String pid,id,typeName,statusName,optName,examId,examName,subjectId,subjectName, 
-			content,answer,analysis,checkCode,sourceId,sourceName;
-	private Integer type,level,year,opt,status,orderNo;
+			content,answer,analysis,checkCode,sourceId,sourceName,areaId,areaName,userId,userName;
+	private Integer type,level,year,opt,status,orderNo,count;
 	private String createTime,lastTime;
 	/**
 	 * 获取父题目ID。
@@ -443,5 +443,80 @@ public abstract class BaseItemInfo<T extends BaseItemInfo<T>>  extends Paging {
 	 */
 	public void setAnswerStatus(Integer answerStatus) {
 		this.answerStatus = answerStatus;
+	}
+	/**
+	 * 获取所属地区ID。
+	 * @return 所属地区ID。
+	 */
+	public String getAreaId() {
+		return areaId;
+	}
+	/**
+	 * 设置所属地区ID。
+	 * @param areaId 
+	 *	  所属地区ID。
+	 */
+	public void setAreaId(String areaId) {
+		this.areaId = areaId;
+	}
+	/**
+	 * 获取所属地区名称。
+	 * @return 所属地区名称
+	 */
+	public String getAreaName() {
+		return areaName;
+	}
+	/**
+	 * 设置所属地区名称
+	 * @param areaName 
+	 *	  所属地区名称
+	 */
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
+	}
+	/**
+	 * 获取所属用户ID。
+	 * @return 所属用户ID。
+	 */
+	public String getUserId() {
+		return userId;
+	}
+	/**
+	 * 设置所属用户ID。
+	 * @param userId 
+	 *	  所属用户ID。
+	 */
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	/**
+	 * 获取所属用户名称。
+	 * @return 所属用户名称。
+	 */
+	public String getUserName() {
+		return userName;
+	}
+	/**
+	 * 设置所属用户名称。
+	 * @param userName 
+	 *	  所属用户名称。
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	/**
+	 * 获取试题数目。
+	 * @return 试题数目。
+	 */
+	public Integer getCount() {
+		return count;
+	}
+	/**
+	 * 设置试题数目。
+	 * @param count 
+	 *	  试题数目。
+	 */
+	public void setCount(Integer count) {
+		this.count = count;
 	}
 }

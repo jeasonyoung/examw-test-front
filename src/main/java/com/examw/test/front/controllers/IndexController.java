@@ -1,6 +1,5 @@
 package com.examw.test.front.controllers;
 
-import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.List;
@@ -23,7 +22,6 @@ import com.examw.test.front.model.product.FrontCategoryInfo;
 import com.examw.test.front.model.user.User;
 import com.examw.test.front.service.ICategoryService;
 import com.examw.test.front.service.IUserService;
-import com.examw.test.front.support.HttpUtil;
 import com.examw.test.front.support.TaoBaoMD5;
 
 /**
@@ -139,6 +137,8 @@ public class IndexController {
 			users = new String(users.getBytes("ISO-8859-1"),"GBK");
 			String key = request.getParameter("KeyStr");
 			String key2 = TaoBaoMD5.sign(users, Md5Key, "GBK");
+			String url = request.getParameter("Url");
+			url = URLDecoder.decode(url,"utf-8");
 			Cookie[] cookies = request.getCookies();
 			if(cookies!=null){
 			for(Cookie c:cookies){
@@ -171,38 +171,46 @@ public class IndexController {
 		}
 		return null;
 	}
-	@RequestMapping(value="/getStr" , method={RequestMethod.GET,RequestMethod.POST})
-	@ResponseBody
-	public String getStr(){
-		String url2 = "http://sc.100xuexi.com/GetBookInfo.ashx?act=GetBookInfo&BookId=40805&PlatNum=1";
-		String xml2;
-		try {
-			xml2 = HttpUtil.httpRequest(url2, "GET", null, "utf-8");
-		System.out.println(xml2);
-		String xml3 = URLEncoder.encode(xml2,"GBK");
-		System.out.println(xml3);
-		System.out.println(URLDecoder.decode(xml3, "gbk"));
-		return URLEncoder.encode(xml2,"GBK");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//	@RequestMapping(value="/getStr" , method={RequestMethod.GET,RequestMethod.POST})
+//	@ResponseBody
+//	public String getStr(){
+//		String url2 = "http://sc.100xuexi.com/GetBookInfo.ashx?act=GetBookInfo&BookId=40805&PlatNum=1";
+//		String xml2;
+//		try {
+//			xml2 = HttpUtil.httpRequest(url2, "GET", null, "utf-8");
+//		System.out.println(xml2);
+//		String xml3 = URLEncoder.encode(xml2,"GBK");
+//		System.out.println(xml3);
+//		System.out.println(URLDecoder.decode(xml3, "gbk"));
+//		return URLEncoder.encode(xml2,"GBK");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return "";
+//	}
+	
+//	@RequestMapping(value="/putStr" , method={RequestMethod.GET,RequestMethod.POST})
+//	public String putStr(HttpServletRequest request){
+//		Cookie[] cookies = request.getCookies();
+//	    String users = null;
+//	    if(cookies!=null){
+//	    	for(Cookie c:cookies){
+//	    		if("Examwww".equals(c.getName())){
+//	    			users = c.getValue();
+//	    			if(logger.isDebugEnabled())
+//	    				logger.debug(users);
+//	    		}
+//	    	}
+//	    }
+//		return "";
+//	}
+	
+	@RequestMapping(value="/logout" , method={RequestMethod.GET,RequestMethod.POST})
+	public String logout(HttpServletRequest request,HttpServletResponse response){
+		//删除cookie
+	    response.setHeader("Set-Cookie","Examwww=");
 		return "";
 	}
 	
-	@RequestMapping(value="/putStr" , method={RequestMethod.GET,RequestMethod.POST})
-	public String putStr(HttpServletRequest request){
-		Cookie[] cookies = request.getCookies();
-	    String users = null;
-	    if(cookies!=null){
-	    	for(Cookie c:cookies){
-	    		if("Examwww".equals(c.getName())){
-	    			users = c.getValue();
-	    			if(logger.isDebugEnabled())
-	    				logger.debug(users);
-	    		}
-	    	}
-	    }
-		return "";
-	}
 }

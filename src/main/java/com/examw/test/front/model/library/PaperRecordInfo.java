@@ -7,7 +7,7 @@ import java.math.BigDecimal;
  * @author fengwei.
  * @since 2014年9月19日 上午9:19:15.
  */
-public class PaperFrontInfo extends PaperInfo{
+public class PaperRecordInfo extends PaperInfo{
 	private static final long serialVersionUID = 1L;
 	private BigDecimal maxScore;	//最高分
 	private Integer userSum;	//参考人数

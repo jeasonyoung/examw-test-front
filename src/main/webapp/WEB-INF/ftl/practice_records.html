@@ -3,6 +3,10 @@
 <head>
 <title>练习记录 考试系统题库</title>
 <#include "common/loadPageJS.ftl" />
+<!-- 分页工具  -->
+<link href="<@s.url "/resources/front-default/pager.css"/>" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<@s.url "/resources/jquery.pager.js"/>"></script>
+<!-- 分页工具  -->
 </head>
 <body>
 <#include "common/head.html" />
@@ -143,8 +147,23 @@
 <#include "common/foot.html" />
 </body>
 <script type="text/javascript">
-	$(function(){
-		
-	});
+var total;
+$(function() {
+	   total = Number("${TOTAL}");
+	   if(total > 0)
+		{
+		   total = Math.floor(total%5==0?total/5:(total/5+1));
+		   $("#pager").pager({ pagenumber: ${PAGE}, pagecount: total, buttonClickCallback: PageClick });
+		}
+ });
+ PageClick = function(pageclickednumber) {
+     $("#pager").pager({ pagenumber: pageclickednumber, pagecount: total, buttonClickCallback: PageClick });
+     //跳转
+     choose("page",pagenumber);
+ }
+ function choose(tag,value){
+ 	$("#form input[name='"+tag+"']").val(value);
+ 	$("#form").submit();
+ }
 </script>
 </html>
