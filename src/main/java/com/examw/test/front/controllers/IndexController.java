@@ -190,7 +190,7 @@ public class IndexController {
 		return "";
 	}
 	
-	@RequestMapping(value="/getStr" , method={RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value="/putStr" , method={RequestMethod.GET,RequestMethod.POST})
 	public String putStr(HttpServletRequest request){
 		Cookie[] cookies = request.getCookies();
 	    String users = null;

@@ -25,7 +25,7 @@ public class SimpleTest {
 		String xml2 = HttpUtil.httpRequest(url2, "GET", null, "utf-8");
 		System.out.println(xml2);
 		System.out.println(URLEncoder.encode(xml2,"GBK"));
-		String Md5Key = "4q3i07f12u5i8R1nU";
+		//String Md5Key = "4q3i07f12u5i8R1nU";
 		String source = "fw121fw42$462144$2$0$%C6%D5%CD%A8%BB%E1%D4%B1$10$$$";
 		System.out.println(MD5Util.MD5(source));
 	}
