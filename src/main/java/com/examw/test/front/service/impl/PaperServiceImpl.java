@@ -2,20 +2,18 @@ package com.examw.test.front.service.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
+import com.examw.model.DataGrid;
 import com.examw.model.Json;
-import com.examw.test.front.model.Constant;
-import com.examw.test.front.model.library.ItemScoreInfo;
-import com.examw.test.front.model.library.PaperRecordInfo;
+import com.examw.test.front.model.library.FrontPaperInfo;
 import com.examw.test.front.model.library.PaperInfo;
 import com.examw.test.front.model.library.PaperPreview;
+import com.examw.test.front.model.library.PaperRecordInfo;
 import com.examw.test.front.model.library.PaperSubmitInfo;
 import com.examw.test.front.model.library.StructureInfo;
 import com.examw.test.front.model.library.StructureItemInfo;
@@ -175,122 +173,145 @@ public class PaperServiceImpl implements IPaperService{
 	 * @see com.examw.test.front.service.IPaperService#loadItemsList(com.examw.test.front.model.PaperPreview)
 	 */
 	@Override
-	public List<ItemScoreInfo> loadItemsList(PaperPreview paper,boolean isSetCommonTitle) {
-		if(paper == null)	return null;
-		List<ItemScoreInfo> result = new ArrayList<ItemScoreInfo>();
+	public java.util.List<com.examw.test.front.model.library.StructureItemInfo> loadItemsList(PaperPreview paper) throws IOException {
+		if(paper == null) return null;
+		List<StructureItemInfo> result = new ArrayList<StructureItemInfo>();
 		List<StructureInfo> structures = paper.getStructures();
 		if(structures == null || structures.size()==0) return result;
 		for(StructureInfo s:structures){
-			TreeSet<StructureItemInfo> items = new TreeSet<StructureItemInfo>(
-					new Comparator<StructureItemInfo>() {
-						@Override
-						public int compare(StructureItemInfo o1,
-								StructureItemInfo o2) {
-							return o1.getOrderNo() - o2.getOrderNo();
-						}
-					});
-			items.addAll(s.getItems());
-			if(items == null || items.size()==0) continue;
-			for(StructureItemInfo item : items){
-				if(item.getItem() == null) continue;
-				if(item.getType().equals(Constant.TYPE_SHARE_ANSWER)||item.getType().equals(Constant.TYPE_SHARE_TITLE)){
-					result.addAll(setCommonItemTile(item,isSetCommonTitle)); //设置题干
-				}
-				else{
-					item.getItem().setStructureItemId(item.getId());
-					result.add(item.getItem());
-				}
-			}
+			result.addAll(s.getItems());
 		}
 		return result;
-	}
+	};
 	/*
 	 * 设置共享题题干
 	 */
-	private List<ItemScoreInfo> setCommonItemTile(StructureItemInfo item,boolean isSetCommonTitle) {
-		List<ItemScoreInfo> list = new ArrayList<ItemScoreInfo>();
-		TreeSet<ItemScoreInfo> set = new TreeSet<ItemScoreInfo>(
-				new Comparator<ItemScoreInfo>() {
-					@Override
-					public int compare(ItemScoreInfo o1,
-							ItemScoreInfo o2) {
-						return o1.getOrderNo() - o2.getOrderNo();
-					}
-				});
-		set.addAll(item.getItem().getChildren());
-		for(ItemScoreInfo info : set){
-			if(isSetCommonTitle)	info.setParentContent(item.getContent());
-			info.setStructureItemId(item.getId()+"#"+info.getId());
-			list.add(info);
-		}
-		return list;
-	}
+//	private List<StructureItemInfo> setCommonItemTile(StructureItemInfo item,boolean isSetCommonTitle) {
+//		List<StructureItemInfo> list = new ArrayList<StructureItemInfo>();
+//		TreeSet<StructureItemInfo> set = new TreeSet<StructureItemInfo>(
+//				new Comparator<ItemScoreInfo>() {
+//					@Override
+//					public int compare(ItemScoreInfo o1,
+//							ItemScoreInfo o2) {
+//						return o1.getOrderNo() - o2.getOrderNo();
+//					}
+//				});
+//		set.addAll(item.getItem().getChildren());
+//		for(ItemScoreInfo info : set){
+//			if(isSetCommonTitle)	info.setParentContent(item.getContent());
+//			info.setStructureItemId(item.getId()+"#"+info.getId());
+//			list.add(info);
+//		}
+//		return list;
+//	}
+//	@Override
+//	public List<ItemScoreInfo> loadItemsList(PaperPreview paper,boolean isSetCommonTitle) {
+//		if(paper == null)	return null;
+//		List<ItemScoreInfo> result = new ArrayList<ItemScoreInfo>();
+//		List<StructureInfo> structures = paper.getStructures();
+//		if(structures == null || structures.size()==0) return result;
+//		for(StructureInfo s:structures){
+//			TreeSet<StructureItemInfo> items = new TreeSet<StructureItemInfo>(
+//					new Comparator<StructureItemInfo>() {
+//						@Override
+//						public int compare(StructureItemInfo o1,
+//								StructureItemInfo o2) {
+//							return o1.getOrderNo() - o2.getOrderNo();
+//						}
+//					});
+//			items.addAll(s.getItems());
+//			if(items == null || items.size()==0) continue;
+//			for(StructureItemInfo item : items){
+//				if(item.getItem() == null) continue;
+//				if(item.getType().equals(Constant.TYPE_SHARE_ANSWER)||item.getType().equals(Constant.TYPE_SHARE_TITLE)){
+//					result.addAll(setCommonItemTile(item,isSetCommonTitle)); //设置题干
+//				}
+//				else{
+//					item.getItem().setStructureItemId(item.getId());
+//					result.add(item.getItem());
+//				}
+//			}
+//		}
+//		return result;
+//	}
 	
-	@Override
-	public Json sumbitPaper(PaperSubmitInfo info)throws IOException {
-		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷基本信息...");
-		if(!info.isSafe())
-		return null;
-		String xml = HttpUtil.httpRequest(this.api_papersubmit_url,"POST",info.createSubmitData(),"utf-8");
-		if(!StringUtils.isEmpty(xml)){
-			return JSONUtil.JsonToObject(xml, Json.class);
-		}
-		return null;
-	}
-	
-	@Override
-	public PaperRecordInfo loadPaperAnalysis(String paperId, String userId,String productId)
-			throws IOException {
-		if(logger.isDebugEnabled()) logger.debug("加载试卷解析...");
-		if(StringUtils.isEmpty(paperId) || StringUtils.isEmpty(userId))
-		return null;
-		String url = String.format(this.api_paperanalysis_url,paperId,userId);
-		String xml = HttpUtil.httpRequest(url,"GET",("productId="+productId),"utf-8");
-		if(!StringUtils.isEmpty(xml)){
-			return JSONUtil.JsonToObject(xml, PaperRecordInfo.class);
-		}
-		return null;
-	}
+//	
+//	@Override
+//	public Json sumbitPaper(PaperSubmitInfo info)throws IOException {
+//		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷基本信息...");
+//		if(!info.isSafe())
+//		return null;
+//		String xml = HttpUtil.httpRequest(this.api_papersubmit_url,"POST",info.createSubmitData(),"utf-8");
+//		if(!StringUtils.isEmpty(xml)){
+//			return JSONUtil.JsonToObject(xml, Json.class);
+//		}
+//		return null;
+//	}
+//	
+//	@Override
+//	public PaperRecordInfo loadPaperAnalysis(String paperId, String userId,String productId)
+//			throws IOException {
+//		if(logger.isDebugEnabled()) logger.debug("加载试卷解析...");
+//		if(StringUtils.isEmpty(paperId) || StringUtils.isEmpty(userId))
+//		return null;
+//		String url = String.format(this.api_paperanalysis_url,paperId,userId);
+//		String xml = HttpUtil.httpRequest(url,"GET",("productId="+productId),"utf-8");
+//		if(!StringUtils.isEmpty(xml)){
+//			return JSONUtil.JsonToObject(xml, PaperRecordInfo.class);
+//		}
+//		return null;
+//	}
 	/**
 	 * 前端分页条件查询
 	 * @param info
 	 * @param list
 	 * @return
 	 */
-//	private DataGrid<FrontPaperInfo> dataGrid(FrontPaperInfo info,List<FrontPaperInfo> list){
-//		DataGrid<FrontPaperInfo> datagrid = new DataGrid<FrontPaperInfo>();
-//		List<FrontPaperInfo> result = new ArrayList<FrontPaperInfo>();
-//		for(FrontPaperInfo paper : list){
-//			boolean flag = true;
-//			if(flag && !StringUtils.isEmpty(info.getSubjectId())){
-//				flag = paper.getSubjectId().equalsIgnoreCase(info.getSubjectId());
-//			}
-//			if(flag && !StringUtils.isEmpty(info.getAreaId())){
-//				flag = paper.getAreaId().equalsIgnoreCase(info.getAreaId());
-//			}
-//			if(flag && info.getType() != null){
-//				flag = paper.getType().equals(info.getType());
-//			}
-//			if(flag && info.getYear() != null){
-//				flag = paper.getYear().equals(info.getYear());
-//			}
-//			if(flag){
-//				result.add(paper);
-//			}
-//		}
-//		int total = result.size();
-//		int page = info.getPage()==null?0:info.getPage();
-//		int rows = info.getRows()==null?0:info.getRows();
-//		if(total > 0){
-//			datagrid.setTotal((long) total);
-//			Integer totalPage = total%rows==0?total/rows:(total/rows+1);
-//			page = page > totalPage?totalPage:page;
-//			if(list.size() <= rows)
-//			{
-//				datagrid.setRows(result);
-//			}else
-//				datagrid.setRows(result.subList((page-1)*rows, page*rows>total?total:page*rows));
-//		}
-//		return datagrid;
-//	}
+	private DataGrid<FrontPaperInfo> dataGrid(FrontPaperInfo info,List<FrontPaperInfo> list){
+		DataGrid<FrontPaperInfo> datagrid = new DataGrid<FrontPaperInfo>();
+		List<FrontPaperInfo> result = new ArrayList<FrontPaperInfo>();
+		for(FrontPaperInfo paper : list){
+			boolean flag = true;
+			if(flag && !StringUtils.isEmpty(info.getSubjectId())){
+				flag = paper.getSubjectId().equalsIgnoreCase(info.getSubjectId());
+			}
+			if(flag && !StringUtils.isEmpty(info.getAreaId())){
+				flag = paper.getAreaId().equalsIgnoreCase(info.getAreaId());
+			}
+			if(flag && info.getType() != null){
+				flag = paper.getType().equals(info.getType());
+			}
+			if(flag && info.getYear() != null){
+				flag = paper.getYear().equals(info.getYear());
+			}
+			if(flag){
+				result.add(paper);
+			}
+		}
+		int total = result.size();
+		int page = 1;//info.getPage()==null?0:info.getPage();
+		int rows = 10;//info.getRows()==null?0:info.getRows();
+		if(total > 0){
+			datagrid.setTotal((long) total);
+			Integer totalPage = total%rows==0?total/rows:(total/rows+1);
+			page = page > totalPage?totalPage:page;
+			if(list.size() <= rows)
+			{
+				datagrid.setRows(result);
+			}else
+				datagrid.setRows(result.subList((page-1)*rows, page*rows>total?total:page*rows));
+		}
+		return datagrid;
+	}
+	@Override
+	public Json sumbitPaper(PaperSubmitInfo info) throws IOException {
+		
+		return null;
+	}
+	@Override
+	public PaperRecordInfo loadPaperAnalysis(String paperId, String userId,
+			String productId) throws IOException {
+		
+		return null;
+	}
 }

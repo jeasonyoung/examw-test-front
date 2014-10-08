@@ -1,13 +1,11 @@
 package com.examw.test.front.service.impl;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 import com.examw.model.Json;
-import com.examw.test.front.model.library.ItemScoreInfo;
 import com.examw.test.front.model.record.Collection;
 import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.support.HttpUtil;
@@ -47,19 +45,19 @@ public class CollectionServiceImpl implements ICollectionService{
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<ItemScoreInfo> loadCollectionItems(Collection info)
-			throws IOException {
-		if(logger.isDebugEnabled()) logger.debug("收藏的试题集合...");
-		if(StringUtils.isEmpty(info.getUserId())) 
-			return null;
-		String url = String.format(this.api_collection_url);
-		String data = "itemId="+info.getItemId()+"&userId="+info.getUserId()+"&productId="+info.getProductId();
-		String xml = HttpUtil.httpRequest(url,"GET",data,"utf-8");
-		if(!StringUtils.isEmpty(xml)){
-			return JSONUtil.JsonToCollection(xml, List.class,ItemScoreInfo.class);
-		}
-		return null;
-	}
+//	@SuppressWarnings("unchecked")
+//	@Override
+//	public List<ItemScoreInfo> loadCollectionItems(Collection info)
+//			throws IOException {
+//		if(logger.isDebugEnabled()) logger.debug("收藏的试题集合...");
+//		if(StringUtils.isEmpty(info.getUserId())) 
+//			return null;
+//		String url = String.format(this.api_collection_url);
+//		String data = "itemId="+info.getItemId()+"&userId="+info.getUserId()+"&productId="+info.getProductId();
+//		String xml = HttpUtil.httpRequest(url,"GET",data,"utf-8");
+//		if(!StringUtils.isEmpty(xml)){
+//			return JSONUtil.JsonToCollection(xml, List.class,ItemScoreInfo.class);
+//		}
+//		return null;
+//	}
 }

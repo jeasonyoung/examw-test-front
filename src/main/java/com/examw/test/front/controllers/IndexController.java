@@ -1,6 +1,5 @@
 package com.examw.test.front.controllers;
 
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -137,8 +136,8 @@ public class IndexController {
 			users = new String(users.getBytes("ISO-8859-1"),"GBK");
 			String key = request.getParameter("KeyStr");
 			String key2 = TaoBaoMD5.sign(users, Md5Key, "GBK");
-			String url = request.getParameter("Url");
-			url = URLDecoder.decode(url,"utf-8");
+//			String url = request.getParameter("Url");
+//			url = URLDecoder.decode(url,"utf-8");
 			Cookie[] cookies = request.getCookies();
 			if(cookies!=null){
 			for(Cookie c:cookies){

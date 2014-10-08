@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.examw.model.Json;
-import com.examw.test.front.model.library.ItemScoreInfo;
-import com.examw.test.front.model.library.PaperRecordInfo;
 import com.examw.test.front.model.library.PaperInfo;
 import com.examw.test.front.model.library.PaperPreview;
+import com.examw.test.front.model.library.PaperRecordInfo;
 import com.examw.test.front.model.library.PaperSubmitInfo;
+import com.examw.test.front.model.library.StructureItemInfo;
 
 /**
  * 试卷服务接口
@@ -48,7 +48,6 @@ public interface IPaperService {
 	 * @param paper
 	 * @return
 	 */
-	List<ItemScoreInfo> loadItemsList(PaperPreview paper,boolean isSetCommonTitle);
 	/**
 	 * 下次再做的提交
 	 * @param info 提交试卷答案信息
@@ -62,5 +61,13 @@ public interface IPaperService {
 	 * @throws IOException
 	 */
 	PaperRecordInfo loadPaperAnalysis(String paperId,String userId,String productId)throws IOException;
+	/**
+	 * 提取试题的集合
+	 * @param paper	试卷信息
+	 * @param isSetCommonTitle 是否设置共用题干
+	 * @return
+	 * @throws IOException
+	 */
+	public List<StructureItemInfo> loadItemsList(PaperPreview paper)throws IOException;
 	
 }

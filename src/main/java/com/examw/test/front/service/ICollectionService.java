@@ -1,10 +1,8 @@
 package com.examw.test.front.service;
 
 import java.io.IOException;
-import java.util.List;
 
 import com.examw.model.Json;
-import com.examw.test.front.model.library.ItemScoreInfo;
 import com.examw.test.front.model.record.Collection;
 
 /**
@@ -28,5 +26,5 @@ public interface ICollectionService {
 	 * @return
 	 * @throws IOException
 	 */
-	List<ItemScoreInfo> loadCollectionItems(Collection info) throws IOException;
+	//List<ItemScoreInfo> loadCollectionItems(Collection info) throws IOException;
 }
