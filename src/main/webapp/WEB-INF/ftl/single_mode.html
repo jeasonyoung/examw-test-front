@@ -11,6 +11,7 @@
 </head>
 
 <body>
+<#assign MODEL = "single" />
 <#include "common/item.ftl"/>
 <#include "common/head.html" />
 <div class="main">
@@ -51,9 +52,10 @@
             	<div class="name"><h1>${PAPER.name}</h1></div>
             </div>
             <div id="questionArea">
-            <#list ITEMLIST as item>
+            <#list ITEMS as item>
             	<div <#if item_index != 0>style="display:none"</#if> single_item_id="${item.id}" id="single${item_index}">
-            	<@show_item item item_index+1/>
+            	<#assign xuhao = xuhao + 1 />
+            	<@show_item null item xuhao />
             	</div>
             </#list>
             </div>
@@ -181,7 +183,7 @@ $(function(){
 		$(this).siblings().removeClass("bg").attr("current",'false');
 	});
 	<!-- timer -->
-	window.limit_time = parseInt('${PAPER.leftTime}');        // 单位：秒
+	window.limit_time = parseInt('${PAPER.time}');        // 单位：秒
 	window.timer         = setInterval(updateTime,1000);                          // 过1秒执行
 	function updateTime(){
 		/*
@@ -231,6 +233,7 @@ $(function(){
 		dialog({
 	        content: "<div class='pause'></div>",
 	        ok: function () {
+	        	if(window.limit_time <= 0) return true;
 	        	window.timer = setInterval(updateTime,1000);   
 	            return true;
 	        },
@@ -255,14 +258,16 @@ $(function(){
 					return;
 				}
 			}
-			var target = $("#single"+current_index);
+			var target = $("div[item_index='"+current_index+"']").parent();
 			$(target).show();
+			target = $("div[item_index='"+current_index+"']");
 			$.scrollTo(target,800,{axis:'xy', offset:-20 });
+			target = $("div[item_index='"+current_index+"']").parent();
 			$(target).siblings().hide();
 			return;
 		}
-		var target = $("div[single_item_id='"+$(obj).attr("item_id")+"']");
-		current_index = target.attr("id");
+		var target = $("div[single_item_id='"+$(obj).attr("pid")+"']");
+		current_index = Number($(obj).html())-1;
 		$(target).show();
 		$.scrollTo(target,800,{axis:'xy', offset:-20 });
 		$(target).siblings().hide();

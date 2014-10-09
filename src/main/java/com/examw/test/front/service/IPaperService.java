@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.examw.model.DataGrid;
 import com.examw.model.Json;
+import com.examw.test.front.model.library.FrontPaperInfo;
 import com.examw.test.front.model.library.PaperInfo;
 import com.examw.test.front.model.library.PaperPreview;
 import com.examw.test.front.model.library.PaperRecordInfo;
@@ -28,7 +30,7 @@ public interface IPaperService {
 	 * @param info
 	 * @return
 	 */
-	Map<String,Object> loadPaperList(String productId,PaperInfo info,String userId)throws IOException;
+	List<FrontPaperInfo> loadPaperList(String productId)throws IOException;
 	/**
 	 * 根据试卷ID加载试卷详情
 	 * @param paperId 试卷id
@@ -64,10 +66,18 @@ public interface IPaperService {
 	/**
 	 * 提取试题的集合
 	 * @param paper	试卷信息
-	 * @param isSetCommonTitle 是否设置共用题干
 	 * @return
 	 * @throws IOException
 	 */
 	public List<StructureItemInfo> loadItemsList(PaperPreview paper)throws IOException;
+	public List<StructureItemInfo> loadBigItemsList(PaperPreview paper)throws IOException;
 	
+	/**
+	 * 试卷基本信息[分页]
+	 * @param info
+	 * @param list
+	 * @return
+	 * @throws IOException
+	 */
+	public DataGrid<FrontPaperInfo> dataGrid(String productId,PaperInfo info,String userId)throws IOException;
 }

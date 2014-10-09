@@ -27,6 +27,8 @@
 	    <property name="api_paperitem_url" value="${api_paper_url}" />
 	    <property name="api_papersubmit_url" value="${api_papersubmit_url}" />
 	    <property name="api_paperanalysis_url" value="${api_paperanalysis_url}" />
+	    <property name="api_papertype_url" value="${api_paper_type_url}" />
+	    <property name="cacheHelper" ref="cacheHelper"></property>
 	</bean>
 	<!-- 笔记 -->
 	<bean id="noteService" class="com.examw.test.front.service.impl.NoteServiceImpl">

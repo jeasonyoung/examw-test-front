@@ -13,6 +13,7 @@
 </style>
 </head>
 <body>
+<#assign MODEL = "multi" />
 <#include "common/item.ftl"/>
 <#include "common/head.html" />
 <div class="main">
@@ -75,9 +76,9 @@
             <div class="tx-box fl" structure_id="${structure.id}">${structure.title}</div>
             <#list structure.items?sort_by(["orderNo"]) as i>
             	<#if i.type != TYPE_SHARE_TITLE_VALUE && i.type != TYPE_SHARE_ANSWER_VALUE>
-            		<@show_item item=i index=(i_index+xuhao)/>
+            		<@show_item p=null item=i index=(i_index + xuhao) />
             	<#else>
-            		<@show_item item=i index=xuhao/>
+            		<@show_item p=null item=i index=xuhao />
             	</#if>
             </#list>
             </div>
@@ -148,12 +149,6 @@ $(function(){
 	var totalNum = Number("${PAPER.total}");
 	$("#answerCard").smartFloat(false);	//答题卡浮动
 	$("#leftArea").smartFloat(1);//左侧浮动
-	//默认选择答案
-	<#list ITEMLIST as item>
-	<#if item.userAnswer?? && item.type!=TYPE_QANDA_VALUE>
-	saveChooseAnswer('${item.structureItemId}','${item.userAnswer}');
-	</#if>
-	</#list>
 	//<!-- 答题卡点击显示  -->
 	$("#answerCard div").first().click(function(){
 		var card = $(this).siblings("div").last();
@@ -209,7 +204,7 @@ $(function(){
 		if($(this).attr("option_type")=="radio"){
 			focusTo(0,Number($(this).attr("item_index"))+1);
 		}
-		//console.info(window.tempChooseAnswer);
+		console.info(window.tempChooseAnswer);
 	}).mouseout(function(){
 		if($(this).attr("actual")){
 			if($(this).attr("class")=="choose") return;
@@ -240,7 +235,7 @@ $(function(){
 		$(this).siblings().removeClass("bg").attr("current",'false');
 	});
 	//<!-- timer -->
-	window.limit_time = parseInt('${PAPER.leftTime?c}');        // 单位：秒
+	window.limit_time = parseInt('${PAPER.time?c}');        // 单位：秒
 	window.timer         = setInterval(updateTime,1000);                          // 过1秒执行
 	function updateTime(){
 		/*
@@ -291,6 +286,7 @@ $(function(){
 		dialog({
 	        content: "<div class='pause'></div>",
 	        ok: function () {
+	        	if(window.limit_time<=0) return true;
 	        	window.timer = setInterval(updateTime,1000);   
 	            return true;
 	        },

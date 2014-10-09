@@ -14,8 +14,7 @@
 <div class="main">
 	<div class="h30"></div>
 	<div class="content fl">
-		<form id="form" action="<@s.url "/library/simulate"/>" method="post">
-		<input type="hidden" name="productId" value="${PRODUCTID}"/>
+		<form id="form" action="<@s.url "/library/simulate/"/>${PRODUCTID}" method="post">
 		<input type="hidden" name="subjectId" value="${CURRENT_SUBJECT_ID}"/>
 		<#if CURRENT_YEAR??>
 		<input type="hidden" name="year" value="${CURRENT_YEAR?c}"/>
@@ -127,6 +126,7 @@
     	<div class="width998 yinying">
             <div class="moni-list">
               	<ul>
+              		<#if PAPERLIST?? && (PAPERLIST?size>0)>
               		<#list PAPERLIST as paper>
               		<#if paper.userStatus??>
               		<li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
@@ -155,7 +155,7 @@
                         <div class="title">
                             <em>
                             	<div class="title"><a href="#" target="_blank" title="${paper.name}">${paper.name}</a></div>
-                                <p>总题：${paper.total} 题</p><p>考试时长：${paper.time}分钟</p><p>总分：${paper.score}分</p><p>最高得分：${paper.maxScore}分</p><p>${paper.userSum}人参考</p>
+                                <p>总题：${paper.total} 题</p><p>考试时长：${paper.time}分钟</p><p>总分：${paper.score}分</p><p>最高得分：${paper.maxScore?default(0)}分</p><p>${paper.sumUser?default(0)}人参考</p>
                             </em>
                             <span>${paper.createTime?substring(0,10)}</span>
                             <span></span>
@@ -164,6 +164,15 @@
                     </li>
                     </#if>	
               		</#list>
+              		<#else>
+              			<li class="moni-out">
+              				<div class="title">
+                            <div style="margin-top:20px">
+                            	<div class="title">抱歉，该条件下暂无试卷，小编们正在努力的添加试卷中....</div>
+                            </div>
+                        </div>
+              			</li>
+              		</#if>
                 </ul>
             </div>
         </div>

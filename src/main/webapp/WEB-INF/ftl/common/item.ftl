@@ -5,13 +5,13 @@
 	${answerflag[index]}
 </#macro>
 
-<#macro show_item item index>
+<#macro show_item p item index>
 	<#if item.type == TYPE_SINGLE_VALUE>
-		<@item_choose parent=null i=item input="radio" index=index/>
+		<@item_choose parent=p i=item input="radio" index=index/>
 	<#elseif item.type == TYPE_MULTY_VALUE || item.type == TYPE_UNCERTAIN_VALUE>
-		<@item_choose parent=null i=item input="checkbox" index=index/>
+		<@item_choose parent=p i=item input="checkbox" index=index/>
 	<#elseif item.type == TYPE_JUDGE_VALUE>
-		<@item_judge parent=null i=item index=index/>
+		<@item_judge parent=p i=item index=index/>
 	<#elseif item.type == TYPE_QANDA_VALUE>
 		<@item_qanda i=item index=index/>
 	<#elseif item.type == TYPE_SHARE_TITLE_VALUE>
@@ -23,12 +23,14 @@
 </#macro>
 <#macro item_choose parent i input index>
 	<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_index="${index}">
+		<!--
 		<#if parent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
 			<em>${parent.content}</em>
 		</div>
 		</#if>
+		-->
        <div class="timu fl" >
            <i>${index}.</i>
               <em><span>[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${i.pid}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>
@@ -37,14 +39,14 @@
             <div class="list">
                 <ul>
                 <#list i.children?sort_by(["orderNo"]) as option>
-                <li item_index="${index}" option_id="${option.id}" s_item_id="${i.structureId}" option_type="${input}" <#if i.userAnswer?contains(option.id)>class="over"<#else>class="out"</#if>><i><@option_flag option_index/>.</i><em>${option.content}</em></li>
+                <li item_index="${index}" option_id="${option.id}" s_item_id="${i.id}" option_type="${input}" <#if i.userAnswer?contains(option.id)>class="over"<#else>class="out"</#if>><i><@option_flag option_index/>.</i><em>${option.content}</em></li>
                 </#list>
                 </ul>
             </div>
             <div class="abcd">
                 <ul>
                 <#list i.children?sort_by(["orderNo"]) as option>
-                <li item_index="${index}" <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}" s_item_id="${i.structureId}" option_type="${input}" actual="true"><@option_flag option_index/></li>
+                <li item_index="${index}" <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}" s_item_id="${i.id}" option_type="${input}" actual="true"><@option_flag option_index/></li>
                 </#list>
                 </ul>
              </div>
@@ -53,12 +55,14 @@
 </#macro>
 <#macro item_judge parent i index>
 	<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_index="${index}">
+		<!--
 		<#if parent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
 			<em>${parent.content}</em>
 		</div>
 		</#if>
+		-->
         <div class="timu fl" >
             <i>${index}.</i>
             <em><span>[${i.typeName}]</span>${i.content}</em>
@@ -66,8 +70,8 @@
         <div class="xz-daan fl">
             <div class="abcd">
                <ul>
-                 <li item_index="${index}" <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_RIGTH)>class="choose"<#else>class="off"</#if> actual="true" pid="${i.id}" s_item_id="${i.structureId}" option_id="${i.id}_${ANSWER_JUDGE_RIGTH}" option_value="${ANSWER_JUDGE_RIGTH}" option_type="radio">对</li>
-                 <li item_index="${index}" <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_WRONG)>class="choose"<#else>class="off"</#if> actual="true" pid="${i.id}" s_item_id="${i.structureId}" option_id="${i.id}_${ANSWER_JUDGE_WRONG}" option_value="${ANSWER_JUDGE_WRONG}" option_type="radio">错</li>
+                 <li item_index="${index}" <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_RIGTH)>class="choose"<#else>class="off"</#if> actual="true" pid="${i.id}" s_item_id="${i.id}" option_id="${i.id}_${ANSWER_JUDGE_RIGTH}" option_value="${ANSWER_JUDGE_RIGTH}" option_type="radio">对</li>
+                 <li item_index="${index}" <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_WRONG)>class="choose"<#else>class="off"</#if> actual="true" pid="${i.id}" s_item_id="${i.id}" option_id="${i.id}_${ANSWER_JUDGE_WRONG}" option_value="${ANSWER_JUDGE_WRONG}" option_type="radio">错</li>
             	</ul>
               </div>
          </div>
@@ -90,7 +94,11 @@
 		<#list i.children?sort_by(["orderNo"]) as child>
         	<@show_item i child index+child_index/>
         </#list>
+        <#if MODEL == "multi">
         <#assign xuhao = xuhao + i.children?size />
+        <#else>
+        <#assign xuhao = xuhao + i.children?size - 1 />
+        </#if>
 </#macro>
 <!-- 共享答案 -->
 <#macro item_share_answer i index>
@@ -135,7 +143,7 @@
                 <ul>
                 <#list parent.children?sort_by(["orderNo"]) as option>
                 <#if i_index != (parent.children?size-1)>
-                <li item_index="${index+i_index}" <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}" s_item_id="${i.structureId}" option_type="${input}" actual="true"><@option_flag option_index/></li>
+                <li item_index="${index+i_index}" <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}" s_item_id="${i.id}" option_type="${input}" actual="true"><@option_flag option_index/></li>
                 </#if>
                 </#list>
                 </ul>
@@ -161,7 +169,7 @@
        			<div class="list">
           			<ul>
 		</#if>
-		<li><a <#if item.userAnswer ??>class="yida"</#if>href="javascript:void(0)" onclick="focusTo(this,${item_index+1})" item_id="${item.id}" s_item_id="${item.structureId}">${item_index+1}</a></li>
+		<li><a <#if item.userAnswer ??>class="yida"</#if>href="javascript:void(0)" onclick="focusTo(this,${item_index+1})" item_id="${item.id}" s_item_id="${item.id}" pid="${item.pid?default(item.id)}">${item_index+1}</a></li>
 		<#if item_index != 0 && (item_index+1)%5==0>
 			 	</ul>
         	</div>

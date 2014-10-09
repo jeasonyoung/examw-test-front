@@ -1,7 +1,6 @@
 package com.examw.test.front.controllers;
 
 import java.util.Calendar;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.examw.model.DataGrid;
+import com.examw.test.front.model.library.FrontPaperInfo;
 import com.examw.test.front.model.library.PaperInfo;
 import com.examw.test.front.model.product.ProductInfo;
 import com.examw.test.front.service.IPaperService;
@@ -60,10 +61,10 @@ public class LibraryController {
 	
 	@RequestMapping(value = "/simulate/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String simulate(@PathVariable String productId,PaperInfo info,Model model){
-		if(logger.isDebugEnabled()) logger.debug("加载模拟考试界面...");
+		if(logger.isDebugEnabled()) logger.debug("加载模拟考试界面[试卷列表]...");
 		try{
 			String userId = this.getUserId(null);
-			Map<String,Object> map = this.paperService.loadPaperList(productId, info,userId);
+			DataGrid<FrontPaperInfo> data = this.paperService.dataGrid(productId, info, userId);
 			//productId
 			model.addAttribute("PRODUCTID", productId);
 			if(!StringUtils.isEmpty(info.getSubjectId())){
@@ -75,25 +76,25 @@ public class LibraryController {
 			if(!StringUtils.isEmpty(info.getType())){
 				model.addAttribute("CURRENT_TYPE", info.getType());
 			}
-//			if(!StringUtils.isEmpty(info.getAreaId())){
-//				model.addAttribute("CURRENT_AREA_ID", info.getAearId());
-//			}
+			if(!StringUtils.isEmpty(info.getAreaId())){
+				model.addAttribute("CURRENT_AREA_ID", info.getAreaId());
+			}
 			//包含科目集合
 			model.addAttribute("SUBJECTLIST", this.productService.loadProductSubjects(productId));
 			//包含地区
 			model.addAttribute("AREALIST", this.productService.loadProductAreas(productId));
 			//试卷集合
-			model.addAttribute("PAPERLIST", map.get("PAPERLIST"));
+			model.addAttribute("PAPERLIST", data.getRows());
 			//试卷类型
 			model.addAttribute("PAPERTYPE", this.paperService.loadPaperType());
 			//页码
 			model.addAttribute("PAGE",info.getPage()==null?1:info.getPage());
 			//总条数
-			model.addAttribute("TOTAL",map.get("TOTAL"));
+			model.addAttribute("TOTAL",data.getTotal());
 			model.addAttribute("THIS_YEAR",Calendar.getInstance().get(Calendar.YEAR));
 		}catch(Exception e){
 			e.printStackTrace();
-			if(logger.isDebugEnabled()) logger.debug("加载模拟考试异常...");
+			if(logger.isDebugEnabled()) logger.debug("加载模拟考试[试卷列表]异常...");
 		}
 		return "simulate";
 	}

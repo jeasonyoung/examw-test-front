@@ -61,7 +61,7 @@ public class PaperController {
 		try{
 			PaperPreview info = this.paperService.loadPaperDetail(paperId,userId,productId);
 			model.addAttribute("PAPER", info);
-			//model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info,false));
+			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info));
 			//单选
 			model.addAttribute("TYPE_SINGLE_VALUE", Constant.TYPE_SINGLE);
 			//多选
@@ -105,6 +105,7 @@ public class PaperController {
 		try{
 			PaperPreview info = this.paperService.loadPaperDetail(paperId,userId,productId);
 			model.addAttribute("PAPER", info);
+			model.addAttribute("ITEMS",this.paperService.loadBigItemsList(info));
 			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info));
 			//单选
 			model.addAttribute("TYPE_SINGLE_VALUE", Constant.TYPE_SINGLE);

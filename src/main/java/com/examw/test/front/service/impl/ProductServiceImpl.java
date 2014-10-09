@@ -164,7 +164,7 @@ public class ProductServiceImpl implements IProductService{
 		String url = String.format(this.api_product_areas_url,productId);
 		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
-			return JSONUtil.JsonToCollection(xml,List.class,SubjectInfo.class);
+			return JSONUtil.JsonToCollection(xml,List.class,AreaInfo.class);
 		}
 		return null;
 	}
