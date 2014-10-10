@@ -58,4 +58,12 @@ public class Constant {
 	 * 答题状态[userStatus] 2:少选了
 	 */
 	public static final int STATUS_LESS = 2;
+	/**
+	 * 试卷答题状态[record status] 1:完成
+	 */
+	public static final int STATUS_DONE = 1;	//完成
+	/**
+	 * 试卷答题状态[record status] 2:未完成
+	 */
+	public static final int STATUS_UNDONE = 0;	//未完成
 }

@@ -25,7 +25,7 @@
                 </div>
                 <div class="recordsift fl">
                     <div class="sift fl">
-                    	<div class="siftbox fl">
+                    	<!-- <div class="siftbox fl">
                             <div class="f-l fl">产品：</div>
                             <div class="f-r fr">
                                <div class="list">
@@ -40,20 +40,28 @@
                                     </ul>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="siftbox fl">
                             <div class="f-l fl">科目：</div>
-                            <#list PRODUCTLIST as product>
-                            <div class="f-r fr" <#if product_index == 0>style="display:none"</#if>>
+                            <div class="f-r fr">
                                	<div class="list">
                                     <ul>
-                                    	<#list product.subjects as subject>
-                                    	<li><a href="#"><em>${subject.id}</em></a></li>
+                                    	<#if CURRENT_SUBJECT_ID??>
+                                    	<li><a href="javascript:void(0)" onclick="chooseSubject('all')"><em>全部</em></a></li>
+                                    	<#else>
+                                    	<li><a href="javascript:void(0)" class="bg"><em>全部</em></a></li>
+                                    	</#if>
+                                    	<#list SUBJECTLIST as subject>
+                                    		<#if CURRENT_SUBJECT_ID?? && subject.id == CURRENT_SUBJECT_ID>
+                                    		<li><a href="javascript:void" class="bg"><em>${subject.name}</em></a></li>
+                                    		<#else>
+	                                    	<li><a href="javascript:void" onclick="chooseSubject('${subject.id}')"><em>${subject.name}</em></a></li>
+	                                    	</#if>
                                     	</#list>
-                                        <li><a href="#"><em>全部</em></a></li>
+                                        <!-- <li><a href="#"><em>全部</em></a></li>
                                         <li class="bg"><em>中级经济师</em></li>
-                                        <li><a href="#"><em>初级经济师</em></a></li><!--鼠标移动上去去掉<i class="cheng"></i>-->
-                                    </ul>
+                                        <li><a href="#"><em>初级经济师</em></a></li>鼠标移动上去去掉<i class="cheng"></i>
+                                        -->                                    </ul>
                                 </div>
                             </div>
                             </#list>
@@ -71,11 +79,17 @@
                         <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
                             <div class="title">
                                 <ol>
-                                    <div class="title">${item.content}</div>
+                                    <div class="title">
+                                    <#if (item.content?length > 30)>
+                                    ${item.content?substring(0,30)}
+                                    <#else>
+                                    ${item.content}
+                                    </#if>
+                                    </div>
                                     <p>${item.createTime}</p>
                                 </ol>
-                                <span><a href="单个答案页面.html" class="red">查看解析</a></span>
-                                <span><div class="buy-botton"><div class="hong-botton"><a href="#">再做一次</a></div></div></span>
+                                <span><a href="javascript:void(0)" onclick="showAnalysis('${item.id}',1)" class="red">查看解析</a></span>
+                                <span><div class="buy-botton"><div class="hong-botton"><a href="javascript:void(0)" onclick="showAnalysis('${item.id}',0)">再做一次</a></div></div></span>
                             </div>
                         </li>
                         </#list>
@@ -96,4 +110,30 @@
 </div>
 <#include "common/foot.html" />
 </body>
+<script type="text/javascript">
+	var total;
+	$(function() {
+	   total = Number("${TOTAL}");
+	   if(total > 0)
+		{
+		   total = Math.floor(total%5==0?total/5:(total/5+1));
+		   $("#pager").pager({ pagenumber: ${PAGE}, pagecount: total, buttonClickCallback: PageClick });
+		}
+	    //切换科目
+		chooseSubject = function(subjectId){
+			window.location = '<@s.url "/library/error/"/>${PRODUCTID}?subjectId='+subjectId;
+		}
+		//查看解析|重做
+		showAnalysis = function(itemId,flag){
+			if(flag == 1){
+				window.location = '<@s.url "/library/error/"/>${PRODUCTID}/item/'+itemId+"?flag="+flag;
+			}
+		}
+ 	});
+	PageClick = function(pageclickednumber) {
+     	$("#pager").pager({ pagenumber: pageclickednumber, pagecount: total, buttonClickCallback: PageClick });
+     	//跳转
+     	window.location = '<@s.url "/library/error/"/>${PRODUCTID}?subjectId=${CURRENT_SUBJECT_ID}&page='+pageclickednumber;
+ 	}
+</script>
 </html>

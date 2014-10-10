@@ -71,7 +71,6 @@ public interface IPaperService {
 	 */
 	public List<StructureItemInfo> loadItemsList(PaperPreview paper)throws IOException;
 	public List<StructureItemInfo> loadBigItemsList(PaperPreview paper)throws IOException;
-	
 	/**
 	 * 试卷基本信息[分页]
 	 * @param info

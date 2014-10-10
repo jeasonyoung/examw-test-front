@@ -157,11 +157,14 @@ public class PaperController {
 	public String paperAnalysis(String paperId,String productId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题解析详情...");
 		//TODO 模拟一个用户ID
-//		String userId = getUserId(null);
+		String userId = getUserId(null);
 		try{
-			//PaperPreview info = this.paperService.loadPaperAnalysis(paperId,userId,productId);
-			//model.addAttribute("PAPER", info);
-			//model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info,true));
+//			PaperRecordInfo info = this.paperService.loadPaperAnalysis(paperId,userId,productId);
+//			model.addAttribute("PAPER", info);
+//			model.addAttribute("ITEMLIST",this.paperService.loadItemsListWithAnswer(info));
+			PaperPreview info = this.paperService.loadPaperDetail(paperId,userId,productId);
+			model.addAttribute("PAPER", info);
+			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info));
 			//单选
 			model.addAttribute("TYPE_SINGLE_VALUE", Constant.TYPE_SINGLE);
 			//多选

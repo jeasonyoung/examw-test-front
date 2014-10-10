@@ -234,7 +234,7 @@ public class PaperServiceImpl implements IPaperService{
 		return list;
 	}
 	/*
-	 * 
+	 * 加载按题型的子题集合
 	 * @see com.examw.test.front.service.IPaperService#loadBigItemsList(com.examw.test.front.model.library.PaperPreview)
 	 */
 	@Override
@@ -274,19 +274,20 @@ public class PaperServiceImpl implements IPaperService{
 //		return null;
 //	}
 //	
-//	@Override
-//	public PaperRecordInfo loadPaperAnalysis(String paperId, String userId,String productId)
-//			throws IOException {
-//		if(logger.isDebugEnabled()) logger.debug("加载试卷解析...");
-//		if(StringUtils.isEmpty(paperId) || StringUtils.isEmpty(userId))
-//		return null;
-//		String url = String.format(this.api_paperanalysis_url,paperId,userId);
-//		String xml = HttpUtil.httpRequest(url,"GET",("productId="+productId),"utf-8");
-//		if(!StringUtils.isEmpty(xml)){
-//			return JSONUtil.JsonToObject(xml, PaperRecordInfo.class);
-//		}
-//		return null;
-//	}
+	@Override
+	public PaperRecordInfo loadPaperAnalysis(String paperId, String userId,String productId)
+			throws IOException {
+		if(logger.isDebugEnabled()) logger.debug("加载试卷解析...");
+		if(StringUtils.isEmpty(paperId) || StringUtils.isEmpty(userId))
+		return null;
+		String url = String.format(this.api_paperanalysis_url,paperId,userId);
+		String xml = HttpUtil.httpRequest(url,"GET",("productId="+productId),"utf-8");
+		if(!StringUtils.isEmpty(xml)){
+			return JSONUtil.JsonToObject(xml, PaperRecordInfo.class);
+		}
+		return null;
+	}
+	
 	/**
 	 * 前端分页条件查询
 	 * @param info
@@ -337,14 +338,10 @@ public class PaperServiceImpl implements IPaperService{
 		}
 		return datagrid;
 	}
+	
+	
 	@Override
 	public Json sumbitPaper(PaperSubmitInfo info) throws IOException {
-		
-		return null;
-	}
-	@Override
-	public PaperRecordInfo loadPaperAnalysis(String paperId, String userId,
-			String productId) throws IOException {
 		
 		return null;
 	}

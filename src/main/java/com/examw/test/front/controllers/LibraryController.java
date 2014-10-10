@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.examw.model.DataGrid;
+import com.examw.test.front.model.library.FrontItemInfo;
 import com.examw.test.front.model.library.FrontPaperInfo;
 import com.examw.test.front.model.library.PaperInfo;
 import com.examw.test.front.model.product.ProductInfo;
+import com.examw.test.front.service.IErrorItemService;
 import com.examw.test.front.service.IPaperService;
 import com.examw.test.front.service.IProductService;
 /**
@@ -33,6 +35,8 @@ public class LibraryController {
 	private IProductService productService;
 	@Resource
 	private IPaperService paperService;
+	@Resource
+	private IErrorItemService errorItemService;
 	
 	@RequestMapping(value = "/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String library(@PathVariable String productId,Model model){
@@ -47,17 +51,42 @@ public class LibraryController {
 		return "exam_center";
 	}
 	
-	@RequestMapping(value = "/collection", method = {RequestMethod.GET,RequestMethod.POST})
-	public String collection(String productId,Model model){
+	@RequestMapping(value = "/collection/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String collection(@PathVariable String productId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载收藏界面...");
+		model.addAttribute("PRODUCTID", productId);
 		return "collections_list";
 	}
 	
-	@RequestMapping(value = "/error", method = {RequestMethod.GET,RequestMethod.POST})
-	public String error(String productId,Model model){
+	@RequestMapping(value = "/error/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String error(@PathVariable String productId,FrontItemInfo info,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载错题界面...");
+		try{
+			String userId = this.getUserId(null);
+			DataGrid<FrontItemInfo> data = this.errorItemService.dataGrid(productId, info, userId);
+			//productId
+			model.addAttribute("PRODUCTID", productId);
+			if(!StringUtils.isEmpty(info.getSubjectId())){
+				model.addAttribute("CURRENT_SUBJECT_ID", info.getSubjectId());
+			}
+			model.addAttribute("PAGE",info.getPage()==null?1:info.getPage());
+			model.addAttribute("ITEMLIST",data.getRows());
+			model.addAttribute("TOTAL",data.getTotal());
+			model.addAttribute("SUBJECTLIST", this.productService.loadProductSubjects(productId));
+			model.addAttribute("");
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
 		return "error_records";
 	}
+	
+	@RequestMapping(value = "/error/{productId}/item/{itemId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String errorDetail(@PathVariable String productId,@PathVariable String itemId,Model model){
+		if(logger.isDebugEnabled()) logger.debug("加载错题详细界面...");
+		model.addAttribute("PRODUCTID", productId);
+		return "error_records";
+	}
+	
 	
 	@RequestMapping(value = "/simulate/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String simulate(@PathVariable String productId,PaperInfo info,Model model){

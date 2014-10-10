@@ -80,9 +80,9 @@
             <div class="tx-box fl" structure_id="${structure.id}">${structure.title}</div>
             <#list structure.items?sort_by(["orderNo"]) as i>
             	<#if i.type != TYPE_SHARE_TITLE_VALUE && i.type != TYPE_SHARE_ANSWER_VALUE>
-            		<@show_item item=i index=(i_index+xuhao)/>
+            		<@show_item father=null item=i index=(i_index+xuhao)/>
             	<#else>
-            		<@show_item item=i index=xuhao/>
+            		<@show_item father=null item=i index=xuhao/>
             	</#if>
             </#list>
             </div>
@@ -225,18 +225,18 @@ $(function(){
 	}
 	//<!-- 分页 -->
 	var pageClick = [];
-	showNote = function(structureItemId,itemIndex,model){
+	showNote = function(itemId,itemIndex,model){
 		var index = pageClick.length;
 		$.ajax({
 			type:"POST",
 			url:'<@s.url "/library/item/notes"/>',
-			data:{"structureItemId":structureItemId,"page":1,"rows":3,"model":model},
+			data:{"itemId":itemId,"page":1,"rows":3,"model":model},
 			dataType:"json",
 			success:function(data){
 				if(data.total == 0) return;
 				var arr = data.rows;
 				var total = data.total%3==0?(data.total/3):(data.total/3+1);
-				var contentArea = $("div[name='noteList'][s_item_id='"+structureItemId+"']").find("div[name='content']");
+				var contentArea = $("div[name='noteList'][s_item_id='"+itemId+"']").find("div[name='content']");
 				contentArea.html("");
 				$.each(arr,function(i){
 					var note = arr[i];
@@ -251,13 +251,13 @@ $(function(){
 						$.ajax({
 							type:"POST",
 							url:"<@s.url "/library/item/notes"/>",
-							data:{"structureItemId":structureItemId,"page":pageclickednumber,"rows":3,"model":model},
+							data:{"itemId":itemId,"page":pageclickednumber,"rows":3,"model":model},
 							dataType:"json",
 							success:function(data){
 								if(data.total == 0) return;
 								var arr = data.rows;
 								var total = data.total%3==0?(data.total/3):(data.total/3+1);
-								var contentArea = $("div[name='noteList'][s_item_id='"+structureItemId+"']").find("div[name='content']");
+								var contentArea = $("div[name='noteList'][s_item_id='"+itemId+"']").find("div[name='content']");
 								contentArea.html("");
 								$.each(arr,function(i){
 									var note = arr[i];
@@ -271,14 +271,14 @@ $(function(){
 				}
 			}
 		});	//获取数据
-		$("div[name='noteList'][s_item_id='"+structureItemId+"']").show();
+		$("div[name='noteList'][s_item_id='"+itemId+"']").show();
 	}
 	//<!-- 收藏或取消收藏 -->
-	collectOrCancel = function(obj,structureItemId,itemId,userAnswer){
+	collectOrCancel = function(obj,itemId,userAnswer){
 		$.ajax({
 			type:"POST",
 			url:'<@s.url "/library/item/collect"/>',
-			data:{"structureItemId":structureItemId,"itemId":itemId,"userAnswer":userAnswer,"productId":productId},
+			data:{"itemId":itemId,"userAnswer":userAnswer,"productId":productId},
 			dataType:'json',
 			success:function(data){
 				if(data.success){
@@ -315,7 +315,7 @@ $(function(){
 		$.ajax({
 			type:"POST",
 			url:"<@s.url "/library/item/addnote"/>",
-			data:{"content":textarea.val(),"structureItemId":textarea.attr("s_item_id"),"itemId":textarea.attr("item_id")},
+			data:{"content":textarea.val(),"itemId":textarea.attr("s_item_id"),"itemId":textarea.attr("item_id")},
 			dataType:"json",
 			success:function(data){
 				if(data.success){

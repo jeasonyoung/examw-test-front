@@ -19,7 +19,7 @@
 	</#if>
 </#macro>
 <#macro item_choose i input index>
-	<div class="box fl" item_type="${i.type}" item_id="${i.item.id?default(i.id)}" item_status="${i.item.answerStatus?default(i.answerStatus)}">
+	<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_status="${i.answerStatus}">
 		<#if i.item?? && i.parentContent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>

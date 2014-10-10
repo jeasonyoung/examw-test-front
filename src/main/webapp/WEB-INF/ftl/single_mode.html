@@ -136,7 +136,7 @@ $(function(){
 			card.hide();
 		}
 	});
-	<!-- 点击选项 -->
+	//<!-- 点击选项 -->
 	$("ul li[option_id]").click(function(){
 		var option_id = $(this).attr("option_id");
 		if($(this).attr("option_type")=="radio") //互斥
@@ -175,14 +175,14 @@ $(function(){
 		}
 		$(this).addClass("over");
 	});
-	<!-- 字体选择 -->
+	//<!-- 字体选择 -->
 	$("#fontset li").click(function(){
 		if($(this)==$("#fontset li[current='true']")) return;
 		$(this).addClass("bg").attr("current",'true');
 		$("#paper_body").addClass($(this).attr("id")).removeClass($("#fontset li[current='true']").attr("id"));
 		$(this).siblings().removeClass("bg").attr("current",'false');
 	});
-	<!-- timer -->
+	//<!-- timer -->
 	window.limit_time = parseInt('${PAPER.time}');        // 单位：秒
 	window.timer         = setInterval(updateTime,1000);                          // 过1秒执行
 	function updateTime(){
@@ -227,7 +227,7 @@ $(function(){
 		$('#showtime').html(sTime);
 		window.limit_time--;
 	}
-	<!-- 暂停 -->
+	//<!-- 暂停 -->
 	pause_do = function(){
 		window.clearInterval(timer);
 		dialog({
@@ -240,30 +240,30 @@ $(function(){
 	        okValue: '点击继续'
 	    }).showModal();
 	}
-	<!-- 滑动到目标题目 上一题 下一题  -->
-	window.current_index = 0;
+	//<!-- 滑动到目标题目 上一题 下一题  -->
+	window.current_index = 1;
 	focusTo = function(obj,index){
 		if(!obj){
 			if(index==0)//上一题
 			{
-				if(current_index == 0){
+				if(current_index == 1){
 					showMsg("已经是第一题");
 					return;
 				}
 				current_index = current_index-1;
 			}else{
 				current_index = current_index+1;
-				if($("#single"+current_index).length==0){
+				if($("div[item_index='"+current_index+"']").length==0){
 					showMsg("已经是最后一题");
 					return;
 				}
 			}
 			var target = $("div[item_index='"+current_index+"']").parent();
+			$(target).siblings().hide();
 			$(target).show();
 			target = $("div[item_index='"+current_index+"']");
 			$.scrollTo(target,800,{axis:'xy', offset:-20 });
 			target = $("div[item_index='"+current_index+"']").parent();
-			$(target).siblings().hide();
 			return;
 		}
 		var target = $("div[single_item_id='"+$(obj).attr("pid")+"']");
@@ -281,7 +281,7 @@ $(function(){
 			if(d) d.close().remove();
 		},1000);
 	}
-	<!-- 显示收起解析 -->
+	//<!-- 显示收起解析 -->
 	toggleAnalysis = function(obj,id){
 		var target = $("div[name='jiexi'][item_id='"+id+"']");
 		if(target.is(":hidden")){
@@ -293,6 +293,15 @@ $(function(){
 			$(obj).html("展开解析");
 			$(obj).parent().siblings("em").attr("class","jiexi");
 		}
+	}
+	//<!-- 查看材料 -->
+	showCommonTitle = function(id){
+		dialog({
+			id:'cailiaoDialog',
+			title: '查看材料',
+			drag: true,
+	        content: "<div class='cont-r'><div class='fenxiti fl' style='border:0px'>"+$("div[fenxi_item_id='"+id+"']").html()+"</div></div>"
+	    }).show();
 	}
 });
 </script>

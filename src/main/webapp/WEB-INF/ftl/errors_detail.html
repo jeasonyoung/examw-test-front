@@ -25,10 +25,9 @@
                 	<div class="title">错题记录</div>
                 </div>
             </div>
-			<#list ITEMLIST as item>
-				<#assign xuhao = (item_index+1)/>	<!-- 计算序号 -->
-				<@show_item item xuhao/>
-			</#list>
+			<#if ITEM??>
+				<@show_item ITEM 1/>
+			</#if>
         </div>
     </div>
     <div class="h10"></div>
