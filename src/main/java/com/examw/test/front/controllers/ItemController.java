@@ -1,7 +1,5 @@
 package com.examw.test.front.controllers;
 
-import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.examw.model.DataGrid;
 import com.examw.model.Json;
 import com.examw.test.front.model.record.Collection;
 import com.examw.test.front.model.record.NoteInfo;
@@ -49,7 +48,7 @@ public class ItemController {
 	
 	@RequestMapping(value ="notes", method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
-	public Map<String,Object> findNotes(NoteInfo info,String model){
+	public DataGrid<NoteInfo> findNotes(NoteInfo info,String model){
 		if(logger.isDebugEnabled()) logger.debug("查询笔记数据...");
 		String userId = getUserId(null);
 		try{
@@ -74,6 +73,7 @@ public class ItemController {
 		String userId = getUserId(null);
 		try{
 			info.setUserId(userId);
+			info.setUsername("username");
 			return this.noteService.addNote(info);
 		}catch(Exception e){
 			e.printStackTrace();

@@ -1,8 +1,8 @@
 package com.examw.test.front.service;
 
 import java.io.IOException;
-import java.util.Map;
 
+import com.examw.model.DataGrid;
 import com.examw.model.Json;
 import com.examw.test.front.model.record.NoteInfo;
 
@@ -19,12 +19,12 @@ public interface INoteService {
 	 * @return
 	 * @throws IOException 
 	 */
-	Map<String,Object> findNotes(NoteInfo note) throws IOException;
+	DataGrid<NoteInfo> findNotes(NoteInfo note) throws IOException;
 	/**
 	 * 添加笔记
 	 * @param info
 	 * @return
 	 * @throws IOException 
 	 */
-	Json addNote(NoteInfo info) throws IOException;
+	Json addNote(NoteInfo info) throws Exception;
 }

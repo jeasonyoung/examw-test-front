@@ -1,7 +1,6 @@
 package com.examw.test.front.model.library;
 
 import java.io.Serializable;
-import java.net.URLEncoder;
 
 import org.springframework.util.StringUtils;
 
@@ -131,36 +130,5 @@ public class PaperSubmitInfo implements Serializable{
 		if(StringUtils.isEmpty(this.paperId) || StringUtils.isEmpty(this.userId) || StringUtils.isEmpty(this.productId))
 			return false;
 		return true;
-	}
-	
-	public String createSubmitData(){
-		StringBuilder buf = new StringBuilder();
-		if(!StringUtils.isEmpty(this.paperId)){
-			buf.append("paperId=").append(this.paperId).append("&");
-		}
-		if(!StringUtils.isEmpty(this.userId)){
-			buf.append("userId=").append(this.userId).append("&");
-		}
-		if(!StringUtils.isEmpty(this.productId)){
-			buf.append("productId=").append(this.productId).append("&");
-		}
-		if(this.limitTime != null){
-			buf.append("limitTime=").append(this.limitTime).append("&");
-		}
-		if(this.model != null){
-			buf.append("model=").append(this.model).append("&");
-		}
-		try{
-			if(!StringUtils.isEmpty(this.chooseAnswer)){
-				buf.append("chooseAnswer=").append(URLEncoder.encode(this.chooseAnswer,"utf-8")).append("&");
-			}
-			if(!StringUtils.isEmpty(this.textAnswer)){
-				buf.append("textAnswer=").append(URLEncoder.encode(this.textAnswer,"utf-8")).append("&");
-			}
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		buf.append("_time=").append(System.currentTimeMillis());
-		return buf.toString();
 	}
 }

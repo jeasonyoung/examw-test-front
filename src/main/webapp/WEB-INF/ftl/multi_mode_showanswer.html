@@ -315,7 +315,7 @@ $(function(){
 		$.ajax({
 			type:"POST",
 			url:"<@s.url "/library/item/addnote"/>",
-			data:{"content":textarea.val(),"itemId":textarea.attr("s_item_id"),"itemId":textarea.attr("item_id")},
+			data:{"content":textarea.val(),"itemId":textarea.attr("item_id")},
 			dataType:"json",
 			success:function(data){
 				if(data.success){

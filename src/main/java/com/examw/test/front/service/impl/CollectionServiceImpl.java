@@ -1,15 +1,16 @@
 package com.examw.test.front.service.impl;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 import com.examw.model.Json;
+import com.examw.test.front.model.library.FrontItemInfo;
 import com.examw.test.front.model.record.Collection;
 import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.support.HttpUtil;
-import com.examw.test.front.support.JSONUtil;
 
 /**
  * 收藏服务接口
@@ -32,17 +33,12 @@ public class CollectionServiceImpl implements ICollectionService{
 	 * @see com.examw.test.front.service.ICollectionService#collectOrCancel(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Json collectOrCancel(Collection info) throws IOException {
+	public Json collectOrCancel(Collection info) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("收藏或取消收藏...");
-		if(StringUtils.isEmpty(info.getStructureItemId()) || StringUtils.isEmpty(info.getUserId())) 
+		if(StringUtils.isEmpty(info.getItemId()) || StringUtils.isEmpty(info.getUserId())) 
 			return null;
-		String url = String.format(this.api_collection_url,info.getStructureItemId());
-		String data = "itemId="+info.getItemId()+"&userId="+info.getUserId()+"&productId="+info.getProductId();
-		String xml = HttpUtil.httpRequest(url,"GET",data,"utf-8");
-		if(!StringUtils.isEmpty(xml)){
-			return JSONUtil.JsonToObject(xml, Json.class);
-		}
-		return null;
+		String url = String.format(this.api_collection_url,info.getItemId());
+		return HttpUtil.upload(url, info);
 	}
 	
 //	@SuppressWarnings("unchecked")
@@ -60,4 +56,10 @@ public class CollectionServiceImpl implements ICollectionService{
 //		}
 //		return null;
 //	}
+	@Override
+	public List<FrontItemInfo> loadCollectionItems(Collection info)
+			throws IOException {
+		
+		return null;
+	}
 }

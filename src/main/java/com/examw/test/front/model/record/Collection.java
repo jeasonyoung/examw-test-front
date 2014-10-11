@@ -10,7 +10,7 @@ import java.util.Date;
  */
 public class Collection implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String id,structureItemId,userId,itemId,userAnswer,productId;
+	private String id,userId,itemId,userAnswer,productId;
 	private Date createTime;
 	/**
 	 * 获取 ID
@@ -27,22 +27,6 @@ public class Collection implements Serializable {
 	 */
 	public void setId(String id) {
 		this.id = id;
-	}
-	/**
-	 * 获取 结构题目ID
-	 * @return structureItemId
-	 * 结构题目ID
-	 */
-	public String getStructureItemId() {
-		return structureItemId;
-	}
-	/**
-	 * 设置 结构题目ID
-	 * @param structureItemId
-	 * 结构题目ID
-	 */
-	public void setStructureItemId(String structureItemId) {
-		this.structureItemId = structureItemId;
 	}
 	/**
 	 * 获取 用户ID
