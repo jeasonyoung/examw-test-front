@@ -11,6 +11,7 @@ import com.examw.test.front.model.library.FrontItemInfo;
 import com.examw.test.front.model.record.Collection;
 import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.support.HttpUtil;
+import com.examw.test.front.support.JSONUtil;
 
 /**
  * 收藏服务接口
@@ -40,26 +41,20 @@ public class CollectionServiceImpl implements ICollectionService{
 		String url = String.format(this.api_collection_url,info.getItemId());
 		return HttpUtil.upload(url, info);
 	}
-	
-//	@SuppressWarnings("unchecked")
-//	@Override
-//	public List<ItemScoreInfo> loadCollectionItems(Collection info)
-//			throws IOException {
-//		if(logger.isDebugEnabled()) logger.debug("收藏的试题集合...");
-//		if(StringUtils.isEmpty(info.getUserId())) 
-//			return null;
-//		String url = String.format(this.api_collection_url);
-//		String data = "itemId="+info.getItemId()+"&userId="+info.getUserId()+"&productId="+info.getProductId();
-//		String xml = HttpUtil.httpRequest(url,"GET",data,"utf-8");
-//		if(!StringUtils.isEmpty(xml)){
-//			return JSONUtil.JsonToCollection(xml, List.class,ItemScoreInfo.class);
-//		}
-//		return null;
-//	}
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<FrontItemInfo> loadCollectionItems(Collection info)
 			throws IOException {
-		
+		if(logger.isDebugEnabled()) logger.debug("收藏的试题集合...");
+		if(StringUtils.isEmpty(info.getUserId())) 
+			return null;
+		String url = String.format(this.api_collection_url);
+		String data = "examId="+info.getExamId()+"&userId="+info.getUserId()+"&productId="+info.getProductId();
+		String xml = HttpUtil.httpRequest(url,"GET",data,"utf-8");
+		if(!StringUtils.isEmpty(xml)){
+			return JSONUtil.JsonToCollection(xml, List.class,FrontItemInfo.class);
+		}
 		return null;
 	}
 }
