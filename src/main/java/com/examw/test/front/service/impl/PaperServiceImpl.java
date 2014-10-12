@@ -3,10 +3,11 @@ package com.examw.test.front.service.impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeanUtils;
@@ -23,6 +24,7 @@ import com.examw.test.front.model.library.PaperSubmitInfo;
 import com.examw.test.front.model.library.StructureInfo;
 import com.examw.test.front.model.library.StructureItemInfo;
 import com.examw.test.front.model.product.FrontProductInfo;
+import com.examw.test.front.model.record.UserItemRecordInfo;
 import com.examw.test.front.model.record.UserPaperRecordInfo;
 import com.examw.test.front.service.IPaperService;
 import com.examw.test.front.support.HttpUtil;
@@ -43,6 +45,7 @@ public class PaperServiceImpl implements IPaperService{
 	private String api_papertype_url;
 	private String api_user_paper_records_url;
 	private String api_user_paper_record_url;
+	private String api_user_paper_record_add_url;
 	private MethodCacheHelper cacheHelper;
 	/**
 	 * 设置 试卷列表数据接口地址
@@ -104,6 +107,15 @@ public class PaperServiceImpl implements IPaperService{
 	 */
 	public void setApi_user_paper_record_url(String api_user_paper_record_url) {
 		this.api_user_paper_record_url = api_user_paper_record_url;
+	}
+
+	/**
+	 *  设置 用户试卷记录添加地址
+	 * @param api_user_paper_record_add_url
+	 */
+	public void setApi_user_paper_record_add_url(
+			String api_user_paper_record_add_url) {
+		this.api_user_paper_record_add_url = api_user_paper_record_add_url;
 	}
 
 	/**
@@ -196,7 +208,7 @@ public class PaperServiceImpl implements IPaperService{
 	 * @see com.examw.test.front.service.IPaperService#loadPaperDetail(java.lang.String)
 	 */
 	@Override
-	public PaperPreview loadPaperDetail(String paperId,String userId,String productId) throws IOException {
+	public PaperPreview loadPaperDetail(String paperId,String userId,String productId) throws Exception {
 		PaperPreview paper = this.loadPaperDetail(paperId);
 		//查询用户试卷考试记录,没有记录的话添加记录
 		String url = String.format(this.api_user_paper_record_url,userId,paperId);
@@ -210,24 +222,91 @@ public class PaperServiceImpl implements IPaperService{
 			UserPaperRecordInfo info = JSONUtil.JsonToObject((String)json.getData(), UserPaperRecordInfo.class);
 			if(info != null){
 				//附上用户的答案
-				//setUserAnswer(paper,info);	
+				setUserAnswer(paper,info);	
 			}else{
 				info = changeModel(paper);
 				info.setProductId(productId);
-				info.setCreateTime(new Date());
-				info.setUsedTime(0L);
-				info.setTerminalCode(123456);
-				info.setStatus(Constant.STATUS_UNDONE); //刚加入未完成
+				//提交记录
+				HttpUtil.upload(this.api_user_paper_record_add_url, info);
 			}
 		}
 		return paper;
 	}
+	//设置用户的答案
+	private void setUserAnswer(PaperPreview paper, UserPaperRecordInfo info) {
+		List<StructureInfo> structures = paper.getStructures();
+		Set<UserItemRecordInfo> itemRecords = info.getItems();
+		if(itemRecords == null || itemRecords.size() ==0 ) return;
+		for(StructureInfo s:structures){
+			Set<StructureItemInfo> items = s.getItems();
+			for(StructureItemInfo item:items){
+				setUserAnswer(item,itemRecords);
+			}
+		}
+	}
+	//设置用户答案
+	private void setUserAnswer(StructureItemInfo item,
+			Set<UserItemRecordInfo> itemRecords) {
+		switch(item.getType()){
+		case Constant.TYPE_SHARE_TITLE:
+			setShareTitleItemUserAnswer(item, itemRecords);
+			break;
+		case Constant.TYPE_SHARE_ANSWER:
+			setShareAnswerItemUserAnswer(item, itemRecords);
+			break;
+		default:
+			for(UserItemRecordInfo info : itemRecords)
+			{
+				if(item.getId().equalsIgnoreCase(info.getItemId())){
+					item.setUserAnswer(info.getAnswer());	//设置用户答案
+					break;
+				}
+			}
+			break;
+		}
+	}
+	//设置共享题干题的用户答案
+	private void setShareTitleItemUserAnswer(StructureItemInfo item,
+			Set<UserItemRecordInfo> itemRecords){
+		Set<StructureItemInfo> children = item.getChildren();
+		for(StructureItemInfo child:children){
+			for(UserItemRecordInfo info : itemRecords)
+			{
+				if(child.getId().equalsIgnoreCase(info.getItemId())){
+					child.setUserAnswer(info.getAnswer());	//设置用户答案
+					break;
+				}
+			}
+		}
+	}
+	//设置共享答案题的用户答案
+	private void setShareAnswerItemUserAnswer(StructureItemInfo item,
+			Set<UserItemRecordInfo> itemRecords){
+		TreeSet<StructureItemInfo> set = new TreeSet<>();
+		set.addAll(item.getChildren());
+		Set<StructureItemInfo> children = set.last().getChildren();
+		for(StructureItemInfo child:children){
+			for(UserItemRecordInfo info : itemRecords)
+			{
+				if(child.getId().equalsIgnoreCase(info.getItemId())){
+					child.setUserAnswer(info.getAnswer());	//设置用户答案
+					break;
+				}
+			}
+		}
+	}
+	//数据模型转换
 	private UserPaperRecordInfo changeModel(PaperPreview paper) {
 		if(paper == null)
 		return null;
 		UserPaperRecordInfo info = new UserPaperRecordInfo();
-		BeanUtils.copyProperties(paper, info,new String[]{"id","structures"});
+		BeanUtils.copyProperties(paper, info,new String[]{"id","structures","createTime","lastTime"});
+		info.setId(UUID.randomUUID().toString());
 		info.setPaperId(paper.getId());	//试卷Id
+		info.setUsedTime(0L);
+		info.setTerminalCode(123456);
+		info.setStatus(Constant.STATUS_UNDONE); //刚加入未完成
+		paper.setPaperRecordId(info.getId());	//设置试卷考试记录ID
 		return info;
 	}
 
@@ -271,14 +350,7 @@ public class PaperServiceImpl implements IPaperService{
 	 */
 	private List<StructureItemInfo> getShareTitleSortedChildrenList(StructureItemInfo item) {
 		List<StructureItemInfo> list = new ArrayList<StructureItemInfo>();
-		TreeSet<StructureItemInfo> set = new TreeSet<StructureItemInfo>(
-				new Comparator<StructureItemInfo>() {
-					@Override
-					public int compare(StructureItemInfo o1,
-							StructureItemInfo o2) {
-						return o1.getOrderNo() - o2.getOrderNo();
-					}
-				});
+		TreeSet<StructureItemInfo> set = new TreeSet<StructureItemInfo>();
 		set.addAll(item.getChildren());
 		for(StructureItemInfo info : set){
 			list.add(info);
@@ -290,14 +362,7 @@ public class PaperServiceImpl implements IPaperService{
 	 */
 	private List<StructureItemInfo> getShareAnswerSortedChildrenList(StructureItemInfo item) {
 		List<StructureItemInfo> list = new ArrayList<StructureItemInfo>();
-		TreeSet<StructureItemInfo> set = new TreeSet<StructureItemInfo>(
-				new Comparator<StructureItemInfo>() {
-					@Override
-					public int compare(StructureItemInfo o1,
-							StructureItemInfo o2) {
-						return o1.getOrderNo() - o2.getOrderNo();
-					}
-				});
+		TreeSet<StructureItemInfo> set = new TreeSet<StructureItemInfo>();
 		set.addAll(item.getChildren());
 		StructureItemInfo last = set.last();	//最后一个
 		set.clear();

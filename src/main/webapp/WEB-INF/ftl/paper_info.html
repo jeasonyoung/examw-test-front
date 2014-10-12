@@ -38,7 +38,7 @@
                   		</ul>
                   	</div>
                   	<div class="botton-box">
-                  		<div class="botton"><div class="hong-botton"><a href="javascript:void(0);" onclick="start('${PAPER.id}');">普通模考</a></div></div>
+                  		<div class="botton"><div class="hong-botton"><a href="javascript:void(0);" onclick="start('${PRODUCTID}','${PAPER.id}');">普通模考</a></div></div>
                         <div class="botton"><div class="hei-botton"><a href="#">全真模考</a></div></div>
                   	</div>
                 </div>
@@ -68,8 +68,8 @@
 <#include "common/foot.html" />
 </body>
 <script type="text/javascript">
-	function start(id){
-		location = "<@s.url "/library/paper/do/multi"/>?paperId="+id;		
+	function start(productId,id){
+		location = "<@s.url "/library/paper/"/>"+productId+"/do/multi/"+id;		
 	}
 </script>
 </html>
