@@ -10,7 +10,23 @@ import java.util.Date;
  */
 public class Collection implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String id,userId,itemId,userAnswer,productId,examId;
+	private String id,userId,itemId,userAnswer,productId,examId,subjectId;
+	/**
+	 * 获取 
+	 * @return subjectId
+	 * 
+	 */
+	public String getSubjectId() {
+		return subjectId;
+	}
+	/**
+	 * 设置 
+	 * @param subjectId
+	 * 
+	 */
+	public void setSubjectId(String subjectId) {
+		this.subjectId = subjectId;
+	}
 	private Date createTime;
 	/**
 	 * 获取 ID

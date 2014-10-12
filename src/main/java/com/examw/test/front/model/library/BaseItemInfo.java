@@ -1,5 +1,6 @@
 package com.examw.test.front.model.library;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import com.examw.model.Paging;
@@ -436,4 +437,74 @@ public abstract class BaseItemInfo<T extends BaseItemInfo<T>>  extends Paging im
 		}
 		return index;
 	}
+	//增加属性
+	private Boolean isCollected;    // 是否被收藏
+	private String userAnswer;	    // 用户答案
+	private BigDecimal userScore;	// 用户得分
+	private Integer answerStatus;	// 回答状态
+	/**
+	 * 获取 是否被收藏
+	 * @return isCollected
+	 * 是否被收藏
+	 */
+	public Boolean getIsCollected() {
+		return isCollected;
+	}
+	/**
+	 * 设置 是否被收藏
+	 * @param isCollected
+	 * 是否被收藏
+	 */
+	public void setIsCollected(Boolean isCollected) {
+		this.isCollected = isCollected;
+	}
+	/**
+	 * 获取 用户答案
+	 * @return userAnswer
+	 * 用户答案
+	 */
+	public String getUserAnswer() {
+		return userAnswer;
+	}
+	/**
+	 * 设置 用户答案
+	 * @param userAnswer
+	 * 用户答案
+	 */
+	public void setUserAnswer(String userAnswer) {
+		this.userAnswer = userAnswer;
+	}
+	/**
+	 * 获取 用户得分
+	 * @return userScore
+	 * 用户得分
+	 */
+	public BigDecimal getUserScore() {
+		return userScore;
+	}
+	/**
+	 * 设置 用户得分
+	 * @param userScore
+	 * 用户得分
+	 */
+	public void setUserScore(BigDecimal userScore) {
+		this.userScore = userScore;
+	}
+	/**
+	 * 获取 回答状态
+	 * @return answerStatus
+	 * 回答状态
+	 */
+	public Integer getAnswerStatus() {
+		return answerStatus;
+	}
+	/**
+	 * 设置 回答状态
+	 * @param answerStatus
+	 * 回答状态
+	 */
+	public void setAnswerStatus(Integer answerStatus) {
+		this.answerStatus = answerStatus;
+	}
+	
 }

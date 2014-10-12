@@ -3,11 +3,13 @@ package com.examw.test.front.service.impl;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
 import com.examw.model.DataGrid;
@@ -21,6 +23,7 @@ import com.examw.test.front.model.library.PaperSubmitInfo;
 import com.examw.test.front.model.library.StructureInfo;
 import com.examw.test.front.model.library.StructureItemInfo;
 import com.examw.test.front.model.product.FrontProductInfo;
+import com.examw.test.front.model.record.UserPaperRecordInfo;
 import com.examw.test.front.service.IPaperService;
 import com.examw.test.front.support.HttpUtil;
 import com.examw.test.front.support.JSONUtil;
@@ -34,11 +37,12 @@ import com.examw.test.front.support.MethodCacheHelper;
 public class PaperServiceImpl implements IPaperService{
 	private static final Logger logger = Logger.getLogger(PaperServiceImpl.class);
 	private String api_paperlist_url;
-	private String api_paperinfo_url;
-	private String api_paperitem_url;
+	private String api_paper_detail_url;
 	private String api_papersubmit_url;
 	private String api_paperanalysis_url;
 	private String api_papertype_url;
+	private String api_user_paper_records_url;
+	private String api_user_paper_record_url;
 	private MethodCacheHelper cacheHelper;
 	/**
 	 * 设置 试卷列表数据接口地址
@@ -47,22 +51,6 @@ public class PaperServiceImpl implements IPaperService{
 	 */
 	public void setApi_paperlist_url(String api_paperlist_url) {
 		this.api_paperlist_url = api_paperlist_url;
-	}
-	/**
-	 * 设置 试卷基本信息数据接口地址
-	 * @param api_paperinfo_url
-	 * 
-	 */
-	public void setApi_paperinfo_url(String api_paperinfo_url) {
-		this.api_paperinfo_url = api_paperinfo_url;
-	}
-	/**
-	 * 设置 试卷试题数据接口地址
-	 * @param api_paperitem_url
-	 * 
-	 */
-	public void setApi_paperitem_url(String api_paperitem_url) {
-		this.api_paperitem_url = api_paperitem_url;
 	}
 	
 	/**
@@ -91,6 +79,33 @@ public class PaperServiceImpl implements IPaperService{
 		this.api_papertype_url = api_papertype_url;
 	}
 	
+	/**
+	 * 设置 用户试卷记录地址
+	 * @param api_user_paper_records_url
+	 * 
+	 */
+	public void setApi_user_paper_records_url(String api_user_paper_records_url) {
+		this.api_user_paper_records_url = api_user_paper_records_url;
+	}
+	
+	/**
+	 * 设置 试卷[带结构带题目]的地址
+	 * @param api_paper_detail_url
+	 * 
+	 */
+	public void setApi_paper_detail_url(String api_paper_detail_url) {
+		this.api_paper_detail_url = api_paper_detail_url;
+	}
+	
+	/**
+	 * 设置 用户试卷记录地址
+	 * @param api_user_paper_record_url
+	 * 
+	 */
+	public void setApi_user_paper_record_url(String api_user_paper_record_url) {
+		this.api_user_paper_record_url = api_user_paper_record_url;
+	}
+
 	/**
 	 * 设置 缓存辅助类
 	 * @param cacheHelper
@@ -123,6 +138,26 @@ public class PaperServiceImpl implements IPaperService{
 		}
 		return null;
 	}
+	/**
+	 * 加载用户最新试卷记录
+	 * @param userId
+	 * @param productId
+	 * @return
+	 * @throws IOException
+	 */
+	@SuppressWarnings("unchecked")
+	public List<UserPaperRecordInfo> loadUserPaperRecords(String userId,String productId) throws IOException{
+		if(logger.isDebugEnabled()) logger.debug("加载模拟考场用户试卷记录列表...");
+		if(StringUtils.isEmpty(productId))
+		return null;
+		String url = String.format(this.api_user_paper_records_url,userId,productId);
+		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		if(!StringUtils.isEmpty(xml)){
+			return JSONUtil.JsonToCollection(xml, List.class, UserPaperRecordInfo.class);
+		}
+		return null;
+	}
+	
 	/*
 	 * 加载试卷的基本信息
 	 * @see com.examw.test.front.service.IPaperService#loadPaperInfo(java.lang.String)
@@ -130,32 +165,72 @@ public class PaperServiceImpl implements IPaperService{
 	@Override
 	public PaperPreview loadPaperInfo(String paperId) throws IOException {
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷基本信息...");
+		PaperPreview paper = (PaperPreview) this.cacheHelper.getCache(PaperPreview.class.getName(), this.getClass().getName()+"loadPaperDetail", new String[]{paperId});
+		if(paper == null){
+			paper = this.loadPaperDetail(paperId);
+			if(paper!=null){
+				this.cacheHelper.putCache(PaperPreview.class.getName(), this.getClass().getName()+"loadPaperDetail", new String[]{paperId}, paper);
+			}
+		}
+		return paper;
+	}
+	/**
+	 * 试卷详细情况
+	 * @param paperId
+	 * @return
+	 * @throws IOException
+	 */
+	private PaperPreview loadPaperDetail(String paperId)throws IOException{
+		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷基本信息...");
 		if(StringUtils.isEmpty(paperId))
 		return null;
-		String url = String.format(this.api_paperinfo_url,paperId);
+		String url = String.format(this.api_paper_detail_url,paperId);
 		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToObject(xml, PaperPreview.class);
 		}
 		return null;
 	}
-	
 	/*
 	 * 加载试卷详情[带试题]
 	 * @see com.examw.test.front.service.IPaperService#loadPaperDetail(java.lang.String)
 	 */
 	@Override
 	public PaperPreview loadPaperDetail(String paperId,String userId,String productId) throws IOException {
-		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷基本信息...");
-		//if(StringUtils.isEmpty(paperId) || StringUtils.isEmpty(userId) || StringUtils.isEmpty(productId))
-		//return null;
-		String url = String.format(this.api_paperitem_url,paperId);
+		PaperPreview paper = this.loadPaperDetail(paperId);
+		//查询用户试卷考试记录,没有记录的话添加记录
+		String url = String.format(this.api_user_paper_record_url,userId,paperId);
 		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		Json json = null;
 		if(!StringUtils.isEmpty(xml)){
-			return JSONUtil.JsonToObject(xml, PaperPreview.class);
+			json = JSONUtil.JsonToObject(xml, Json.class);
 		}
-		return null;
+		if(json.isSuccess())
+		{
+			UserPaperRecordInfo info = JSONUtil.JsonToObject((String)json.getData(), UserPaperRecordInfo.class);
+			if(info != null){
+				//附上用户的答案
+				//setUserAnswer(paper,info);	
+			}else{
+				info = changeModel(paper);
+				info.setProductId(productId);
+				info.setCreateTime(new Date());
+				info.setUsedTime(0L);
+				info.setTerminalCode(123456);
+				info.setStatus(Constant.STATUS_UNDONE); //刚加入未完成
+			}
+		}
+		return paper;
 	}
+	private UserPaperRecordInfo changeModel(PaperPreview paper) {
+		if(paper == null)
+		return null;
+		UserPaperRecordInfo info = new UserPaperRecordInfo();
+		BeanUtils.copyProperties(paper, info,new String[]{"id","structures"});
+		info.setPaperId(paper.getId());	//试卷Id
+		return info;
+	}
+
 	/*
 	 * 从试卷详情中把试题集合择出来
 	 * @see com.examw.test.front.service.IPaperService#loadItemsList(com.examw.test.front.model.PaperPreview)
@@ -299,14 +374,23 @@ public class PaperServiceImpl implements IPaperService{
 		if(logger.isDebugEnabled()) logger.debug("加载试卷分页列表信息...");
 		Integer page = info.getPage()==null?1:info.getPage();
 		Integer rows = info.getRows()==null?10:info.getRows();
-		List<FrontPaperInfo> list = (List<FrontPaperInfo>) this.cacheHelper.getCache(FrontPaperInfo.class.getName(), this.getClass().getName()+"loadPaperList", new Object[]{info.getExamId()});
+		//从缓存中取所有的试卷
+		List<FrontPaperInfo> list = (List<FrontPaperInfo>) this.cacheHelper.getCache(FrontPaperInfo.class.getName(), this.getClass().getName()+"loadPaperList", new Object[]{productId});
 		if(list == null){
 			list = this.loadPaperList(productId);
 			if(list!=null)
-				this.cacheHelper.putCache(FrontProductInfo.class.getName(), this.getClass().getName()+"loadPaperList", new Object[]{info.getExamId()}, list);
+				this.cacheHelper.putCache(FrontProductInfo.class.getName(), this.getClass().getName()+"loadPaperList", new Object[]{productId}, list);
+		}
+		//从缓存中取用户试卷最新记录
+		List<UserPaperRecordInfo> records = (List<UserPaperRecordInfo>) this.cacheHelper.getCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadUserPaperRecords", new Object[]{userId,productId});
+		if(records == null){
+			records = this.loadUserPaperRecords(userId, productId);
+			if(records!=null)
+				this.cacheHelper.putCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadUserPaperRecords", new Object[]{userId,productId}, records);
 		}
 		DataGrid<FrontPaperInfo> datagrid = new DataGrid<FrontPaperInfo>();
 		List<FrontPaperInfo> result = new ArrayList<FrontPaperInfo>();
+		//按条件筛选
 		for(FrontPaperInfo paper : list){
 			boolean flag = true;
 			if(flag && !StringUtils.isEmpty(info.getSubjectId())){
@@ -332,17 +416,40 @@ public class PaperServiceImpl implements IPaperService{
 			page = page > totalPage?totalPage:page;
 			if(list.size() <= rows)
 			{
+				setUserRecordInfo(result,records);
 				datagrid.setRows(result);
-			}else
-				datagrid.setRows(result.subList((page-1)*rows, page*rows>total?total:page*rows));
+			}else{
+				List<FrontPaperInfo> subList = result.subList((page-1)*rows, page*rows>total?total:page*rows);
+				setUserRecordInfo(subList,records);
+				datagrid.setRows(subList);
+			}
 		}
 		return datagrid;
 	}
 	
-	
+	/**
+	 * 设置用户考试记录信息
+	 * @param result
+	 * @param records
+	 */
+	private void setUserRecordInfo(List<FrontPaperInfo> result,List<UserPaperRecordInfo> records) {
+		if(result == null || result.size() == 0) return;
+		if(records == null || records.size() == 0) return;
+		for(FrontPaperInfo info:result){
+			for(UserPaperRecordInfo record:records){
+				if(info.getId().equalsIgnoreCase(record.getPaperId())){
+					info.setUserScore(record.getScore());//用户得分
+					info.setUsedTime(record.getUsedTime()); //使用时间
+					info.setExamTime(record.getCreateTime());
+					info.setExamStatus(record.getStatus());
+					break;
+				}
+			}
+		}
+	}
 	@Override
-	public Json sumbitPaper(PaperSubmitInfo info) throws IOException {
-		
-		return null;
+	public Json sumbitPaper(PaperSubmitInfo info) throws Exception {
+		//评判分
+		return HttpUtil.upload(api_papersubmit_url, info);
 	}
 }

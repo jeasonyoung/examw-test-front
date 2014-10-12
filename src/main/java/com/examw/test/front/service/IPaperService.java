@@ -54,7 +54,7 @@ public interface IPaperService {
 	 * 下次再做的提交
 	 * @param info 提交试卷答案信息
 	 */
-	Json sumbitPaper(PaperSubmitInfo info)throws IOException;
+	Json sumbitPaper(PaperSubmitInfo info)throws Exception;
 	/**
 	 * 加载试卷试题解析
 	 * @param paperId

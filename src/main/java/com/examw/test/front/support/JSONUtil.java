@@ -1,9 +1,11 @@
 package com.examw.test.front.support;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.JavaType;
@@ -20,6 +22,10 @@ public class JSONUtil {
 	public static synchronized ObjectMapper getMapperInstance() {
 		if (mapper == null) {
 			mapper = new ObjectMapper();
+			//处理日期格式 
+			DeserializationConfig cfg = mapper.getDeserializationConfig();
+			cfg = cfg.withDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+			mapper = mapper.setDeserializationConfig(cfg);
 		}
 		return mapper;
 	}

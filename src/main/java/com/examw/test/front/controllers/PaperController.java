@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -33,13 +34,13 @@ public class PaperController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value ="", method = {RequestMethod.GET,RequestMethod.POST})
-	public String paperInfo(String paperId,HttpServletRequest request,Model model){
+	@RequestMapping(value ="/{productId}/{paperId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String paperInfo(@PathVariable String productId,@PathVariable String paperId,HttpServletRequest request,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷基本信息...");
 		try{
 			PaperPreview info = this.paperService.loadPaperInfo(paperId);
 			model.addAttribute("PAPER", info);
-			model.addAttribute("PRODUCTID",request.getAttribute("productId"));
+			model.addAttribute("PRODUCTID",productId);
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载试卷基本信息...");
@@ -52,8 +53,8 @@ public class PaperController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value ="/do/multi", method = {RequestMethod.GET,RequestMethod.POST})
-	public String paperDetail(String paperId,String productId,Model model,HttpServletRequest request){
+	@RequestMapping(value ="/{productId}/do/multi/{paperId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String paperDetail(@PathVariable String paperId,@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情...");
 		//TODO 模拟一个用户ID
 		String userId = getUserId(null);
@@ -83,7 +84,7 @@ public class PaperController {
 			//是否显示答案
 			model.addAttribute("IS_SHOW_ANSWER",false);
 			//productID
-			model.addAttribute("PRODUCTID",request.getAttribute("productId"));
+			model.addAttribute("PRODUCTID",productId);
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情异常...");
@@ -96,8 +97,8 @@ public class PaperController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value ="/do/single", method = {RequestMethod.GET,RequestMethod.POST})
-	public String paperDetailSigleModel(String paperId,String productId,Model model,HttpServletRequest request){
+	@RequestMapping(value ="/{productId}/do/single/{paperId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String paperDetailSigleModel(@PathVariable String paperId,@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情...");
 		//TODO 模拟一个用户ID
 		String userId = getUserId(null);
@@ -128,7 +129,7 @@ public class PaperController {
 			//是否显示答案
 			model.addAttribute("IS_SHOW_ANSWER",false);
 			
-			model.addAttribute("PRODUCTID",request.getAttribute("productId"));
+			model.addAttribute("PRODUCTID",productId);
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情异常...");
@@ -153,8 +154,8 @@ public class PaperController {
 		return null;
 	}
 	
-	@RequestMapping(value ="/analysis", method = {RequestMethod.GET,RequestMethod.POST})
-	public String paperAnalysis(String paperId,String productId,Model model){
+	@RequestMapping(value ="/{productId}/analysis/{paperId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String paperAnalysis(@PathVariable String paperId,@PathVariable String productId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题解析详情...");
 		//TODO 模拟一个用户ID
 		String userId = getUserId(null);
@@ -187,6 +188,8 @@ public class PaperController {
 			model.addAttribute("STATUS_RIGHT", Constant.STATUS_RIGHT);
 			//答错
 			model.addAttribute("STATUS_WRONG", Constant.STATUS_WRONG);
+			
+			model.addAttribute("PRODUCTID",productId);
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情异常...");

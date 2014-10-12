@@ -159,4 +159,22 @@ public class SubjectInfo extends Paging{
 		this.categoryName = categoryName;
 	}
 	
+	private Integer itemCount; //题目个数
+	/**
+	 * 获取 题目个数
+	 * @return itemCount
+	 * 题目个数
+	 */
+	public Integer getItemCount() {
+		return itemCount;
+	}
+	/**
+	 * 设置 题目个数
+	 * @param itemCount
+	 * 题目个数
+	 */
+	public void setItemCount(Integer itemCount) {
+		this.itemCount = itemCount;
+	}
+	
 }

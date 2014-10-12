@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.examw.model.DataGrid;
+import com.examw.test.front.model.Constant;
 import com.examw.test.front.model.library.FrontItemInfo;
 import com.examw.test.front.model.library.FrontPaperInfo;
 import com.examw.test.front.model.library.PaperInfo;
-import com.examw.test.front.model.product.ProductInfo;
+import com.examw.test.front.model.product.FrontProductInfo;
+import com.examw.test.front.model.record.Collection;
+import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.service.IErrorItemService;
 import com.examw.test.front.service.IPaperService;
 import com.examw.test.front.service.IProductService;
@@ -30,20 +33,23 @@ import com.examw.test.front.service.IProductService;
 @RequestMapping("/library")
 public class LibraryController {
 	private static final Logger logger = Logger.getLogger(LibraryController.class);
-	
 	@Resource
 	private IProductService productService;
 	@Resource
 	private IPaperService paperService;
 	@Resource
 	private IErrorItemService errorItemService;
+	@Resource
+	private ICollectionService collectionService;
 	
+	//产品题库中心
 	@RequestMapping(value = "/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String library(@PathVariable String productId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载题库界面...");
 		try{
-			ProductInfo info = productService.loadProduct(productId);
+			FrontProductInfo info = productService.loadProduct(productId);
 			model.addAttribute("PRODUCT", info);
+			model.addAttribute("PRODUCTID",productId);
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载product异常...");
@@ -51,11 +57,35 @@ public class LibraryController {
 		return "exam_center";
 	}
 	
+	//收藏列表
 	@RequestMapping(value = "/collection/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String collection(@PathVariable String productId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载收藏界面...");
 		model.addAttribute("PRODUCTID", productId);
+		try{
+			FrontProductInfo info = productService.loadProduct(productId);
+			model.addAttribute("PRODUCT", info);
+			model.addAttribute("SUBJECTLIST", this.productService.loadProductSubjects(productId));
+		}catch(Exception e){
+			
+		}
 		return "collections_list";
+	}
+	
+	@RequestMapping(value = "/error/{productId}/items/{subjectId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String collectionDetail(@PathVariable String productId,@PathVariable String subjectId,Model model){
+		if(logger.isDebugEnabled()) logger.debug("加载错题详细界面...");
+		model.addAttribute("PRODUCTID", productId);
+		Collection info = new Collection();
+		info.setProductId(productId);
+		info.setUserId(this.getUserId(null));
+		info.setSubjectId(subjectId);
+		try{
+			model.addAttribute("ITEMLIST",this.collectionService.loadCollectionItems(info));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "error_records";
 	}
 	
 	@RequestMapping(value = "/error/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
@@ -134,10 +164,68 @@ public class LibraryController {
 		return "multi_mode";
 	}
 	
-	@RequestMapping(value = "daily", method = {RequestMethod.GET,RequestMethod.POST})
-	public String daily(String productId,Model model){
-		if(logger.isDebugEnabled()) logger.debug("加载题库界面...");
+	/**
+	 * 获取每日一练
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/daily/{productId}", method = RequestMethod.GET)
+	public String daily(@PathVariable String productId,Model model){
 		return "daily_practice";
+	}
+	
+	/**
+	 * 获取模拟考场
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/simulate", method = RequestMethod.GET)
+	public String simulate(Model model){
+		return "simulate";
+	}
+	
+	/**
+	 * 获取章节练习
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/chapter/{productId}", method = RequestMethod.GET)
+	public String chapter(@PathVariable String productId,Model model){
+		model.addAttribute("PRODUCTID",productId);
+		return "chapter_list";
+	}
+	
+	/**
+	 * 获取练习记录
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/record/{productId}", method = RequestMethod.GET)
+	public String records(@PathVariable String productId,Model model){
+		try{
+			//包含科目集合
+			model.addAttribute("SUBJECTLIST", this.productService.loadProductSubjects(productId));
+			//试卷类型
+			model.addAttribute("PAPERTYPE", this.paperService.loadPaperType());
+			model.addAttribute("PRODUCTID",productId);
+			model.addAttribute("STATUS_DONE",Constant.STATUS_DONE);
+			model.addAttribute("STATUS_UNDONE",Constant.STATUS_UNDONE);
+		}catch(Exception e){
+			e.printStackTrace();
+			if(logger.isDebugEnabled()) logger.debug("加载考试记录数据异常...");
+		}
+		return "practice_records";
+	}
+	
+	/**
+	 * 获取题库首页
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/center/{productId}", method = RequestMethod.GET)
+	public String center(@PathVariable String productId,Model model){
+		model.addAttribute("PRODUCTID",productId);
+		return "exam_center";
 	}
 	
 	private String getUserId(HttpServletRequest request){
