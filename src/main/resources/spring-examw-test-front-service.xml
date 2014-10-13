@@ -24,12 +24,11 @@
 	<bean id="paperService" class="com.examw.test.front.service.impl.PaperServiceImpl">
 	    <property name="api_paperlist_url" value="${api_papers_url}" />
 	    <property name="api_paper_detail_url" value="${api_paper_url}" />
-	    <property name="api_papersubmit_url" value="${api_papersubmit_url}" />
-	    <property name="api_paperanalysis_url" value="${api_paperanalysis_url}" />
 	    <property name="api_papertype_url" value="${api_paper_type_url}" />
 	    <property name="api_user_paper_records_url" value="${api_user_paper_records_url}" />
 	    <property name="api_user_paper_record_url" value="${api_user_paper_record_url}" />
 	    <property name="api_user_paper_record_add_url" value="${api_user_paper_record_add_url}" />
+	     <property name="api_user_collections_url" value="${api_user_collections_url}" />
 	    <property name="cacheHelper" ref="cacheHelper"/>
 	</bean>
 	<!-- 笔记 -->

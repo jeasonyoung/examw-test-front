@@ -1,8 +1,12 @@
 package com.examw.test.front.service.impl;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,11 +23,12 @@ import com.examw.test.front.model.Constant;
 import com.examw.test.front.model.library.FrontPaperInfo;
 import com.examw.test.front.model.library.PaperInfo;
 import com.examw.test.front.model.library.PaperPreview;
-import com.examw.test.front.model.library.PaperRecordInfo;
 import com.examw.test.front.model.library.PaperSubmitInfo;
 import com.examw.test.front.model.library.StructureInfo;
 import com.examw.test.front.model.library.StructureItemInfo;
 import com.examw.test.front.model.product.FrontProductInfo;
+import com.examw.test.front.model.record.ItemRecord;
+import com.examw.test.front.model.record.UserItemFavoriteInfo;
 import com.examw.test.front.model.record.UserItemRecordInfo;
 import com.examw.test.front.model.record.UserPaperRecordInfo;
 import com.examw.test.front.service.IPaperService;
@@ -40,12 +45,11 @@ public class PaperServiceImpl implements IPaperService{
 	private static final Logger logger = Logger.getLogger(PaperServiceImpl.class);
 	private String api_paperlist_url;
 	private String api_paper_detail_url;
-	private String api_papersubmit_url;
-	private String api_paperanalysis_url;
 	private String api_papertype_url;
 	private String api_user_paper_records_url;
 	private String api_user_paper_record_url;
 	private String api_user_paper_record_add_url;
+	private String api_user_collections_url;
 	private MethodCacheHelper cacheHelper;
 	/**
 	 * 设置 试卷列表数据接口地址
@@ -56,23 +60,6 @@ public class PaperServiceImpl implements IPaperService{
 		this.api_paperlist_url = api_paperlist_url;
 	}
 	
-	/**
-	 * 设置 试卷提交数据接口地址
-	 * @param api_papersubmit_url
-	 * 
-	 */
-	public void setApi_papersubmit_url(String api_papersubmit_url) {
-		this.api_papersubmit_url = api_papersubmit_url;
-	}
-	
-	/**
-	 * 设置 试卷解析地址
-	 * @param api_paperanalysis_url
-	 * 
-	 */
-	public void setApi_paperanalysis_url(String api_paperanalysis_url) {
-		this.api_paperanalysis_url = api_paperanalysis_url;
-	}
 	/**
 	 * 设置 试卷类型地址
 	 * @param api_papertype_url
@@ -116,6 +103,15 @@ public class PaperServiceImpl implements IPaperService{
 	public void setApi_user_paper_record_add_url(
 			String api_user_paper_record_add_url) {
 		this.api_user_paper_record_add_url = api_user_paper_record_add_url;
+	}
+	
+	/**
+	 * 设置 用户收藏地址
+	 * @param api_user_collections_url
+	 * 
+	 */
+	public void setApi_user_collections_url(String api_user_collections_url) {
+		this.api_user_collections_url = api_user_collections_url;
 	}
 
 	/**
@@ -177,14 +173,7 @@ public class PaperServiceImpl implements IPaperService{
 	@Override
 	public PaperPreview loadPaperInfo(String paperId) throws IOException {
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷基本信息...");
-		PaperPreview paper = (PaperPreview) this.cacheHelper.getCache(PaperPreview.class.getName(), this.getClass().getName()+"loadPaperDetail", new String[]{paperId});
-		if(paper == null){
-			paper = this.loadPaperDetail(paperId);
-			if(paper!=null){
-				this.cacheHelper.putCache(PaperPreview.class.getName(), this.getClass().getName()+"loadPaperDetail", new String[]{paperId}, paper);
-			}
-		}
-		return paper;
+		return this.findPaperDetail(paperId);
 	}
 	/**
 	 * 试卷详细情况
@@ -192,16 +181,22 @@ public class PaperServiceImpl implements IPaperService{
 	 * @return
 	 * @throws IOException
 	 */
-	private PaperPreview loadPaperDetail(String paperId)throws IOException{
+	public PaperPreview findPaperDetail(String paperId)throws IOException{
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷基本信息...");
 		if(StringUtils.isEmpty(paperId))
 		return null;
-		String url = String.format(this.api_paper_detail_url,paperId);
-		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
-		if(!StringUtils.isEmpty(xml)){
-			return JSONUtil.JsonToObject(xml, PaperPreview.class);
+		PaperPreview paper = (PaperPreview) this.cacheHelper.getCache(PaperPreview.class.getName(), this.getClass().getName()+"loadPaperDetail", new String[]{paperId});
+		if(paper == null){
+			String url = String.format(this.api_paper_detail_url,paperId);
+			String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+			if(!StringUtils.isEmpty(xml)){
+				paper = JSONUtil.JsonToObject(xml, PaperPreview.class);
+			}
+			if(paper!=null){
+				this.cacheHelper.putCache(PaperPreview.class.getName(), this.getClass().getName()+"loadPaperDetail", new String[]{paperId}, paper);
+			}
 		}
-		return null;
+		return paper;
 	}
 	/*
 	 * 加载试卷详情[带试题]
@@ -209,89 +204,128 @@ public class PaperServiceImpl implements IPaperService{
 	 */
 	@Override
 	public PaperPreview loadPaperDetail(String paperId,String userId,String productId) throws Exception {
-		PaperPreview paper = this.loadPaperDetail(paperId);
+		PaperPreview paper = this.findPaperDetail(paperId);
 		//查询用户试卷考试记录,没有记录的话添加记录
-		String url = String.format(this.api_user_paper_record_url,userId,paperId);
-		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
-		Json json = null;
-		if(!StringUtils.isEmpty(xml)){
-			json = JSONUtil.JsonToObject(xml, Json.class);
+		UserPaperRecordInfo info = this.findLastedRecord(userId, paperId);
+		if(info != null && info.getStatus().equals(Constant.STATUS_UNDONE)){
+			//附上用户的答案
+			setUserAnswer(paper,info,null);	
+		}else{
+			info = changeModel(paper);
+			info.setProductId(productId);
+			info.setUserId(userId);
+			//提交记录
+			HttpUtil.upload(this.api_user_paper_record_add_url, info);
 		}
-		if(json.isSuccess())
-		{
-			UserPaperRecordInfo info = JSONUtil.JsonToObject((String)json.getData(), UserPaperRecordInfo.class);
-			if(info != null){
-				//附上用户的答案
-				setUserAnswer(paper,info);	
-			}else{
-				info = changeModel(paper);
-				info.setProductId(productId);
-				//提交记录
-				HttpUtil.upload(this.api_user_paper_record_add_url, info);
-			}
-		}
+		paper.setPaperRecordId(info.getId());	//设置试卷考试记录ID
+		paper.setLeftTime(paper.getTime()*60 - info.getUsedTime());	//设置剩余考试时间
 		return paper;
 	}
+	/**
+	 * 获取最新的考试记录
+	 * @param userId
+	 * @param paperId
+	 * @return
+	 * @throws Exception
+	 */
+	public UserPaperRecordInfo findLastedRecord(String userId,String paperId)throws Exception{
+		UserPaperRecordInfo info = (UserPaperRecordInfo) this.cacheHelper.getCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadLastedRecord", new String[]{userId,paperId});
+		if(info == null){
+			String url = String.format(this.api_user_paper_record_url,userId,paperId);
+			String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+			Json json = null;
+			if(!StringUtils.isEmpty(xml)){
+				json = JSONUtil.JsonToObject(xml, Json.class);
+			}
+			if(json.isSuccess())
+				info = JSONUtil.JsonToObject((String)json.getData(), UserPaperRecordInfo.class);
+			if(info!=null){
+				this.cacheHelper.putCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadLastedRecord", new String[]{userId,paperId}, info);
+			}
+		}
+		return info;
+	}
 	//设置用户的答案
-	private void setUserAnswer(PaperPreview paper, UserPaperRecordInfo info) {
+	private void setUserAnswer(PaperPreview paper, UserPaperRecordInfo info,List<UserItemFavoriteInfo> favors) {
 		List<StructureInfo> structures = paper.getStructures();
 		Set<UserItemRecordInfo> itemRecords = info.getItems();
 		if(itemRecords == null || itemRecords.size() ==0 ) return;
 		for(StructureInfo s:structures){
 			Set<StructureItemInfo> items = s.getItems();
 			for(StructureItemInfo item:items){
-				setUserAnswer(item,itemRecords);
+				setUserAnswer(item,itemRecords,favors);
 			}
 		}
 	}
 	//设置用户答案
 	private void setUserAnswer(StructureItemInfo item,
-			Set<UserItemRecordInfo> itemRecords) {
+			Set<UserItemRecordInfo> itemRecords,List<UserItemFavoriteInfo> favors) {
 		switch(item.getType()){
 		case Constant.TYPE_SHARE_TITLE:
-			setShareTitleItemUserAnswer(item, itemRecords);
+			setShareTitleItemUserAnswer(item, itemRecords,favors);
 			break;
 		case Constant.TYPE_SHARE_ANSWER:
-			setShareAnswerItemUserAnswer(item, itemRecords);
+			setShareAnswerItemUserAnswer(item, itemRecords,favors);
 			break;
 		default:
 			for(UserItemRecordInfo info : itemRecords)
 			{
 				if(item.getId().equalsIgnoreCase(info.getItemId())){
 					item.setUserAnswer(info.getAnswer());	//设置用户答案
+					item.setUserScore(info.getScore());
+					item.setAnswerStatus(info.getStatus());
 					break;
 				}
 			}
+			//判断是否被收藏
+			isCollected(item.getId(), item, favors);
 			break;
 		}
 	}
 	//设置共享题干题的用户答案
 	private void setShareTitleItemUserAnswer(StructureItemInfo item,
-			Set<UserItemRecordInfo> itemRecords){
+			Set<UserItemRecordInfo> itemRecords,List<UserItemFavoriteInfo> favors){
 		Set<StructureItemInfo> children = item.getChildren();
 		for(StructureItemInfo child:children){
 			for(UserItemRecordInfo info : itemRecords)
 			{
-				if(child.getId().equalsIgnoreCase(info.getItemId())){
+				if((item.getId()+"#"+child.getId()).equalsIgnoreCase(info.getItemId())){
 					child.setUserAnswer(info.getAnswer());	//设置用户答案
+					child.setUserScore(info.getScore());
+					child.setAnswerStatus(info.getStatus());
 					break;
 				}
 			}
+			//判断是否被收藏
+			isCollected(item.getId()+"#"+child.getId(), child, favors);
 		}
 	}
 	//设置共享答案题的用户答案
 	private void setShareAnswerItemUserAnswer(StructureItemInfo item,
-			Set<UserItemRecordInfo> itemRecords){
+			Set<UserItemRecordInfo> itemRecords,List<UserItemFavoriteInfo> favors){
 		TreeSet<StructureItemInfo> set = new TreeSet<>();
 		set.addAll(item.getChildren());
 		Set<StructureItemInfo> children = set.last().getChildren();
 		for(StructureItemInfo child:children){
 			for(UserItemRecordInfo info : itemRecords)
 			{
-				if(child.getId().equalsIgnoreCase(info.getItemId())){
+				if((item.getId()+"#"+child.getId()).equalsIgnoreCase(info.getItemId())){
 					child.setUserAnswer(info.getAnswer());	//设置用户答案
+					child.setUserScore(info.getScore());
+					child.setAnswerStatus(info.getStatus());
 					break;
 				}
+			}
+			//判断是否被收藏
+			isCollected(item.getId()+"#"+child.getId(), child, favors);
+		}
+	}
+	//判断是否被收藏
+	private void isCollected(String itemId,StructureItemInfo item,List<UserItemFavoriteInfo> favors){
+		if(favors == null || favors.size() == 0) return ;
+		for(UserItemFavoriteInfo favor:favors){
+			if(itemId.equalsIgnoreCase(favor.getItemId())){
+				item.setIsCollected(true);
 			}
 		}
 	}
@@ -304,9 +338,9 @@ public class PaperServiceImpl implements IPaperService{
 		info.setId(UUID.randomUUID().toString());
 		info.setPaperId(paper.getId());	//试卷Id
 		info.setUsedTime(0L);
+		//TODO 改终端代码
 		info.setTerminalCode(123456);
 		info.setStatus(Constant.STATUS_UNDONE); //刚加入未完成
-		paper.setPaperRecordId(info.getId());	//设置试卷考试记录ID
 		return info;
 	}
 
@@ -415,19 +449,32 @@ public class PaperServiceImpl implements IPaperService{
 //	}
 //	
 	@Override
-	public PaperRecordInfo loadPaperAnalysis(String paperId, String userId,String productId)
-			throws IOException {
-		if(logger.isDebugEnabled()) logger.debug("加载试卷解析...");
-		if(StringUtils.isEmpty(paperId) || StringUtils.isEmpty(userId))
-		return null;
-		String url = String.format(this.api_paperanalysis_url,paperId,userId);
-		String xml = HttpUtil.httpRequest(url,"GET",("productId="+productId),"utf-8");
-		if(!StringUtils.isEmpty(xml)){
-			return JSONUtil.JsonToObject(xml, PaperRecordInfo.class);
-		}
-		return null;
+	public PaperPreview loadPaperAnalysis(String paperId, String userId,String productId) throws Exception {
+		PaperPreview paper = this.findPaperDetail(paperId);
+		UserPaperRecordInfo info = this.findLastedRecord(userId, paperId);
+		List<UserItemFavoriteInfo> list = this.loadItemFavorites(userId);
+		setUserAnswer(paper,info,list);	//附上用户答案
+		paper.setUserScore(info.getScore());
+		return paper;
 	}
-	
+	@SuppressWarnings("unchecked")
+	private List<UserItemFavoriteInfo> loadItemFavorites(String userId) throws IOException{
+		if(logger.isDebugEnabled()) logger.debug("加载用户收藏...");
+		if(StringUtils.isEmpty(userId))
+			return null;
+		List<UserItemFavoriteInfo> list = (List<UserItemFavoriteInfo>) this.cacheHelper.getCache(UserItemFavoriteInfo.class.getName(), this.getClass().getName()+"loadItemFavorites", new String[]{userId});
+			if(list == null){
+				String url = String.format(this.api_user_collections_url,userId);
+				String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+				if(!StringUtils.isEmpty(xml)){
+					list = JSONUtil.JsonToCollection(xml, List.class, UserItemFavoriteInfo.class);
+				}
+				if(list!=null){
+					this.cacheHelper.putCache(UserItemFavoriteInfo.class.getName(), this.getClass().getName()+"loadItemFavorites", new String[]{userId}, list);
+				}
+			}
+		return list;
+	}
 	/**
 	 * 前端分页条件查询
 	 * @param info
@@ -512,9 +559,229 @@ public class PaperServiceImpl implements IPaperService{
 			}
 		}
 	}
+	/*
+	 * 提交试卷
+	 * @see com.examw.test.front.service.IPaperService#sumbitPaper(com.examw.test.front.model.library.PaperSubmitInfo)
+	 */
 	@Override
 	public Json sumbitPaper(PaperSubmitInfo info) throws Exception {
-		//评判分
-		return HttpUtil.upload(api_papersubmit_url, info);
+		if(logger.isDebugEnabled()) logger.debug("提交试卷...");
+		PaperPreview paper = this.findPaperDetail(info.getPaperId());
+		UserPaperRecordInfo record = this.findLastedRecord(info.getUserId(), info.getPaperId());
+		if(record == null) {
+			throw new RuntimeException("找不到记录");
+		}
+		Integer model = info.getModel();
+		record.setStatus(model);
+		record.setUsedTime((long)(paper.getTime() * 60 - info.getLimitTime())); // 使用时间
+		String chooseAnswers = info.getChooseAnswers();
+		Set<UserItemRecordInfo> itemRecords = new TreeSet<UserItemRecordInfo>();
+		if (!StringUtils.isEmpty(chooseAnswers)) {
+			if(logger.isDebugEnabled()) logger.debug("解析答案字符串...."+chooseAnswers);
+			try {
+				chooseAnswers = URLDecoder.decode(chooseAnswers, "utf-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
+			String[] answers = chooseAnswers.split("&");// 拆分题目与答案
+			for (String s : answers) {
+				String[] arr = s.split("=");
+				UserItemRecordInfo itemRecord = null;
+				if (!arr[0].contains("#"))
+				{
+					itemRecord = this.changeModel(this.getStructureItemInfo(paper, arr[0]),null);
+				}
+				else
+				{
+					String[] p_c_id = arr[0].split("#");
+					itemRecord = this.changeModel(this.getStructureItemInfo(paper, p_c_id[0]),p_c_id[1]);
+				}
+				if(itemRecord!=null){
+					itemRecord.setId(UUID.randomUUID().toString());
+					itemRecord.setLastTime(new Date());
+					if (arr.length > 1) { // 没有答案
+						itemRecord.setAnswer(arr[1]);
+					}
+					itemRecords.add(itemRecord);
+				}
+			}
+		}
+		record.setItems(itemRecords);
+		if (!StringUtils.isEmpty(info.getTextAnswer())) {
+		}
+		judgePaper(paper,record, itemRecords);
+		if (!model.equals(Constant.STATUS_DONE)) {
+			record.setScore(null);
+		}
+		//时间提交过去有问题
+		record.setCreateTime(null);
+		record.setLastTime(null);
+		return HttpUtil.upload(api_user_paper_record_add_url, record);
+	}
+	private StructureItemInfo getStructureItemInfo(PaperPreview paper,String itemId){
+		List<StructureInfo> structures = paper.getStructures();
+		for(StructureInfo s:structures){
+			Set<StructureItemInfo> items = s.getItems();
+			for(StructureItemInfo item:items){
+				if(item.getId().equalsIgnoreCase(itemId)){
+					return item;
+				}
+			}
+		}
+		return null;
+	}
+	private UserItemRecordInfo changeModel(StructureItemInfo info,String childItemId){
+		if(info == null) return null;
+		if(childItemId == null)
+		{
+			UserItemRecordInfo data = new UserItemRecordInfo();
+			BeanUtils.copyProperties(info, data, new String[]{"createTime","lastTime"});
+			data.setItemId(info.getId());
+			data.setItemContent(JSONUtil.ObjectToJson(info));
+			//TODO 改终端代码
+			data.setTerminalCode(123456);
+			return data;
+		}
+		else{
+			Set<StructureItemInfo> items = info.getChildren();	//子题目
+			if(info.getType().equals(Constant.TYPE_SHARE_TITLE)){
+				for(StructureItemInfo item:items){
+					if(item.getId().equalsIgnoreCase(childItemId)){
+						UserItemRecordInfo result = this.changeModel(item, null);
+						result.setStructureId(info.getStructureId());
+						result.setItemId(info.getId()+"#"+item.getId());
+						return result;
+					}
+				}
+			}else if(info.getType().equals(Constant.TYPE_SHARE_ANSWER)){
+				TreeSet<StructureItemInfo> set = new TreeSet<StructureItemInfo>();
+				set.addAll(info.getChildren());
+				Set<StructureItemInfo> children = set.last().getChildren();	//子题目
+				for(StructureItemInfo item:children){
+					if(item.getId().equalsIgnoreCase(childItemId)){
+						UserItemRecordInfo result = this.changeModel(item, null);
+						result.setStructureId(info.getStructureId());
+						result.setItemId(info.getId()+"#"+item.getId());
+						return result;
+					}
+				}
+			}
+			return null;
+		}
+	}
+	//判分
+	private PaperPreview judgePaper(PaperPreview paper,UserPaperRecordInfo record,Set<UserItemRecordInfo> itemRecordList) throws Exception {
+		List<StructureInfo> structures = paper.getStructures();
+		if (structures == null || structures.size() == 0)
+			return null;
+		BigDecimal paperTotalScore = BigDecimal.ZERO; // 试卷总分
+		for (StructureInfo s : structures) {
+			Set<StructureItemInfo> items = s.getItems();
+			if (items == null || items.size() == 0)
+				continue;
+			// 评分规则
+			BigDecimal min = s.getMin(); // 最低得分
+			BigDecimal per = s.getScore(); // 每题得分
+			BigDecimal actualRuleTotal = BigDecimal.ZERO;
+			for (StructureItemInfo item : items) { // 结构题目
+				for (UserItemRecordInfo itemRecord : itemRecordList) {
+					if (!itemRecord.getItemId().contains("#")) { // 不包含#,是单题
+						if (item.getId()
+								.equals(itemRecord.getItemId())) {
+							// 判断对错
+							if(!judgeItemIsRight(item, itemRecord, min, per))
+							actualRuleTotal = actualRuleTotal.add(itemRecord
+									.getScore());
+							break;
+						}
+					} else { // 复合题
+						if(item.getType().equals(Constant.TYPE_SHARE_TITLE))
+						{
+							Set<StructureItemInfo> children = item.getChildren();
+							for (StructureItemInfo child : children) {
+								if ((item.getId()+"#"+child.getId()).equals(itemRecord.getItemId())) {
+									// 判断对错
+									if(!judgeItemIsRight(child, itemRecord, min, per))
+										actualRuleTotal = actualRuleTotal
+											.add(itemRecord.getScore());
+									break;
+								}
+							}
+						}else if(item.getType().equals(Constant.TYPE_SHARE_ANSWER)){
+							TreeSet<StructureItemInfo> set = new TreeSet<StructureItemInfo>();
+							set.addAll(item.getChildren());
+							Set<StructureItemInfo> children = set.last().getChildren();	//子题目
+							for(StructureItemInfo i:children){
+								if((item.getId()+"#"+i.getId()).equalsIgnoreCase(itemRecord.getItemId())){
+									//判断对错
+									if(!judgeItemIsRight(i, itemRecord, min, per))
+										actualRuleTotal = actualRuleTotal
+											.add(itemRecord.getScore());
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+			if (actualRuleTotal.compareTo(BigDecimal.ZERO) == -1) {
+				actualRuleTotal = BigDecimal.ZERO;
+			}
+			paperTotalScore = paperTotalScore.add(actualRuleTotal); // 试卷总分
+		}
+		record.setScore(paperTotalScore);
+		return paper;
+	}
+	/*
+	* 判断题目是对是错
+	*/
+	private boolean judgeItemIsRight(StructureItemInfo item,UserItemRecordInfo itemRecord, BigDecimal min, BigDecimal per) {
+		if (StringUtils.isEmpty(itemRecord.getAnswer())) {
+			itemRecord.setScore(min == null ? BigDecimal.ZERO : min); // 得0分或者负分
+			itemRecord.setStatus(ItemRecord.STATUS_NULL); // 没有作答
+			return false;
+		}
+		if(item.getType().equals(Constant.TYPE_SINGLE) || item.getType().equals(Constant.TYPE_JUDGE)) {
+			if (item.getAnswer().equals(itemRecord.getAnswer())) // 答对
+			{
+				itemRecord.setScore(per); // 得标准分
+				itemRecord.setStatus(ItemRecord.STATUS_RIGHT); // 答对
+				return true;
+			} else {
+				itemRecord.setScore((min == null || min
+						.compareTo(BigDecimal.ZERO) == 1) ? BigDecimal.ZERO
+								: min); // 得0分或者负分
+				itemRecord.setStatus(ItemRecord.STATUS_WRONG); // 答错
+				return false;
+			}
+		}
+		if(item.getType().equals(Constant.TYPE_MULTY) || item.getType().equals(Constant.TYPE_MULTY)) {
+			String[] arr = itemRecord.getAnswer().split(",");
+			String answer = item.getAnswer();
+			int total = 0;
+			for (String a : arr) {
+				if (answer.indexOf(a) == -1) { // 包含有错误答案
+					itemRecord.setScore((min == null || min
+							.compareTo(BigDecimal.ZERO) == 1) ? BigDecimal.ZERO
+									: min); // 得0分或者负分
+					itemRecord.setStatus(ItemRecord.STATUS_WRONG); // 答错
+					return false;
+				} else {
+					total++;
+				}
+			}
+			if (total == answer.split(",").length) { // 全对,得满分
+				itemRecord.setScore(per); // 得标准分
+				itemRecord.setStatus(ItemRecord.STATUS_RIGHT); // 答对
+				return true;
+			} else {
+				itemRecord.setScore((min == null || min
+						.compareTo(BigDecimal.ZERO) == -1) ? BigDecimal.ZERO
+								: min.multiply(new BigDecimal(total))); // 得0分或者负分
+				itemRecord.setStatus(ItemRecord.STATUS_LESS); // 少选
+				return false;
+			}
+		}
+		return true;
 	}
 }

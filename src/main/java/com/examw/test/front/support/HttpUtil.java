@@ -118,6 +118,7 @@ public final class HttpUtil {
 	 * @throws Exception	
 	 */
 	public static Json upload(String requestUrl, Object data) throws Exception {
+		if(logger.isDebugEnabled())	logger.debug("上传数据中: url = "+requestUrl);
 		String post = JSONUtil.ObjectToJson(data);
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Content-type","application/json;charset=UTF-8");

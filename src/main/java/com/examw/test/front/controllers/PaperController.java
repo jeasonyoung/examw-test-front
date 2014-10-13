@@ -160,10 +160,8 @@ public class PaperController {
 		//TODO 模拟一个用户ID
 		String userId = getUserId(null);
 		try{
-//			PaperRecordInfo info = this.paperService.loadPaperAnalysis(paperId,userId,productId);
-//			model.addAttribute("PAPER", info);
-//			model.addAttribute("ITEMLIST",this.paperService.loadItemsListWithAnswer(info));
-			PaperPreview info = this.paperService.loadPaperDetail(paperId,userId,productId);
+			PaperPreview info = this.paperService.loadPaperAnalysis(paperId,userId,productId);
+			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info));
 			model.addAttribute("PAPER", info);
 			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info));
 			//单选

@@ -21,6 +21,8 @@ import com.examw.test.front.support.JSONUtil;
 public class CollectionServiceImpl implements ICollectionService{
 	private static final Logger logger = Logger.getLogger(CollectionServiceImpl.class);
 	private String api_collection_url;
+	private String api_is_collection_url;
+	private String api_cancel_collection_url;
 	/**
 	 * 设置 笔记数据查询数据接口地址
 	 * @param api_item_notes_url
@@ -50,7 +52,7 @@ public class CollectionServiceImpl implements ICollectionService{
 		if(StringUtils.isEmpty(info.getUserId())) 
 			return null;
 		String url = String.format(this.api_collection_url);
-		String data = "examId="+info.getExamId()+"&userId="+info.getUserId()+"&productId="+info.getProductId();
+		String data = "subjectId="+info.getSubjectId()+"&userId="+info.getUserId()+"&productId="+info.getProductId();
 		String xml = HttpUtil.httpRequest(url,"GET",data,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml, List.class,FrontItemInfo.class);

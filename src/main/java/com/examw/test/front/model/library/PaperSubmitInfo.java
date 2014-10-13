@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
  */
 public class PaperSubmitInfo implements Serializable{
 	private static final long serialVersionUID = 1L;
-	private String userId,paperId,productId,chooseAnswer,textAnswer;
+	private String userId,paperId,productId,chooseAnswers,textAnswers;
 	private Integer limitTime,model;
 	/**
 	 * 获取 用户ID
@@ -66,16 +66,16 @@ public class PaperSubmitInfo implements Serializable{
 	 * @return chooseAnswer
 	 * 选择题答案
 	 */
-	public String getChooseAnswer() {
-		return chooseAnswer;
+	public String getChooseAnswers() {
+		return chooseAnswers;
 	}
 	/**
 	 * 设置 选择题答案	structureItemId=answers
 	 * @param chooseAnswer
 	 * 选择题答案
 	 */
-	public void setChooseAnswer(String chooseAnswer) {
-		this.chooseAnswer = chooseAnswer;
+	public void setChooseAnswers(String chooseAnswers) {
+		this.chooseAnswers = chooseAnswers;
 	}
 	/**
 	 * 获取 文字题答案
@@ -83,7 +83,7 @@ public class PaperSubmitInfo implements Serializable{
 	 * 文字题答案
 	 */
 	public String getTextAnswer() {
-		return textAnswer;
+		return textAnswers;
 	}
 	/**
 	 * 设置 文字题答案
@@ -91,7 +91,7 @@ public class PaperSubmitInfo implements Serializable{
 	 * 文字题答案
 	 */
 	public void setTextAnswer(String textAnswer) {
-		this.textAnswer = textAnswer;
+		this.textAnswers = textAnswer;
 	}
 	/**
 	 * 获取 剩余时间[秒]

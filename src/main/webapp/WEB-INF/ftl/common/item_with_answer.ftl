@@ -33,13 +33,13 @@
            <i>${index}.</i>
               <em><span>[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${i.pid}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>
        </div>
-       <#if i.children??>
        <div class="xz-daan fl" >
        		<#if i.answerStatus == STATUS_RIGHT>
        			<div class="dui"></div>
        		<#else>	
        			<div class="cuo"></div>
        		</#if>
+       		<#if i.children??>
             <div class="list">
                 <ul>
                 <#list i.children?sort_by(["orderNo"]) as option>
@@ -54,8 +54,8 @@
                 </#list>
                 </ul>
             </div>
+            </#if>
          </div>
-         </#if>
          <div class="daanbox fl">
                <div class="zhankai-bg" item_id="${i.id}" <#if index != 1>style="display:none"</#if>></div>
                <div class="f-l fl"><i>参考答案：</i><@calculate_right_answer parent i/></div>

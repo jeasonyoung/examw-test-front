@@ -15,6 +15,7 @@ public class PaperPreview extends BasePaperInfo {
 	private static final long serialVersionUID = 1L;
 	private Integer total;
 	private String paperRecordId;	//试卷记录Id
+	private Long leftTime;	//剩余时间
 	private List<StructureInfo> structures;
 	/**
 	 * 获取试卷结构集合。
@@ -79,6 +80,21 @@ public class PaperPreview extends BasePaperInfo {
 	public void setUserScore(BigDecimal userScore) {
 		this.userScore = userScore;
 	}
-	
+	/**
+	 * 设置 剩余时间
+	 * @param leftTime
+	 * 剩余时间
+	 */
+	public void setLeftTime(Long leftTime) {
+		this.leftTime = leftTime;
+	}
+	/**
+	 * 获取 剩余时间
+	 * @return leftTime
+	 * 剩余时间
+	 */
+	public Long getLeftTime() {
+		return leftTime;
+	}
 	
 }

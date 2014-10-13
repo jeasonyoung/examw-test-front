@@ -143,10 +143,10 @@
                             <span>${paper.createTime?substring(0,10)}</span>
                             <#if paper.examStatus == 1>
                             <span><a href="<@s.url "/library/paper/analysis"/>?paperId=${paper.id}" target="_blank" class="red">查看解析</a></span>
-                            <span><div class="buy-botton"><div class="hong-botton"><a href="<@s.url "/library/paper/do/multi"/>?paperId=${paper.id}">再做一次</a></div></div></span>
+                            <span><div class="buy-botton"><div class="hong-botton"><a href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.id}"/>">再做一次</a></div></div></span>
                             <#else>
                             <span>未完成</span>
-                            <span><div class="buy-botton"><div class="hong-botton"><a href="<@s.url "/library/paper/do/multi"/>?paperId=${paper.id}">继续做题</a></div></div></span>	
+                            <span><div class="buy-botton"><div class="hong-botton"><a href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.id}"/>">继续做题</a></div></div></span>	
                             </#if>
                         </div>
                     </li>

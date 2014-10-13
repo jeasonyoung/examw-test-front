@@ -9,9 +9,9 @@ import com.examw.model.Json;
 import com.examw.test.front.model.library.FrontPaperInfo;
 import com.examw.test.front.model.library.PaperInfo;
 import com.examw.test.front.model.library.PaperPreview;
-import com.examw.test.front.model.library.PaperRecordInfo;
 import com.examw.test.front.model.library.PaperSubmitInfo;
 import com.examw.test.front.model.library.StructureItemInfo;
+import com.examw.test.front.model.record.UserPaperRecordInfo;
 
 /**
  * 试卷服务接口
@@ -62,7 +62,7 @@ public interface IPaperService {
 	 * @return
 	 * @throws IOException
 	 */
-	PaperRecordInfo loadPaperAnalysis(String paperId,String userId,String productId)throws IOException;
+	PaperPreview loadPaperAnalysis(String paperId,String userId,String productId)throws Exception;
 	/**
 	 * 提取试题的集合
 	 * @param paper	试卷信息
@@ -79,4 +79,7 @@ public interface IPaperService {
 	 * @throws IOException
 	 */
 	public DataGrid<FrontPaperInfo> dataGrid(String productId,PaperInfo info,String userId)throws IOException;
+	
+	PaperPreview findPaperDetail(String paperId)throws IOException;
+	UserPaperRecordInfo findLastedRecord(String userId,String paperId)throws Exception;
 }
