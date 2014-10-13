@@ -38,7 +38,7 @@
 	</bean>
 	<!-- 收藏 -->
 	<bean id="collectionService" class="com.examw.test.front.service.impl.CollectionServiceImpl">
-	    <property name="api_collection_url" value="${api_item_collection_url}" />
+	    <property name="api_collection_url" value="${api_user_collection_add_url}" />
 	</bean>
 	<!-- 错题 -->
 	<bean id="errorItemService" class="com.examw.test.front.service.impl.ErrorItemServiceImpl">

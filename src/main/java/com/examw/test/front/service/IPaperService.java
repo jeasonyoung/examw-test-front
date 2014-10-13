@@ -82,4 +82,5 @@ public interface IPaperService {
 	
 	PaperPreview findPaperDetail(String paperId)throws IOException;
 	UserPaperRecordInfo findLastedRecord(String userId,String paperId)throws Exception;
+	List<UserPaperRecordInfo> loadUserPaperRecords(String userId,String productId)throws Exception;
 }
