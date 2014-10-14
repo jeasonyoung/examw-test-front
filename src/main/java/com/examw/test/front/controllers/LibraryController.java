@@ -203,10 +203,12 @@ public class LibraryController {
 	@RequestMapping(value = "/record/{productId}", method = RequestMethod.GET)
 	public String records(@PathVariable String productId,Model model){
 		try{
+			String userId = this.getUserId(null);
 			//包含科目集合
 			model.addAttribute("SUBJECTLIST", this.productService.loadProductSubjects(productId));
 			//试卷类型
 			model.addAttribute("PAPERTYPE", this.paperService.loadPaperType());
+			model.addAttribute("PAPERLIST",this.paperService.loadUserPaperRecords(userId, productId));
 			model.addAttribute("PRODUCTID",productId);
 			model.addAttribute("STATUS_DONE",Constant.STATUS_DONE);
 			model.addAttribute("STATUS_UNDONE",Constant.STATUS_UNDONE);
