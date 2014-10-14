@@ -22,7 +22,7 @@
 	</#if>
 </#macro>
 <#macro item_choose parent i input index>
-	<div name="item_whole" class="box fl" item_type="${i.type}" item_id="${i.id}" item_status="${i.answerStatus}">
+	<div name="item_whole" class="box fl" item_type="${i.type}" item_id="${i.id}" item_status="${i.answerStatus?default(0)}">
 		<#if i.item?? && i.parentContent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
@@ -65,13 +65,14 @@
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
                     <div class="f-r fr"><em class="jiucuo"></em><i><a href="#">纠错</a></i></div>
                     <#if (i.isCollected)>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
                     <#else>
-                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
                     </#if>
                </div>
          </div>
          <@item_analysis i index/>
+    </div>
 </#macro>
 <#macro item_judge parent i index>
 	<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_status="${i.answerStatus}">
@@ -124,9 +125,9 @@
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
                     <#if (i.isCollected)>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
                     <#else>
-                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
                     </#if>
                     <!--收藏后<div class="f-r fl"><em class="shoucang"></em><i><a href="#">收藏</a></i></div>-->
                </div>
@@ -234,6 +235,7 @@
                    <i>参考解析：</i>${i.analysis}
               </div>
               <div class="h10"></div>
+              <!--
               <div class="bookbox fl">
                     <div class="book-l fl"><span>第${index}题笔记</span>（本题共${i.totalNoteNum?default(0)}条笔记）</div>
                     <div class="sybook fr"><a href="javascript:void(0)" onclick="showNote('${i.id}','${index}','all')">查看所有笔记（${i.totalNoteNum?default(0)}条）</a></div>
@@ -250,8 +252,8 @@
                          <div class="f-right">
                              <div class="vipname fl"><a href="#" target="_blank" title="王艳阳">王艳阳</a><span>1小时前</span></div>
                              <div class="pinglun fl">2—3年</div>
-                             <!--<div class="huifu"><a href="#" class="huifu">回复(0)</a></div>
-                             <div class="zan"><a href="#" class="zan">(0)</a></div>-->
+                             <div class="huifu"><a href="#" class="huifu">回复(0)</a></div>
+                             <div class="zan"><a href="#" class="zan">(0)</a></div>
                          </div>
                       </div>
                     </div>
@@ -259,7 +261,8 @@
                <div class="h10"></div>
                 <div id="pager${index}" class="pager-plugin">
                </div>
-         </div>
+         	</div>
+          -->
     </div>
 </#macro>
 <!-- 答题卡 -->

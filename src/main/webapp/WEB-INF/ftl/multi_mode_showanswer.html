@@ -74,7 +74,6 @@
                 </div>
             </div><a name="danxiang" id="danxiang"></a>
             <#list PAPER.structures as structure>
-            <div <#if structure_index != 0></#if> >
             <#assign total = total + structure.total/> 
             <#assign xuhao = total-structure.total + 1 />
             <div class="tx-box fl" structure_id="${structure.id}">${structure.title}</div>
@@ -85,7 +84,6 @@
             		<@show_item father=null item=i index=xuhao/>
             	</#if>
             </#list>
-            </div>
             </#list>
             <div class="datika fl" id="answerCard" style="width:830px;">
             	<div class="ka fl" id="font14">展开答题卡</div>
@@ -275,10 +273,12 @@ $(function(){
 	}
 	//<!-- 收藏或取消收藏 -->
 	collectOrCancel = function(obj,itemId,userAnswer){
+		var pid = $(obj).attr("pid");
+		if(pid) itemId = pid+"#"+itemId;
 		$.ajax({
 			type:"POST",
 			url:'<@s.url "/library/item/collect"/>',
-			data:{"itemId":itemId,"userAnswer":userAnswer,"productId":productId},
+			data:{"itemId":itemId,"userAnswer":userAnswer,"productId":productId,"paperId":paperId},
 			dataType:'json',
 			success:function(data){
 				if(data.success){

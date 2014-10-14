@@ -134,7 +134,7 @@
                         	<em>
                             	<#if paper.examStatus == 1>
                             	<div class="title"><a href="<@s.url "/library/paper/analysis"/>?paperId=${paper.id}" target="_blank" title="${paper.name}">${paper.name}</a></div>
-                                <p class="red">得分：${paper.userScore}分</p><p class="red">用时：${(paper.usedTime/60)?round}分钟</p><p>最高得分：${paper.maxScore}分</p><p>${paper.userSum}人参考</p><p>考试日期：${paper.examTime?substring(0,10)}</p>
+                                <p class="red">得分：${paper.userScore}分</p><p class="red">用时：${(paper.usedTime/60)?round}分钟</p><p>最高得分：${paper.maxScore}分</p><p>${paper.userSum}人参考</p><p>考试日期：${paper.examTime?date}</p>
                                 <#else>
                                 <div class="title"><a href="<@s.url "/library/paper/do/multi"/>?paperId=${paper.id}" target="_blank" title="${paper.name}">${paper.name}</a></div>
                                 <p>总题：${paper.total} 题</p><p>考试时长：${paper.time}分钟</p><p>总分：${paper.score}分</p><p>最高得分：${paper.maxScore}分</p><p>${paper.userSum}人参考</p>
@@ -142,7 +142,7 @@
                             </em>
                             <span>${paper.createTime?substring(0,10)}</span>
                             <#if paper.examStatus == 1>
-                            <span><a href="<@s.url "/library/paper/analysis"/>?paperId=${paper.id}" target="_blank" class="red">查看解析</a></span>
+                            <span><a href="<@s.url "/library/paper/${PRODUCTID}/analysis/${paper.id}"/>" target="_blank" class="red">查看解析</a></span>
                             <span><div class="buy-botton"><div class="hong-botton"><a href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.id}"/>">再做一次</a></div></div></span>
                             <#else>
                             <span>未完成</span>
