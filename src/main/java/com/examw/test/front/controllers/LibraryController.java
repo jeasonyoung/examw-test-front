@@ -20,6 +20,7 @@ import com.examw.test.front.model.library.FrontPaperInfo;
 import com.examw.test.front.model.library.PaperInfo;
 import com.examw.test.front.model.product.FrontProductInfo;
 import com.examw.test.front.model.record.Collection;
+import com.examw.test.front.model.record.UserPaperRecordInfo;
 import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.service.IErrorItemService;
 import com.examw.test.front.service.IPaperService;
@@ -63,16 +64,15 @@ public class LibraryController {
 		if(logger.isDebugEnabled()) logger.debug("加载收藏界面...");
 		model.addAttribute("PRODUCTID", productId);
 		try{
-			FrontProductInfo info = productService.loadProduct(productId);
-			model.addAttribute("PRODUCT", info);
-			model.addAttribute("SUBJECTLIST", this.productService.loadProductSubjects(productId));
+			String userId = this.getUserId(null);
+			model.addAttribute("SUBJECTLIST", this.collectionService.loadCollectionSubjects(productId, userId));
 		}catch(Exception e){
-			
+			e.printStackTrace();
 		}
 		return "collections_list";
 	}
 	
-	@RequestMapping(value = "/error/{productId}/items/{subjectId}", method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value = "/collection/{productId}/items/{subjectId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String collectionDetail(@PathVariable String productId,@PathVariable String subjectId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载错题详细界面...");
 		model.addAttribute("PRODUCTID", productId);
@@ -200,16 +200,30 @@ public class LibraryController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/record/{productId}", method = RequestMethod.GET)
-	public String records(@PathVariable String productId,Model model){
+	@RequestMapping(value = "/record/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String records(@PathVariable String productId,PaperInfo info,Model model){
 		try{
 			String userId = this.getUserId(null);
 			//包含科目集合
 			model.addAttribute("SUBJECTLIST", this.productService.loadProductSubjects(productId));
+			DataGrid<UserPaperRecordInfo> datagrid = this.paperService.recordDataGrid(userId, productId,info);
 			//试卷类型
 			model.addAttribute("PAPERTYPE", this.paperService.loadPaperType());
-			model.addAttribute("PAPERLIST",this.paperService.loadUserPaperRecords(userId, productId));
+			model.addAttribute("PAPERLIST",datagrid.getRows());
 			model.addAttribute("PRODUCTID",productId);
+			if(!StringUtils.isEmpty(info.getSubjectId())){
+				model.addAttribute("CURRENT_SUBJECT_ID", info.getSubjectId());
+			}
+			if(info.getStatus()!=null){
+				model.addAttribute("CURRENT_STATUS", info.getStatus());
+			}
+			if(!StringUtils.isEmpty(info.getType())){
+				model.addAttribute("CURRENT_TYPE", info.getType());
+			}
+			//页码
+			model.addAttribute("PAGE",info.getPage()==null?1:info.getPage());
+			//总条数
+			model.addAttribute("TOTAL",datagrid.getTotal());
 			model.addAttribute("STATUS_DONE",Constant.STATUS_DONE);
 			model.addAttribute("STATUS_UNDONE",Constant.STATUS_UNDONE);
 		}catch(Exception e){

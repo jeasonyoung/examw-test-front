@@ -15,9 +15,9 @@ import com.examw.test.front.model.library.FrontItemInfo;
 import com.examw.test.front.model.library.PaperPreview;
 import com.examw.test.front.model.library.StructureInfo;
 import com.examw.test.front.model.library.StructureItemInfo;
+import com.examw.test.front.model.product.FrontSubjectInfo;
 import com.examw.test.front.model.record.Collection;
 import com.examw.test.front.model.record.UserItemFavoriteInfo;
-import com.examw.test.front.model.record.UserItemRecordInfo;
 import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.service.IPaperService;
 import com.examw.test.front.support.HttpUtil;
@@ -31,6 +31,7 @@ import com.examw.test.front.support.JSONUtil;
 public class CollectionServiceImpl implements ICollectionService{
 	private static final Logger logger = Logger.getLogger(CollectionServiceImpl.class);
 	private String api_collection_url;
+	private String api_collection_list_url;
 	private IPaperService paperService;
 	/**
 	 * 设置 笔记数据查询数据接口地址
@@ -47,7 +48,15 @@ public class CollectionServiceImpl implements ICollectionService{
 	public void setPaperService(IPaperService paperService) {
 		this.paperService = paperService;
 	}
-
+	
+	/**
+	 * 设置 
+	 * @param api_collection_list_url
+	 * 
+	 */
+	public void setApi_collection_list_url(String api_collection_list_url) {
+		this.api_collection_list_url = api_collection_list_url;
+	}
 	/*
 	 *收藏或取消收藏
 	 * @see com.examw.test.front.service.ICollectionService#collectOrCancel(java.lang.String, java.lang.String, java.lang.String)
@@ -57,14 +66,14 @@ public class CollectionServiceImpl implements ICollectionService{
 		if(logger.isDebugEnabled()) logger.debug("收藏或取消收藏...");
 		if(StringUtils.isEmpty(info.getItemId()) || StringUtils.isEmpty(info.getUserId())) 
 			return null;
-		String url = String.format(this.api_collection_url,info.getItemId());
+		String url = String.format(this.api_collection_url,info.getUserId());
 		PaperPreview paper = this.paperService.findPaperDetail(info.getPaperId());
 		UserItemFavoriteInfo favor = null;
 		if(info.getItemId().contains("#")){
 			String[] p_c_id = info.getItemId().split("#");
-			favor = this.changeModel(this.getStructureItemInfo(paper, p_c_id[0]),p_c_id[1]);
+			favor = this.changeModel(this.getStructureItemInfo(paper, p_c_id[0]),p_c_id[1],info);
 		}else{
-			favor = this.changeModel(this.getStructureItemInfo(paper, info.getItemId()),null);
+			favor = this.changeModel(this.getStructureItemInfo(paper, info.getItemId()),null,info);
 		}
 		return HttpUtil.upload(url, favor);
 	}
@@ -84,16 +93,21 @@ public class CollectionServiceImpl implements ICollectionService{
 		}
 		return null;
 	}
-	private UserItemFavoriteInfo changeModel(StructureItemInfo info,String childItemId){
+	private UserItemFavoriteInfo changeModel(StructureItemInfo info,String childItemId,Collection c){
 		if(info == null) return null;
 		if(childItemId == null)
 		{
 			UserItemFavoriteInfo data = new UserItemFavoriteInfo();
 			BeanUtils.copyProperties(info, data, new String[]{"createTime","lastTime"});
 			data.setItemId(info.getId());
+			info.setUserAnswer(c.getUserAnswer());
 			data.setItemContent(JSONUtil.ObjectToJson(info));
 			//TODO 改终端代码
 			data.setTerminalCode(123456);
+			data.setUserId(c.getUserId());
+			data.setItemType(info.getType());
+			data.setSubjectId(info.getSubjectId());
+			data.setId(null);
 			return data;
 		}
 		else{
@@ -101,7 +115,7 @@ public class CollectionServiceImpl implements ICollectionService{
 			if(info.getType().equals(Constant.TYPE_SHARE_TITLE)){
 				for(StructureItemInfo item:items){
 					if(item.getId().equalsIgnoreCase(childItemId)){
-						UserItemFavoriteInfo result = this.changeModel(item, null);
+						UserItemFavoriteInfo result = this.changeModel(item, null,c);
 						result.setItemId(info.getId()+"#"+item.getId());
 						return result;
 					}
@@ -112,7 +126,7 @@ public class CollectionServiceImpl implements ICollectionService{
 				Set<StructureItemInfo> children = set.last().getChildren();	//子题目
 				for(StructureItemInfo item:children){
 					if(item.getId().equalsIgnoreCase(childItemId)){
-						UserItemFavoriteInfo result = this.changeModel(item, null);
+						UserItemFavoriteInfo result = this.changeModel(item, null,c);
 						result.setItemId(info.getId()+"#"+item.getId());
 						return result;
 					}
@@ -133,6 +147,19 @@ public class CollectionServiceImpl implements ICollectionService{
 		String xml = HttpUtil.httpRequest(url,"GET",data,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml, List.class,FrontItemInfo.class);
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<FrontSubjectInfo> loadCollectionSubjects(String productId,
+			String userId) throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("收藏的试题科目列表...");
+		String url = String.format(this.api_collection_list_url,productId,userId);
+		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		if(!StringUtils.isEmpty(xml)){
+			return JSONUtil.JsonToCollection(xml, List.class,FrontSubjectInfo.class);
 		}
 		return null;
 	}

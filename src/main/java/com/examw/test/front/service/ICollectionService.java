@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.examw.model.Json;
 import com.examw.test.front.model.library.FrontItemInfo;
+import com.examw.test.front.model.product.FrontSubjectInfo;
 import com.examw.test.front.model.record.Collection;
 
 /**
@@ -29,4 +30,6 @@ public interface ICollectionService {
 	 * @throws IOException
 	 */
 	List<FrontItemInfo> loadCollectionItems(Collection info) throws IOException;
+	
+	List<FrontSubjectInfo> loadCollectionSubjects(String productId,String userId)throws Exception;
 }

@@ -78,9 +78,36 @@ public interface IPaperService {
 	 * @return
 	 * @throws IOException
 	 */
-	public DataGrid<FrontPaperInfo> dataGrid(String productId,PaperInfo info,String userId)throws IOException;
-	
+	public DataGrid<FrontPaperInfo> dataGrid(String productId,PaperInfo info,String userId)throws Exception;
+	/**
+	 * 试卷详细信息
+	 * @param paperId
+	 * @return
+	 * @throws IOException
+	 */
 	PaperPreview findPaperDetail(String paperId)throws IOException;
+	/**
+	 * 试卷最新记录
+	 * @param userId
+	 * @param paperId
+	 * @return
+	 * @throws Exception
+	 */
 	UserPaperRecordInfo findLastedRecord(String userId,String paperId)throws Exception;
+	/**
+	 * 产品下所有试卷记录
+	 * @param userId
+	 * @param productId
+	 * @return
+	 * @throws Exception
+	 */
 	List<UserPaperRecordInfo> loadUserPaperRecords(String userId,String productId)throws Exception;
+	/**
+	 * 分页数据
+	 * @param userId
+	 * @param productId
+	 * @return
+	 * @throws Exception
+	 */
+	DataGrid<UserPaperRecordInfo> recordDataGrid(String userId,String productId,PaperInfo info)throws Exception;
 }

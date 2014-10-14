@@ -482,7 +482,7 @@ public class PaperServiceImpl implements IPaperService{
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public DataGrid<FrontPaperInfo> dataGrid(String productId,PaperInfo info,String userId)throws IOException{
+	public DataGrid<FrontPaperInfo> dataGrid(String productId,PaperInfo info,String userId)throws Exception{
 		if(logger.isDebugEnabled()) logger.debug("加载试卷分页列表信息...");
 		Integer page = info.getPage()==null?1:info.getPage();
 		Integer rows = info.getRows()==null?10:info.getRows();
@@ -783,5 +783,52 @@ public class PaperServiceImpl implements IPaperService{
 			}
 		}
 		return true;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public DataGrid<UserPaperRecordInfo> recordDataGrid(String userId,
+			String productId, PaperInfo info) throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("加载考试记录分页列表信息...");
+		Integer page = info.getPage()==null?1:info.getPage();
+		Integer rows = info.getRows()==null?10:info.getRows();
+		//从缓存中取用户试卷最新记录
+		List<UserPaperRecordInfo> records = (List<UserPaperRecordInfo>) this.cacheHelper.getCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadUserPaperRecords", new Object[]{userId,productId});
+		if(records == null){
+			records = this.loadUserPaperRecords(userId, productId);
+			if(records!=null)
+				this.cacheHelper.putCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadUserPaperRecords", new Object[]{userId,productId}, records);
+		}
+		DataGrid<UserPaperRecordInfo> datagrid = new DataGrid<UserPaperRecordInfo>();
+		List<UserPaperRecordInfo> result = new ArrayList<UserPaperRecordInfo>();
+				//按条件筛选
+		for(UserPaperRecordInfo paper : records){
+			boolean flag = true;
+			if(flag && !StringUtils.isEmpty(info.getSubjectId())){
+				flag = paper.getSubjectId().equalsIgnoreCase(info.getSubjectId());
+			}
+			if(flag && info.getType() != null){
+				flag = paper.getPaperType().equals(info.getType());
+			}
+			if(flag && info.getStatus()!=null){
+				flag = paper.getStatus().equals(info.getStatus());
+			}
+			if(flag){
+				result.add(paper);
+			}
+		}
+		int total = result.size();
+		if(total > 0){
+			datagrid.setTotal((long) total);
+			Integer totalPage = total%rows==0?total/rows:(total/rows+1);
+			page = page > totalPage?totalPage:page;
+			if(result.size() <= rows)
+			{
+				datagrid.setRows(result);
+			}else{
+				datagrid.setRows(result.subList((page-1)*rows, page*rows>total?total:page*rows));
+			}
+		}
+		return datagrid;
 	}
 }

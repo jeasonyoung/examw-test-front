@@ -1,14 +1,11 @@
 package com.examw.test.front.junit;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 
 import com.examw.model.Json;
-import com.examw.test.front.support.HttpUtil;
-import com.examw.utils.MD5Util;
 
 /**
  * 
@@ -37,8 +34,5 @@ public class SimpleTest {
 		String s = (mapper.writeValueAsString(null));
 		Json json = mapper.readValue(s, Json.class);
 		System.out.println(json);
-	}
-	private void add(Integer count){
-		count = 12;
 	}
 }
