@@ -11,8 +11,8 @@
 	<div class="content fl">
     	<div class="cont-l fl">
         	<div class="box fl yinying">
-                <div class="hui-botton"><a href="<@s.url "/record"/>">练习记录</a></div>
-                <div class="hui-botton"><a href="<@s.url "/library/error"/>">错题记录</a></div>
+                <div class="hui-botton"><a href="<@s.url "/record/${PRODUCTID}"/>">练习记录</a></div>
+                <div class="hui-botton"><a href="<@s.url "/library/error/${PRODUCTID}"/>">错题记录</a></div>
                 <div class="dangqian">我的收藏</div>
                 <div class="h10"></div>
             </div>
@@ -24,6 +24,10 @@
                 </div>
             </div>
             <div class="box fl">
+            	<#assign TOTAL = 0/>
+            	<#list SUBJECTLIST as subject>
+            		<#assign TOTAL = TOTAL + subject.totalFavors/>
+            	</#list>
             	<#if TOTAL != 0>
                 <table width="100%" border="0" cellpadding="0" cellspacing="0" class="collect-box">
                     <tr>
@@ -32,9 +36,11 @@
                             <div class="collectlist">
                             	<ul>
                             		<#list SUBJECTLIST as subject>
+                            		<#if (subject.totalFavors != 0)>
                                 	<li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'">
                                     	<em>${subject.name}</em><em>共 <font class="red">${subject.totalFavors}</font> 道收藏试题</em><i><div class="hei-botton"><a href="我的收藏题库页面.html">点击查看</a></div></i>
                                     </li>
+                                    </#if>
                                     </#list>
                                 </ul>
                             </div>
@@ -44,7 +50,7 @@
                 <#else>
             	<div class="moni-list">
             		<ul>
-                  	 	<li class="line">亲爱的同学，暂无您的收藏记录<a href="<@s.url "/library/simulate"/>?productId=${PRODUCTID}" class="red">立即练习</a></li>
+                  	 	<li class="line">亲爱的同学，暂无您的收藏记录<a href="<@s.url "/library/simulate/${PRODUCTID}"/>" class="red">立即练习</a></li>
                 	</ul>
             	</div>
             	</#if>

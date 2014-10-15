@@ -158,10 +158,24 @@ public class LibraryController {
 		return "simulate";
 	}
 	
-	@RequestMapping(value = "last-exam", method = {RequestMethod.GET,RequestMethod.POST})
-	public String lastExam(Model model){
+	@RequestMapping(value = "last-exam/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String lastExam(@PathVariable String productId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载错题界面...");
-		return "multi_mode";
+		String userId = this.getUserId(null);
+		try{
+			UserPaperRecordInfo record = this.paperService.findProductLastedRecord(userId, productId);
+			if(record == null){
+				return "redirect:/simulate/"+productId;
+			}
+			if(record.getStatus().equals(Constant.STATUS_DONE)){
+				return "redirect:/library/paper/"+productId+"/analysis/"+record.getPaperId();
+			}else{
+				return "redirect:/library/paper/"+productId+"/do/multi/"+record.getPaperId();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "redirect:/simulate/"+productId;
 	}
 	
 	/**

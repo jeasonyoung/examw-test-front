@@ -1,6 +1,7 @@
 package com.examw.test.front.interceptor;
 
 import java.net.URLDecoder;
+import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +25,8 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	private static Logger logger = Logger.getLogger(UserAuthenticationInterceptor.class);
 	private NamedThreadLocal<Long> startTimeThreadLocal = new NamedThreadLocal<>("StopWatch-StartTime");
 	private String loginUrl;
-	
+	private List<String> safeUrl;
+	private String remoteRedirectUrl;
 	/**
 	 * 设置 登录地址
 	 * @param loginUrl
@@ -33,6 +35,25 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	public void setLoginUrl(String loginUrl) {
 		this.loginUrl = loginUrl;
 	}
+	
+	/**
+	 * 设置 需要跳过检查的地址
+	 * @param safeUrl
+	 * 
+	 */
+	public void setSafeUrl(List<String> safeUrl) {
+		this.safeUrl = safeUrl;
+	}
+	
+	/**
+	 * 设置 远程跳转地址
+	 * @param remoteRedirectUrl
+	 * 
+	 */
+	public void setRemoteRedirectUrl(String remoteRedirectUrl) {
+		this.remoteRedirectUrl = remoteRedirectUrl;
+	}
+
 	/*
 	 * 在业务处理之前被调用。
 	 * @see org.springframework.web.servlet.handler.HandlerInterceptorAdapter#preHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object)
@@ -49,18 +70,19 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	    }  
 	          
 	    //2、TODO 比如退出、首页等页面无需登录，即此处要放行 允许游客的请求  静态资源
-	    if(request.getServletPath().startsWith("/resources"))
-	    {
-	    	return true;
+	    if(safeUrl!=null && safeUrl.size()>0){
+	    	for(String url:safeUrl)
+	    	{
+	    		if(!StringUtils.isEmpty(url)){
+	    			if(url.contains("*") && request.getServletPath().startsWith(url.replaceAll("[*]", "")))
+	    		    {
+	    		    	return true;
+	    		    }else if(!url.contains("*") && request.getServletPath().equalsIgnoreCase(url)){
+	    		    	return true;
+	    		    }
+	    		}
+	    	}
 	    }
-	    if(request.getServletPath().equals("/"))
-	    {
-	    	return true;
-	    }  
-	    if(request.getServletPath().equals("/getUserInfo"))
-	    {
-	    	return true;
-	    }  
 	    //3、如果用户已经登录 放行    
 	    Cookie[] cookies = request.getCookies();
 	    String users = null;
@@ -101,7 +123,7 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	    }
 	    //4、非法请求 即这些请求需要登录后才能访问  
 	    //重定向到登录页面  
-	    response.sendRedirect("http://test.examw.com/user/c.asp");
+	    response.sendRedirect(remoteRedirectUrl);
 	    return false; 
 	}
 	    private User createUser(String users){

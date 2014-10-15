@@ -163,4 +163,21 @@ public class IndexController {
 		return "";
 	}
 	
+	@RequestMapping(value="/testCookie", method={RequestMethod.GET,RequestMethod.POST})
+	public String testCookie(HttpServletRequest request,HttpServletResponse response,Model model)
+	{
+		Cookie[] cookies = request.getCookies();
+	    String users = null;
+	    if(cookies!=null){
+	    	for(Cookie c:cookies){
+	    		if("ExamwCom".equals(c.getName())){
+	    			users = c.getValue();
+	    			if(logger.isDebugEnabled())
+	    				logger.debug(users);
+	    		}
+	    	}
+	    }
+	    model.addAttribute("ExamwCom",users);
+	    return "test";
+	}
 }

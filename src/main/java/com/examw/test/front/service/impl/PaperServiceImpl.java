@@ -245,6 +245,17 @@ public class PaperServiceImpl implements IPaperService{
 		}
 		return info;
 	}
+	@Override
+	public UserPaperRecordInfo findProductLastedRecord(String userId,
+			String productId) throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("加载产品下最新的试卷记录");
+		List<UserPaperRecordInfo> list =loadUserPaperRecords(userId,productId);
+		if(list !=null && list.size()>0)
+		{
+			return list.get(0);
+		}
+		return null;
+	}
 	//设置用户的答案
 	private void setUserAnswer(PaperPreview paper, UserPaperRecordInfo info,List<UserItemFavoriteInfo> favors) {
 		List<StructureInfo> structures = paper.getStructures();

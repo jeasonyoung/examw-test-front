@@ -34,5 +34,7 @@ public class SimpleTest {
 		String s = (mapper.writeValueAsString(null));
 		Json json = mapper.readValue(s, Json.class);
 		System.out.println(json);
+		String ss = "sdfsdf*1111*3333";
+		System.out.println(ss.replaceAll("[*]", ""));
 	}
 }

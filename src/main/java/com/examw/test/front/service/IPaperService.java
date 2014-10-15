@@ -94,6 +94,7 @@ public interface IPaperService {
 	 * @throws Exception
 	 */
 	UserPaperRecordInfo findLastedRecord(String userId,String paperId)throws Exception;
+	UserPaperRecordInfo findProductLastedRecord(String userId,String productId)throws Exception;
 	/**
 	 * 产品下所有试卷记录
 	 * @param userId

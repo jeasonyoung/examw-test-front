@@ -59,7 +59,17 @@
 		<!-- mvc 拦截器 -->
 		<mvc:interceptors>
 			<bean class="com.examw.test.front.interceptor.UserAuthenticationInterceptor">
+			    <!-- 登录地址 -->
 				<property name="loginUrl"  value="/login" />
+				<!-- 远程跳转获取数据的地址 -->
+				<property name="remoteRedirectUrl" value="http://test.examw.com/user/c.asp" />
+				<property name="safeUrl"> <!-- 不需要拦截的地址 -->
+					<list>
+						<value>/resources*</value>
+						<value>/getUserInfo</value>
+						<!-- <value>/</value>  -->
+					</list>
+				</property>
 			</bean>
 		</mvc:interceptors>
 		<!-- 文件上传 -->
