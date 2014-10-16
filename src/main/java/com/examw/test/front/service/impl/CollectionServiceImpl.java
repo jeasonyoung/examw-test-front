@@ -11,7 +11,6 @@ import org.springframework.util.StringUtils;
 
 import com.examw.model.Json;
 import com.examw.test.front.model.Constant;
-import com.examw.test.front.model.library.FrontItemInfo;
 import com.examw.test.front.model.library.PaperPreview;
 import com.examw.test.front.model.library.StructureInfo;
 import com.examw.test.front.model.library.StructureItemInfo;
@@ -137,7 +136,7 @@ public class CollectionServiceImpl implements ICollectionService{
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<FrontItemInfo> loadCollectionItems(Collection info)
+	public List<UserItemFavoriteInfo> loadCollectionItems(Collection info)
 			throws IOException {
 		if(logger.isDebugEnabled()) logger.debug("收藏的试题集合...");
 		if(StringUtils.isEmpty(info.getUserId())) 
@@ -146,7 +145,7 @@ public class CollectionServiceImpl implements ICollectionService{
 		String data = "subjectId="+info.getSubjectId()+"&userId="+info.getUserId()+"&productId="+info.getProductId();
 		String xml = HttpUtil.httpRequest(url,"GET",data,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
-			return JSONUtil.JsonToCollection(xml, List.class,FrontItemInfo.class);
+			return JSONUtil.JsonToCollection(xml, List.class,UserItemFavoriteInfo.class);
 		}
 		return null;
 	}

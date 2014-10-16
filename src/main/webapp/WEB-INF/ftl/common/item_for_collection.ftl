@@ -20,8 +20,8 @@
 </#macro>
 <#macro item_choose i input index>
 	<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_status="${i.answerStatus}">
-		<#if i.item?? && i.parentContent??>
-		<div id="font14" class="fenxiti fl">
+		<#if i.parentContent??>
+		<div id="font14" class="fenxiti fl" fenxi_item_id="${i.pid}">
 			<i>材料题</i>
 			<em>${i.parentContent}</em>
 		</div>
@@ -33,24 +33,23 @@
        <div class="xz-daan fl" >
             <div class="list">
                 <ul>
-                <#if i.item.children??>
-                <!-- 按顺序输出?sort_by(["orderNo"]) -->
-                <#list i.item.children?sort_by(["orderNo"]) as option>
-                <li>
-                	<i><@option_flag option_index/>.</i>
-                	<em>${option.content}</em>
-                </li>
-                </#list>
-                <#else>
                 <#list i.children?sort_by(["orderNo"]) as option>
                 <li>
                 	<i><@option_flag option_index/>.</i>
                 	<em>${option.content}</em>
                 </li>
                 </#list>
-                </#if>
                 </ul>
             </div>
+            <#if IS_SHOW_ANSWER>
+            	<div class="abcd">
+                <ul>
+                <#list i.children?sort_by(["orderNo"]) as option>
+                <li item_index="${index}" <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}" s_item_id="${i.id}" <#if parent??>pid="${parent.id}"</#if> option_type="${input}" actual="true"><@option_flag option_index/></li>
+                </#list>
+                </ul>
+             	</div>
+             </#if>
          </div>
          <div class="daanbox fl">
                <div class="zhankai-bg" item_id="${i.item.id?default(i.id)}" <#if index != 1>style="display:none"</#if>></div>
@@ -73,7 +72,7 @@
 </#macro>
 <#macro item_judge i index>
 	<div class="box fl" item_type="${i.type}" item_id="${i.item.id?default(i.id)}" item_status="${i.item.answerStatus?default(i.answerStatus)}">
-		<#if i.item?? && i.parentContent??>
+		<#if i.parentContent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
 			<em>${i.parentContent}</em>
@@ -84,6 +83,14 @@
             <em><span>[${i.typeName}]</span>${i.content}</em>
         </div>
         <div class="xz-daan fl">
+        	<#if IS_SHOW_ANSWER>
+        	   <div class="abcd">
+               <ul>
+                 <li item_index="${index}" <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_RIGTH)>class="choose"<#else>class="off"</#if> actual="true" <#if parent??>pid="${parent.id}"</#if> s_item_id="${i.id}" option_id="${i.id}_${ANSWER_JUDGE_RIGTH}" option_value="${ANSWER_JUDGE_RIGTH}" option_type="radio">对</li>
+                 <li item_index="${index}" <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_WRONG)>class="choose"<#else>class="off"</#if> actual="true" <#if parent??>pid="${parent.id}"</#if> option_id="${i.id}_${ANSWER_JUDGE_WRONG}" option_value="${ANSWER_JUDGE_WRONG}" option_type="radio">错</li>
+            	</ul>
+              </div>
+        	</#if>
          </div>
          <div class="daanbox fl">
                <div class="zhankai-bg" item_id="${i.item.id?default(i.id)}" <#if index != 1>style="display:none"</#if>></div>
@@ -234,31 +241,5 @@
                    <i>参考解析：</i>${i.item.analysis?default(i.analysis)}
               </div>
               <div class="h10"></div>
-              <div class="bookbox fl">
-                    <div class="book-l fl"><span>第${index}题笔记</span>（本题共${i.item.totalNoteNum?default(0)}条笔记）</div>
-                    <div class="sybook fr"><a href="javascript:void(0)" onclick="showNote('${i.structureItemId?default(i.id)}','${index}','all')">查看所有笔记（${i.item.totalNoteNum?default(0)}条）</a></div>
-                    <div class="mybook fr"><a href="javascript:void(0)" onclick="showNote('${i.structureItemId?default(i.id)}','${index}','mine')">查看我的笔记（${i.item.userNoteNum?default(0)}条）</a></div>
-                    <textarea name="" class="notebook" id="font14" s_item_id="${i.structureItemId?default(i.id)}" item_id = "${i.item.id?default(i.id)}"></textarea>
-                    <div class="sure"><a href="javascript:void(0)" onclick="addNote(this);">确认保存</a></div>
-              </div>
-              <div name="noteList" s_item_id="${i.structureItemId?default(i.id)}" style="display:none">
-              	<div name="content">
-              		<div class="textbook fl">
-                    	<div class="txt">
-                         <div class="pic-bg"><a href="#" target="_blank" title=""></a></div>
-                         <div class="pic"><img src="<@s.url "/resources/front-default/image/pic2.jpg"/>" width="70" height="70"></div>
-                         <div class="f-right">
-                             <div class="vipname fl"><a href="#" target="_blank" title="王艳阳">王艳阳</a><span>1小时前</span></div>
-                             <div class="pinglun fl">2—3年</div>
-                             <!--<div class="huifu"><a href="#" class="huifu">回复(0)</a></div>
-                             <div class="zan"><a href="#" class="zan">(0)</a></div>-->
-                         </div>
-                      </div>
-                    </div>
-               	</div>
-               <div class="h10"></div>
-                <div id="pager${index}" class="pager-plugin">
-               </div>
-         </div>
     </div>
 </#macro>

@@ -16,4 +16,9 @@ public interface IUserService {
 	 * @return 用户详细信息
 	 */
 	User login(User user)throws IOException;
+	/**
+	 * 获取md5密钥
+	 * @return
+	 */
+	String getMd5Key();
 }

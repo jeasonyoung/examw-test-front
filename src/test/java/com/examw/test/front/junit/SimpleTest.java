@@ -36,5 +36,7 @@ public class SimpleTest {
 		System.out.println(json);
 		String ss = "sdfsdf*1111*3333";
 		System.out.println(ss.replaceAll("[*]", ""));
+		String sr = "111,1222,333";
+		System.out.println(sr.split(",").length);
 	}
 }

@@ -17,6 +17,7 @@ import com.examw.test.front.support.JSONUtil;
 public class UserServiceImpl implements IUserService{
 	private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
 	private String login_url;
+	private String md5Key;
 	
 	/**
 	 * 设置 登录远程地址
@@ -33,6 +34,24 @@ public class UserServiceImpl implements IUserService{
 		String url = String.format(this.login_url, user.getUsername(),user.getPassword());
 		String xml = HttpUtil.httpRequest(url, "GET", null);
 		return JSONUtil.JsonToObject(xml, User.class);
+	}
+
+	/**
+	 * 获取 
+	 * @return md5Key
+	 * 
+	 */
+	public String getMd5Key() {
+		return md5Key;
+	}
+
+	/**
+	 * 设置 
+	 * @param md5Key
+	 * 
+	 */
+	public void setMd5Key(String md5Key) {
+		this.md5Key = md5Key;
 	}
 	
 }

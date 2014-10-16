@@ -3,6 +3,10 @@
 <head>
 <title>错题记录  考试系统题库</title>
 <#include "common/loadPageJS.ftl" />
+<!-- 分页工具  -->
+<link href="<@s.url "/resources/front-default/pager.css"/>" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<@s.url "/resources/jquery.pager.js"/>"></script>
+<!-- 分页工具  -->
 </head>
 
 <body>
@@ -42,6 +46,9 @@
                             </div>
                         </div> -->
                         <div class="siftbox fl">
+                        	<form id="form" action="" method="POST">
+                        	<input type="hidden" name="subjectId" value="${CURRENT_SUBJECTID?default("")}"/>
+                        	<input type="hidden" name="page" value="${PAGE}"/>
                             <div class="f-l fl">科目：</div>
                             <div class="f-r fr">
                                	<div class="list">
@@ -49,11 +56,11 @@
                                     	<#if CURRENT_SUBJECT_ID??>
                                     	<li><a href="javascript:void(0)" onclick="chooseSubject('all')"><em>全部</em></a></li>
                                     	<#else>
-                                    	<li><a href="javascript:void(0)" class="bg"><em>全部</em></a></li>
+                                    	<li class="bg"><a href="javascript:void(0)"><em>全部</em></a></li>
                                     	</#if>
                                     	<#list SUBJECTLIST as subject>
                                     		<#if CURRENT_SUBJECT_ID?? && subject.id == CURRENT_SUBJECT_ID>
-                                    		<li><a href="javascript:void" class="bg"><em>${subject.name}</em></a></li>
+                                    		<li class="bg"><a href="javascript:void" ><em>${subject.name}</em></a></li>
                                     		<#else>
 	                                    	<li><a href="javascript:void" onclick="chooseSubject('${subject.id}')"><em>${subject.name}</em></a></li>
 	                                    	</#if>
@@ -63,8 +70,8 @@
                                         <li><a href="#"><em>初级经济师</em></a></li>鼠标移动上去去掉<i class="cheng"></i>
                                         -->                                    </ul>
                                 </div>
+                                </form>
                             </div>
-                            </#list>
                         </div>
                     </div>
                 </div>
@@ -73,7 +80,7 @@
                 <!--无错题情况下<div class="moni-list">
                 </div>-->
                 <div class="moni-list">
-            		<#if ITEMLIST??>
+            		<#if ITEMLIST?? && (ITEMLIST?size>0)>
                     <ul>
                     	<#list ITEMLIST as item>
                         <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
@@ -86,7 +93,7 @@
                                     ${item.content}
                                     </#if>
                                     </div>
-                                    <p>${item.createTime}</p>
+                                    <dl>${item.createTime}</dl>
                                 </ol>
                                 <span><a href="javascript:void(0)" onclick="showAnalysis('${item.id}',1)" class="red">查看解析</a></span>
                                 <span><div class="buy-botton"><div class="hong-botton"><a href="javascript:void(0)" onclick="showAnalysis('${item.id}',0)">再做一次</a></div></div></span>
@@ -121,19 +128,24 @@
 		}
 	    //切换科目
 		chooseSubject = function(subjectId){
-			window.location = '<@s.url "/library/error/"/>${PRODUCTID}?subjectId='+subjectId;
+			$("#form input[name='page']").val(1);
+			choose("subjectId",subjectId);
 		}
 		//查看解析|重做
 		showAnalysis = function(itemId,flag){
 			if(flag == 1){
-				window.location = '<@s.url "/library/error/"/>${PRODUCTID}/item/'+itemId+"?flag="+flag;
+				window.location = '<@s.url "/library/error/${PRODUCTID}/item/"/>'+itemId+"?flag="+flag;
 			}
 		}
  	});
 	PageClick = function(pageclickednumber) {
      	$("#pager").pager({ pagenumber: pageclickednumber, pagecount: total, buttonClickCallback: PageClick });
      	//跳转
-     	window.location = '<@s.url "/library/error/"/>${PRODUCTID}?subjectId=${CURRENT_SUBJECT_ID}&page='+pageclickednumber;
+     	choose("page",pagenumber);
  	}
+	function choose(tag,value){
+	 	$("#form input[name='"+tag+"']").val(value);
+	 	$("#form").submit();
+	 }
 </script>
 </html>

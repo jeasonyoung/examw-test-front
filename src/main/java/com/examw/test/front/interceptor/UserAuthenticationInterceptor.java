@@ -27,6 +27,7 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	private String loginUrl;
 	private List<String> safeUrl;
 	private String remoteRedirectUrl;
+	private String md5Str;
 	/**
 	 * 设置 登录地址
 	 * @param loginUrl
@@ -52,6 +53,24 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	 */
 	public void setRemoteRedirectUrl(String remoteRedirectUrl) {
 		this.remoteRedirectUrl = remoteRedirectUrl;
+	}
+	
+	/**
+	 * 获取 md5加密字符串
+	 * @return md5Str
+	 * 
+	 */
+	public String getMd5Str() {
+		return md5Str;
+	}
+
+	/**
+	 * 设置 
+	 * @param md5Str
+	 * 
+	 */
+	public void setMd5Str(String md5Str) {
+		this.md5Str = md5Str;
 	}
 
 	/*
@@ -98,10 +117,10 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	    if(!StringUtils.isEmpty(users)) {  
 	        //更好的实现方式的使用cookie  
 	    	String[] arr = users.split("#");
-	    	String md5key = "4q3i07f12u5i8R1nU";
+	    	//String md5key = "4q3i07f12u5i8R1nU";
 	    	String userStr = URLDecoder.decode(arr[0], "utf-8");
 	    	try{
-	    	if(arr[1].equals(TaoBaoMD5.sign(userStr, md5key, "gbk"))){
+	    	if(arr[1].equals(TaoBaoMD5.sign(userStr, md5Str, "gbk"))){
 	    		//表示已经登陆
 	    		User user = this.createUser(users);
 	    		if(user!=null){

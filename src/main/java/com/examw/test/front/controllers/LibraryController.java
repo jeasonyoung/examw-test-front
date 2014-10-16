@@ -1,6 +1,8 @@
 package com.examw.test.front.controllers;
 
 import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -15,10 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.examw.model.DataGrid;
 import com.examw.test.front.model.Constant;
-import com.examw.test.front.model.library.FrontItemInfo;
 import com.examw.test.front.model.library.FrontPaperInfo;
 import com.examw.test.front.model.library.PaperInfo;
+import com.examw.test.front.model.library.StructureItemInfo;
 import com.examw.test.front.model.product.FrontProductInfo;
+import com.examw.test.front.model.product.SubjectInfo;
 import com.examw.test.front.model.record.Collection;
 import com.examw.test.front.model.record.UserPaperRecordInfo;
 import com.examw.test.front.service.ICollectionService;
@@ -71,7 +74,7 @@ public class LibraryController {
 		}
 		return "collections_list";
 	}
-	
+	//题目列表
 	@RequestMapping(value = "/collection/{productId}/items/{subjectId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String collectionDetail(@PathVariable String productId,@PathVariable String subjectId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载错题详细界面...");
@@ -87,34 +90,78 @@ public class LibraryController {
 		}
 		return "error_records";
 	}
-	
+	//错题列表
 	@RequestMapping(value = "/error/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
-	public String error(@PathVariable String productId,FrontItemInfo info,Model model){
+	public String error(@PathVariable String productId,StructureItemInfo info,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载错题界面...");
 		try{
 			String userId = this.getUserId(null);
-			DataGrid<FrontItemInfo> data = this.errorItemService.dataGrid(productId, info, userId);
-			//productId
-			model.addAttribute("PRODUCTID", productId);
+			List<SubjectInfo> subjectList = this.productService.loadProductSubjects(productId);
+			model.addAttribute("SUBJECTLIST", subjectList);
 			if(!StringUtils.isEmpty(info.getSubjectId())){
 				model.addAttribute("CURRENT_SUBJECT_ID", info.getSubjectId());
+			}else{
+				info.setSubjectId("");
+				 if(subjectList!=null && subjectList.size()>0){
+					 for(SubjectInfo s:subjectList){
+						 info.setSubjectId(info.getSubjectId()+s.getId()+",");
+					 }
+				 }
 			}
+			DataGrid<StructureItemInfo> data = this.errorItemService.dataGrid(productId, info, userId);
+			//productId
 			model.addAttribute("PAGE",info.getPage()==null?1:info.getPage());
 			model.addAttribute("ITEMLIST",data.getRows());
 			model.addAttribute("TOTAL",data.getTotal());
-			model.addAttribute("SUBJECTLIST", this.productService.loadProductSubjects(productId));
+			model.addAttribute("PRODUCTID", productId);
 			model.addAttribute("");
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
 		return "error_records";
 	}
-	
+	//错题详细
 	@RequestMapping(value = "/error/{productId}/item/{itemId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String errorDetail(@PathVariable String productId,@PathVariable String itemId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载错题详细界面...");
 		model.addAttribute("PRODUCTID", productId);
-		return "error_records";
+		String userId = this.getUserId(null);
+		try{
+			List<SubjectInfo> subjectList = this.productService.loadProductSubjects(productId);
+			String subjectId = "";
+			if(subjectList!=null && subjectList.size()>0){
+				for(SubjectInfo s:subjectList){
+					subjectId = subjectId+s.getId()+",";
+				}
+			}
+			Map<String,Object> map = this.errorItemService.loadItemDetail(productId,subjectId,userId,itemId);
+			model.addAttribute("LAST_ITEM_ID", map.get("LAST_ITEM_ID"));
+			model.addAttribute("NEXT_ITEM_ID",map.get("NEXT_ITEM_ID"));
+			model.addAttribute("ITEM",map.get("ITEM"));
+			//单选
+			model.addAttribute("TYPE_SINGLE_VALUE", Constant.TYPE_SINGLE);
+			//多选
+			model.addAttribute("TYPE_MULTY_VALUE", Constant.TYPE_MULTY);
+			//不定向选
+			model.addAttribute("TYPE_UNCERTAIN_VALUE", Constant.TYPE_UNCERTAIN);
+			//判断
+			model.addAttribute("TYPE_JUDGE_VALUE", Constant.TYPE_JUDGE);
+			//问答
+			model.addAttribute("TYPE_QANDA_VALUE", Constant.TYPE_QANDA);
+			//共提干
+			model.addAttribute("TYPE_SHARE_TITLE_VALUE", Constant.TYPE_SHARE_TITLE);
+			//共答案
+			model.addAttribute("TYPE_SHARE_ANSWER_VALUE", Constant.TYPE_SHARE_ANSWER);
+			//判断[正确]
+			model.addAttribute("ANSWER_JUDGE_RIGTH",Constant.ANSWER_JUDGE_RIGTH);
+			//判断[错误]
+			model.addAttribute("ANSWER_JUDGE_WRONG",Constant.ANSWER_JUDGE_WRONG);
+			//是否显示答案
+			model.addAttribute("IS_SHOW_ANSWER",false);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "errors_detail";
 	}
 	
 	

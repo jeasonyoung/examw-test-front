@@ -658,6 +658,7 @@ public class PaperServiceImpl implements IPaperService{
 			if(info.getType().equals(Constant.TYPE_SHARE_TITLE)){
 				for(StructureItemInfo item:items){
 					if(item.getId().equalsIgnoreCase(childItemId)){
+						item.setParentContent(info.getContent());
 						UserItemRecordInfo result = this.changeModel(item, null);
 						result.setStructureId(info.getStructureId());
 						result.setItemId(info.getId()+"#"+item.getId());
@@ -668,8 +669,10 @@ public class PaperServiceImpl implements IPaperService{
 				TreeSet<StructureItemInfo> set = new TreeSet<StructureItemInfo>();
 				set.addAll(info.getChildren());
 				Set<StructureItemInfo> children = set.last().getChildren();	//子题目
+				String content = getShareAnswerContent(info,set);
 				for(StructureItemInfo item:children){
 					if(item.getId().equalsIgnoreCase(childItemId)){
+						item.setParentContent(content);
 						UserItemRecordInfo result = this.changeModel(item, null);
 						result.setStructureId(info.getStructureId());
 						result.setItemId(info.getId()+"#"+item.getId());
@@ -680,6 +683,17 @@ public class PaperServiceImpl implements IPaperService{
 			return null;
 		}
 	}
+	private String getShareAnswerContent(StructureItemInfo info,TreeSet<StructureItemInfo> set) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(info.getContent());
+		set.remove(set.last());
+		int i = 65;
+		for(StructureItemInfo s:set){
+			builder.append((char)(i++)).append(s.getContent()).append(" <br/>");
+		}
+		return builder.toString();
+	}
+
 	//判分
 	private PaperPreview judgePaper(PaperPreview paper,UserPaperRecordInfo record,Set<UserItemRecordInfo> itemRecordList) throws Exception {
 		List<StructureInfo> structures = paper.getStructures();

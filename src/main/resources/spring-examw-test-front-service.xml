@@ -50,6 +50,6 @@
 	<!-- 用户 -->
 	<bean id="userService" class="com.examw.test.front.service.impl.UserServiceImpl">
 	    <property name="login_url" value="${login_url}" />
+	    <property name="md5Key" value="${md5key}"/>
 	</bean>
-	
 </beans>

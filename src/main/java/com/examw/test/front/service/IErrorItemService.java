@@ -1,9 +1,10 @@
 package com.examw.test.front.service;
 
 import java.io.IOException;
+import java.util.Map;
 
 import com.examw.model.DataGrid;
-import com.examw.test.front.model.library.FrontItemInfo;
+import com.examw.test.front.model.library.StructureItemInfo;
 
 /**
  * 
@@ -19,5 +20,12 @@ public interface IErrorItemService {
 	 * @return
 	 * @throws IOException
 	 */
-	DataGrid<FrontItemInfo> dataGrid(String productId,FrontItemInfo info,String userId) throws IOException;
+	DataGrid<StructureItemInfo> dataGrid(String productId,StructureItemInfo info,String userId) throws Exception;
+	/**
+	 * 加载具体的题目
+	 * @param productId
+	 * @param itemId
+	 * @return
+	 */
+	Map<String, Object> loadItemDetail(String productId,String subjectId,String userId, String itemId)throws Exception;
 }

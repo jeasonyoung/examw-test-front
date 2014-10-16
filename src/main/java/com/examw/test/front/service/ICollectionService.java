@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import com.examw.model.Json;
-import com.examw.test.front.model.library.FrontItemInfo;
 import com.examw.test.front.model.product.FrontSubjectInfo;
 import com.examw.test.front.model.record.Collection;
+import com.examw.test.front.model.record.UserItemFavoriteInfo;
 
 /**
  * 收藏服务接口
@@ -29,7 +29,7 @@ public interface ICollectionService {
 	 * @return
 	 * @throws IOException
 	 */
-	List<FrontItemInfo> loadCollectionItems(Collection info) throws IOException;
+	List<UserItemFavoriteInfo> loadCollectionItems(Collection info) throws IOException;
 	
 	List<FrontSubjectInfo> loadCollectionSubjects(String productId,String userId)throws Exception;
 }

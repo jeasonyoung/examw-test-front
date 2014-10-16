@@ -215,13 +215,13 @@
 		</#if>
      	<#if parent??>	<!-- 共享答案题  -->
 	 	<#list parent.children?sort_by(["orderNo"]) as option>
-        	<#if i.answer?index_of(option.id)!=-1>
+        	<#if i.userAnswer?index_of(option.id)!=-1>
           		<@option_flag option_index/> 
         	</#if>
      	</#list>
 	 	<#else>
      	<#list i.children?sort_by(["orderNo"]) as option>
-        	<#if i.answer?index_of(option.id)!=-1>
+        	<#if i.userAnswer?index_of(option.id)!=-1>
           		<@option_flag option_index/> 
         	</#if>
      	</#list>

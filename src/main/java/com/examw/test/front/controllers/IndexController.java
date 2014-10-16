@@ -82,18 +82,18 @@ public class IndexController {
 	public String getUserInfo(HttpServletRequest request,HttpServletResponse response,Model model)
 	{
 		try{
-			String Md5Key = "4q3i07f12u5i8R1nU";
+			String Md5Key = this.userService.getMd5Key();
 			String users = request.getParameter("Users");
 			users = new String(users.getBytes("ISO-8859-1"),"GBK");
 			String key = request.getParameter("KeyStr");
 			String key2 = TaoBaoMD5.sign(users, Md5Key, "GBK");
 //			String url = request.getParameter("Url");
 //			url = URLDecoder.decode(url,"utf-8");
-			Cookie[] cookies = request.getCookies();
-			if(cookies!=null){
-			for(Cookie c:cookies){
-				System.out.println(c.getName()+"   ====   "+c.getValue());
-			}}
+//			Cookie[] cookies = request.getCookies();
+//			if(cookies!=null){
+//			for(Cookie c:cookies){
+//				System.out.println(c.getName()+"   ====   "+c.getValue());
+//			}}
 			if(key2.equals(key)){
 				response.setHeader("P3P","CP='IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT'");
 				response.setHeader("Set-Cookie","Examwww="+URLEncoder.encode(users, "utf-8")+"#"+key);

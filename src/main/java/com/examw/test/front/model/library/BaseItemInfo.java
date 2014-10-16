@@ -442,6 +442,7 @@ public abstract class BaseItemInfo<T extends BaseItemInfo<T>>  extends Paging im
 	private String userAnswer;	    // 用户答案
 	private BigDecimal userScore;	// 用户得分
 	private Integer answerStatus;	// 回答状态
+	private String parentContent; 	// 材料内容
 	/**
 	 * 获取 是否被收藏
 	 * @return isCollected
@@ -505,6 +506,22 @@ public abstract class BaseItemInfo<T extends BaseItemInfo<T>>  extends Paging im
 	 */
 	public void setAnswerStatus(Integer answerStatus) {
 		this.answerStatus = answerStatus;
+	}
+	/**
+	 * 设置 父题目内容
+	 * @param parentContent
+	 * 父题目内容
+	 */
+	public void setParentContent(String parentContent) {
+		this.parentContent = parentContent;
+	}
+	/**
+	 * 获取 父题目内容
+	 * @return parentContent
+	 * 父题目内容
+	 */
+	public String getParentContent() {
+		return parentContent;
 	}
 	
 }

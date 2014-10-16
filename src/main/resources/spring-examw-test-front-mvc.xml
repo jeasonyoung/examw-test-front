@@ -8,6 +8,8 @@
 											 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
 											 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
 											 http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+		<!--引入参数属性文件 -->
+		<context:property-placeholder location="classpath:config.properties" />
 		<!-- 注解注入 -->
 		<context:annotation-config/>
 		<!-- spring mvc 注解扫描的 controller 包 -->
@@ -62,7 +64,8 @@
 			    <!-- 登录地址 -->
 				<property name="loginUrl"  value="/login" />
 				<!-- 远程跳转获取数据的地址 -->
-				<property name="remoteRedirectUrl" value="http://test.examw.com/user/c.asp" />
+				<property name="remoteRedirectUrl" value="${check_user_url}" />
+				<property name="md5Str" value="${md5key}"/>
 				<property name="safeUrl"> <!-- 不需要拦截的地址 -->
 					<list>
 						<value>/resources*</value>
