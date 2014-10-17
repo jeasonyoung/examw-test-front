@@ -122,8 +122,9 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	    	try{
 	    	if(arr[1].equals(TaoBaoMD5.sign(userStr, md5Str, "gbk"))){
 	    		//表示已经登陆
-	    		User user = this.createUser(users);
+	    		User user = this.createUser(userStr);
 	    		if(user!=null){
+	    			request.getSession().setAttribute("USER", user);
 	    			if(handler instanceof HandlerMethod){
 	    				HandlerMethod hm = (HandlerMethod)handler;
 	    				if(hm != null && (hm.getBean() instanceof IUserAware)){
@@ -148,14 +149,15 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	    private User createUser(String users){
 			if(StringUtils.isEmpty(users)) return null;
 			//fw121fw42$462144$2$0$普通会员$10$$$
-			String[] arr = users.split("$");
+			String[] arr = users.split("[$]");
 			try{
 				User user = new User();
 				user.setId(arr[1]);
 				user.setUsername(arr[0]);
 				user.setCoin(Integer.valueOf(arr[2]));
+				return user;
 			}catch(Exception e){
-				
+				e.printStackTrace();
 			}
 			return null;
 		}

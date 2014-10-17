@@ -10,7 +10,7 @@
 <link href="<@s.url "/resources/front-default/pub.css"/>" rel="stylesheet" type="text/css">
 <link href="<@s.url "/resources/front-default/home.css"/>" rel="stylesheet" type="text/css">
 <!-- jquery -->
-<script type="text/javascript" src="<@s.url "/resources/jquery.min.1.11.1.js"/>"></script>
+<script type="text/javascript" src="http://img.examw.com/jquery.js"></script>
 </head>
 <body>
 <#include "common/head.html" />
@@ -44,12 +44,12 @@
                 	<div class="h10"></div>
                     <div class="jianjie">
                     	<ul>
-                        	<li>产品版本：<span>${PRODUCT.version}</span></li>
+    						<li>产品价格：<span>${PRODUCT.discount}元</span></li>
+    						<li>优惠价格：<span>${PRODUCT.price}元</span></li>
+                        	<li>更新时间：<span>${PRODUCT.lastTime?substring(0,11)}</span></li>
+                        	<li>试题数量：<span>${PRODUCT.itemCount}题</span></li>
                             <li>试题解析：<span>有</span></li>
                             <li>历年真题：<span><#if PRODUCT.hasRealItem>有<#else>无</#if></span></li>
-                            <li>更新时间：<span>${PRODUCT.lastTime?substring(0,11)}</span></li>
-                            <li>产品价格：<span>${PRODUCT.discount}元</span></li>
-                            <li>试题数量：<span>${PRODUCT.itemCount}题</span></li>
                         </ul>
                     </div>
                 </div>
@@ -58,33 +58,6 @@
                     <!--已购买的情况下可以点击跳转到当前产品的模拟考场<div class="botton"><div class="hong-botton"><a href="#">点击做题</a></div></div>-->
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="h30"></div>
-    <div class="tongji-out yinying" onMouseOver="this.className='tongji-over yinying'" onMouseOut="this.className='tongji-out yinying'">
-    	<div class="tongji-content fl">
-        	<div class="tj-top fl">0</div>
-            <div class="tj-name fl">收藏</div>
-            <div class="tj-info fl">记录您的收藏试题，适当的练习有助于记忆</div>
-            <div class="tj-botton hei-botton"><a href="<@s.url "/library/collection/${PRODUCT.id}"/>">查看收藏夹</a></div>
-            <!--有收藏的情况下使用红色按钮<div class="tj-botton hong-botton"><a href="#">查看收藏夹</a></div>-->
-        </div>
-    </div>
-    <div class="tongji-out yinying" onMouseOver="this.className='tongji-over yinying'" onMouseOut="this.className='tongji-out yinying'">
-    	<div class="tongji-content fl">
-        	<div class="tj-top fl">19</div>
-            <div class="tj-name fl">错题</div>
-            <div class="tj-info fl">查看累积的错误试题，复习薄弱环节</div>
-            <div class="tj-botton hong-botton"><a href="<@s.url "/library/error/${PRODUCT.id}"/>">查看错题</a></div>
-            <!--没有错题的情况下使用灰色按钮<div class="tj-botton hei-botton"><a href="#">查看错题</a></div>-->
-        </div>
-    </div>
-    <div class="tongji-out yinying mr-no" onMouseOver="this.className='tongji-over yinying mr-no'" onMouseOut="this.className='tongji-out yinying mr-no'">
-    	<div class="tongji-content fl">
-        	<div class="tj-top fl"><em class="jixu"></em></div>
-            <div class="tj-name fl">继续上次练习</div>
-            <div class="tj-info fl">这个是上一次的测试名称这个是上一次的测试名称这个是上一次的测试名称</div>
-            <div class="tj-botton hong-botton"><a href="<@s.url "/library/last-exam"/>">继续练习</a></div>
         </div>
     </div>
     <div class="h30"></div>
@@ -110,6 +83,37 @@
             <div class="tj-name fl">每日一练</div>
             <div class="tj-info fl">每天考察不同知识点，做到查漏补缺。</div>
             <div class="tj-botton hong-botton"><a href="<@s.url "/library/daily/${PRODUCT.id}"/>">开始练习</a></div>
+        </div>
+    </div>
+    <div class="h30"></div>
+    <div class="tongji-out yinying" onMouseOver="this.className='tongji-over yinying'" onMouseOut="this.className='tongji-out yinying'">
+    	<div class="tongji-content fl">
+    		<#assign TOTAL = 0/>
+            <#list SUBJECTLIST as subject>
+            	<#assign TOTAL = TOTAL + subject.totalFavors/>
+            </#list>
+        	<div class="tj-top fl">${TOTAL}</div>
+            <div class="tj-name fl">收藏</div>
+            <div class="tj-info fl">记录您的收藏试题，适当的练习有助于记忆</div>
+            <div class="tj-botton hei-botton"><a href="<@s.url "/library/collection/${PRODUCT.id}"/>">查看收藏夹</a></div>
+            <!--有收藏的情况下使用红色按钮<div class="tj-botton hong-botton"><a href="#">查看收藏夹</a></div>-->
+        </div>
+    </div>
+    <div class="tongji-out yinying" onMouseOver="this.className='tongji-over yinying'" onMouseOut="this.className='tongji-out yinying'">
+    	<div class="tongji-content fl">
+        	<div class="tj-top fl">${TOTALERROR}</div>
+            <div class="tj-name fl">错题</div>
+            <div class="tj-info fl">查看累积的错误试题，复习薄弱环节</div>
+            <div class="tj-botton hong-botton"><a href="<@s.url "/library/error/${PRODUCT.id}"/>">查看错题</a></div>
+            <!--没有错题的情况下使用灰色按钮<div class="tj-botton hei-botton"><a href="#">查看错题</a></div>-->
+        </div>
+    </div>
+    <div class="tongji-out yinying mr-no" onMouseOver="this.className='tongji-over yinying mr-no'" onMouseOut="this.className='tongji-out yinying mr-no'">
+    	<div class="tongji-content fl">
+        	<div class="tj-top fl"><em class="jixu"></em></div>
+            <div class="tj-name fl">继续上次练习</div>
+            <div class="tj-info fl">这个是上一次的测试名称这个是上一次的测试名称这个是上一次的测试名称</div>
+            <div class="tj-botton hong-botton"><a href="<@s.url "/library/last-exam"/>">继续练习</a></div>
         </div>
     </div>
     <div class="h30"></div>

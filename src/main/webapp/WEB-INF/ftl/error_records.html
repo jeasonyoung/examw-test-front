@@ -134,6 +134,8 @@
 		//查看解析|重做
 		showAnalysis = function(itemId,flag){
 			if(flag == 1){
+				window.location = '<@s.url "/library/error/${PRODUCTID}/item/"/>'+itemId;
+			}else{
 				window.location = '<@s.url "/library/error/${PRODUCTID}/item/"/>'+itemId+"?flag="+flag;
 			}
 		}

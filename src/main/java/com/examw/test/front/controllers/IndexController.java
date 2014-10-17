@@ -29,13 +29,12 @@ import com.examw.test.front.support.TaoBaoMD5;
  * @since 2014年9月4日 上午10:30:26.
  */
 @Controller
-public class IndexController {
+public class IndexController{
 	private static final Logger logger = Logger.getLogger(IndexController.class);
 	@Resource
 	private ICategoryService categoryService;
 	@Resource
 	private IUserService userService;
-
 	/**
 	 * 获取首页。
 	 * @param model
@@ -160,7 +159,7 @@ public class IndexController {
 	public String logout(HttpServletRequest request,HttpServletResponse response){
 		//删除cookie
 	    response.setHeader("Set-Cookie","Examwww=");
-		return "";
+		return "redirect:http://test.examw.com/user/Login/CheckUser.asp?CheckType=Logout";
 	}
 	
 	@RequestMapping(value="/testCookie", method={RequestMethod.GET,RequestMethod.POST})

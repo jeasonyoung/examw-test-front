@@ -38,7 +38,7 @@
                             		<#list SUBJECTLIST as subject>
                             		<#if (subject.totalFavors != 0)>
                                 	<li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'">
-                                    	<em>${subject.name}</em><em>共 <font class="red">${subject.totalFavors}</font> 道收藏试题</em><i><div class="hei-botton"><a href="我的收藏题库页面.html">点击查看</a></div></i>
+                                    	<em>${subject.name}</em><em>共 <font class="red">${subject.totalFavors}</font> 道收藏试题</em><i><div class="hei-botton"><a href="<@s.url "/library/collection/${PRODUCTID}/items/${subject.id}"/>">点击查看</a></div></i>
                                     </li>
                                     </#if>
                                     </#list>

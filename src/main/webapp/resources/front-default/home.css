@@ -46,7 +46,7 @@
 .porduct-list li a:link,.porduct-list li a:visited,.porduct-list li a:active{ color:#333}
 .porduct-list li a:hover{ color:#f00}
 .porduct-list .title{width:100%; float:left; display:block; overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.porduct-list .title em{ width:590px;padding-left:10px; float:left; text-align:left; font-family:"宋体"}
+.porduct-list .title em{ width:459px;padding-left:10px; float:left; text-align:left; font-family:"宋体"}
 .porduct-list .title span{ width:131px; float:left; font-weight:300; font-size:14px; border-left:#e8e8e8 solid 1px}
 .porduct-list .title span .buy-botton{ width:110px; height:30px; padding-top:10px; padding-bottom:10px; padding-left:11px; float:left; line-height:30px}
 .porduct-list .title span .shiyong-botton{ width:50px; height:28px; font-size:12px !important; padding-top:11px; padding-bottom:11px; padding-left:11px; float:left; line-height:28px}

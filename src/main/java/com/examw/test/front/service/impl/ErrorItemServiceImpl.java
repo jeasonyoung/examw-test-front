@@ -70,7 +70,6 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 		}
 		return null;
 	}
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public DataGrid<StructureItemInfo> dataGrid(String productId,StructureItemInfo info, String userId) throws Exception {

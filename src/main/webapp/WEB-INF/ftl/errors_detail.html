@@ -16,9 +16,9 @@
 	<div class="content fl">
     	<div class="cont-l fl">
         	<div class="box fl yinying">
-                 <div class="hui-botton"><a href="<@s.url "/record"/>">练习记录</a></div>
+                 <div class="hui-botton"><a href="<@s.url "/record/${PRODUCTID}"/>">练习记录</a></div>
                 <div class="dangqian">错题记录</div>
-                <div class="hui-botton"><a href="<@s.url "/library/collection"/>">我的收藏</a></div>
+                <div class="hui-botton"><a href="<@s.url "/library/collection/${PRODUCTID}"/>">我的收藏</a></div>
                 <div class="h10"></div>
             </div>
         </div>
@@ -59,7 +59,7 @@
 				$(obj).parent().siblings("em").attr("class","jiexi-h");
 			}else{
 				target.hide();
-				target2.hide();
+				//target2.hide();
 				$(obj).html("展开解析");
 				$(obj).parent().siblings("em").attr("class","jiexi");
 			}
@@ -89,56 +89,58 @@
 				}
 			});
 		}
-		//<!-- 分页 -->
-		var pageClick = [];
-		showNote = function(structureItemId,itemIndex,model){
-			var index = pageClick.length;
-			$.ajax({
-				type:"POST",
-				url:'<@s.url "/library/item/notes"/>',
-				data:{"structureItemId":structureItemId,"page":1,"rows":3,"model":model},
-				dataType:"json",
-				success:function(data){
-					if(data.total == 0) return;
-					var arr = data.rows;
-					var total = data.total%3==0?(data.total/3):(data.total/3+1);
-					var contentArea = $("div[name='noteList'][s_item_id='"+structureItemId+"']").find("div[name='content']");
-					contentArea.html("");
-					$.each(arr,function(i){
-						var note = arr[i];
-						var html = "<div class='textbook fl'><div class='txt'><div class='pic-bg'><a href='#' target='_blank' title=''></a></div><div class='pic'><img src='<@s.url '/resources/front-default/image/pic2.jpg'/>' width='70' height='70'></div><div class='f-right'><div class='vipname fl'><a href='#' target='_blank' title='note.username'>"+note.username+"</a><span>"+note.time+"</span></div><div class='pinglun fl'>"+note.content+"</div></div></div></div>"
-						contentArea.append(html);
-					});
-					if(data.total<=3){
-						$("#pager"+itemIndex).html("");
-					}else{
-						pageClick[index] = function(pageclickednumber){
-							$("#pager"+itemIndex).pager({ pagenumber: pageclickednumber, pagecount: total, buttonClickCallback: pageClick[index] });
-							$.ajax({
-								type:"POST",
-								url:"<@s.url "/library/item/notes"/>",
-								data:{"structureItemId":structureItemId,"page":pageclickednumber,"rows":3,"model":model},
-								dataType:"json",
-								success:function(data){
-									if(data.total == 0) return;
-									var arr = data.rows;
-									var total = data.total%3==0?(data.total/3):(data.total/3+1);
-									var contentArea = $("div[name='noteList'][s_item_id='"+structureItemId+"']").find("div[name='content']");
-									contentArea.html("");
-									$.each(arr,function(i){
-										var note = arr[i];
-										var html = "<div class='textbook fl'><div class='txt'><div class='pic-bg'><a href='#' target='_blank' title=''></a></div><div class='pic'><img src='<@s.url '/resources/front-default/image/pic2.jpg'/>' width='70' height='70'></div><div class='f-right'><div class='vipname fl'><a href='#' target='_blank' title='note.username'>"+note.username+"</a><span>"+note.time+"</span></div><div class='pinglun fl'>"+note.content+"</div></div></div></div>"
-										contentArea.append(html);
-									});
-								}
-							});
-						}
-						$("#pager"+itemIndex).pager({ pagenumber: 1, pagecount: total, buttonClickCallback: pageClick[index]});
-					}
+		//<!-- 点击选项 -->
+		$("ul li[option_id]").click(function(){
+			var option_id = $(this).attr("option_id");
+			var s_item_id = $(this).attr("s_item_id");
+			var pid = $(this).attr("pid");
+			if($(this).attr("option_type")=="radio") //互斥
+			{
+				if($(this).attr("class").indexOf("choose")!=-1) {	//取消选择
+					$("li[actual][option_id='"+option_id+"']").attr("class","off");
+					$("#answerCard a[s_item_id='"+s_item_id+"']").removeClass("yida");
+					return;
 				}
-			});	//获取数据
-			$("div[name='noteList'][s_item_id='"+structureItemId+"']").show();
-		}
+				$("li[actual][option_id='"+option_id+"']").attr("class","choose");
+				$("li[actual][option_id='"+option_id+"']").siblings().attr("class","off");
+				$("#answerCard a[s_item_id='"+s_item_id+"']").attr("class","yida");
+			}else{
+				if($(this).attr("class").indexOf("choose")!=-1)
+				{
+					$("li[option_id='"+option_id+"']").attr("class","out");
+					$("li[actual][option_id='"+option_id+"']").attr("class","off");
+					if($(this).parent().children("li[class='choose']").length==0){
+						$("#answerCard a[s_item_id='"+s_item_id+"']").removeClass("yida");
+					}
+				}else{
+					$("li[actual][option_id='"+option_id+"']").attr("class","choose");
+					$("#answerCard a[s_item_id='"+s_item_id+"']").attr("class","yida");
+				}
+			}
+			//单选直接显示答案
+			if($(this).attr("option_type")=="radio"){
+				$("div[item_id='"+s_item_id+"']:hidden").show();
+				var answer = $("#rightAnswer_"+s_item_id).attr("answer");
+				var myAnswer = $(this).html();
+				if(answer == myAnswer){
+					myAnswer = "<em class='dui'>"+myAnswer+"</em>";
+					$("#duicuo_"+s_item_id).attr("class","dui");
+				}else{
+					myAnswer = "<em class='cuo'>"+myAnswer+"</em>";
+					$("#duicuo_"+s_item_id).attr("class","cuo");
+				}
+				$("#myAnswer_"+s_item_id).html("<i>我的答案：</i>"+myAnswer);
+			}
+		}).mouseout(function(){
+				if($(this).attr("class")=="choose") return;
+				$(this).attr("class","off");
+				$("li[option_id='"+$(this).attr("option_id")+"']:not([actual])").attr("class","out");
+		}).mouseover(function(){
+				if($(this).attr("class")=="choose") return;
+				$(this).attr("class","on");
+				$("li[option_id='"+$(this).attr("option_id")+"']:not([actual])").attr("class","over");
+			$(this).addClass("over");
+		});
 		//显示提示
 		function showTips(obj,msg){
 			var d = dialog({

@@ -51,9 +51,22 @@ public class LibraryController {
 	public String library(@PathVariable String productId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载题库界面...");
 		try{
-			FrontProductInfo info = productService.loadProduct(productId);
-			model.addAttribute("PRODUCT", info);
+			String userId = getUserId(null);
+			FrontProductInfo data = productService.loadProduct(productId);
+			model.addAttribute("PRODUCT", data);
 			model.addAttribute("PRODUCTID",productId);
+			//计算错题个数
+			List<SubjectInfo> subjectList = this.productService.loadProductSubjects(productId);
+			StructureItemInfo info = new StructureItemInfo();
+			info.setSubjectId("");
+			if(subjectList!=null && subjectList.size()>0){
+				 for(SubjectInfo s:subjectList){
+					 info.setSubjectId(info.getSubjectId()+s.getId()+",");
+				}
+			}
+			model.addAttribute("TOTALERROR",this.errorItemService.dataGrid(productId, info, userId).getTotal());
+			//计算收藏个数
+			model.addAttribute("SUBJECTLIST", this.collectionService.loadCollectionSubjects(productId, userId));
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载product异常...");
@@ -88,7 +101,7 @@ public class LibraryController {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		return "error_records";
+		return "collections_detail";
 	}
 	//错题列表
 	@RequestMapping(value = "/error/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
@@ -122,7 +135,7 @@ public class LibraryController {
 	}
 	//错题详细
 	@RequestMapping(value = "/error/{productId}/item/{itemId}", method = {RequestMethod.GET,RequestMethod.POST})
-	public String errorDetail(@PathVariable String productId,@PathVariable String itemId,Model model){
+	public String errorDetail(@PathVariable String productId,@PathVariable String itemId,String flag,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载错题详细界面...");
 		model.addAttribute("PRODUCTID", productId);
 		String userId = this.getUserId(null);
@@ -157,7 +170,7 @@ public class LibraryController {
 			//判断[错误]
 			model.addAttribute("ANSWER_JUDGE_WRONG",Constant.ANSWER_JUDGE_WRONG);
 			//是否显示答案
-			model.addAttribute("IS_SHOW_ANSWER",false);
+			model.addAttribute("IS_SHOW_ANSWER",StringUtils.isEmpty(flag)?true:false);
 		}catch(Exception e){
 			e.printStackTrace();
 		}

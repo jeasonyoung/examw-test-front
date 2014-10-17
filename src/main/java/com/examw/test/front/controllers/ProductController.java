@@ -7,10 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.examw.model.DataGrid;
-import com.examw.test.front.model.product.FrontProductInfo;
 import com.examw.test.front.service.IProductService;
 
 /**
@@ -33,21 +30,12 @@ public class ProductController {
 	@RequestMapping(value = {"","/"}, method = {RequestMethod.GET,RequestMethod.POST})
 	public String products(String examId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载产品列表页面...");
-		model.addAttribute("EXAMID", examId);
-		return "products";
-	}
-	
-	@RequestMapping(value = "/list", method = {RequestMethod.GET,RequestMethod.POST})
-	@ResponseBody
-	public DataGrid<FrontProductInfo> loadProducts(FrontProductInfo info){
-		if(logger.isDebugEnabled()) logger.debug("加载产品列表数据...");
 		try{
-			DataGrid<FrontProductInfo> datagrid = this.productService.dataGrid(info);
-			return datagrid;
+			model.addAttribute("EXAMID", examId);
+			model.addAttribute("PRODUCTLIST",this.productService.loadProducts(examId));
 		}catch(Exception e){
 			e.printStackTrace();
-			if(logger.isDebugEnabled()) logger.debug("加载products数据异常...");
 		}
-		return null;
+		return "products";
 	}
 }

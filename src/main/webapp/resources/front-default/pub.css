@@ -39,32 +39,38 @@ a:hover,a:active{color:#cc0000; text-decoration:none}
 .t-cheng a:link,.t-cheng  a:visited,.t-cheng  a:active{ background:#ff8400; color:#fff !important;-moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; width:100%; height:auto; float:left}
 .t-cheng a:hover{ background:#ff6000; color:#fff !important;-moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px;width:100%; height:auto; float:left}
 /*公用按钮结束*/
-.logo,.topnva .nvabox em,#wBox .wBox_title .wBox_close,#wBox .wBox_title .on,.nav span,.nav-list .more a{ background:url(image/gd.png) no-repeat}/*公用图路径*/
+.logo,.topnva .nvabox em,#wBox .wBox_title .wBox_close,#wBox .wBox_title .on,.nav span,.nav-list .more a,.vip{ background:url(image/gd.png) no-repeat}/*公用图路径*/
 .main{ width:1000px; height:auto; margin:0 auto}
 /*top*/
 .top{ width:100%; height:80px; background:#fff; border-bottom:#e5e5e5 solid 1px; line-height:77px}
 .top .logo{ background-position:0px 0px; width:210px; height:80px; padding-right:10px}
 /*头部LOGO段导航*/
-.topnva{float:left; position:relative;display:inline;font-size:16px;border-left:#efefef solid 1px; border-right:#efefef solid 1px;margin-right:-1px}
-.topnva .nvabox{width:auto;display:inline-block;cursor:pointer;position:relative;padding:0 20px 0 16px;height:77px;border-top:3px solid #fff}
+.topnva{float:left;display:inline;font-size:16px;border-left:#efefef solid 1px; border-right:#efefef solid 1px;margin-right:-1px}
+.topnva .nvabox{width:auto;display:inline-block;cursor:pointer;padding:0 20px 0 16px;height:77px;border-top:3px solid #fff}
 .topnva .nvabox em{ float:left;display:inline;width:50px; height:77px}
 .topnva .nvabox .tiku{ background-position:-300px 0}
 .topnva .nvabox .video{ background-position:-400px 0}
 
+/*会员中心*/
+/*会员中心*/
+.vip-name{height:80px; font:14px/80px""; padding:0px 10px; float:right}
+.vip-name a{ padding-left:20px}
+.vip-name b a{ color:#cc0000; padding-left:0px !important}
+.vip-name b a:hover{ text-decoration:underline}
+
 .topnva .nvabox:hover{text-decoration:none; }
 .check .nvabox .tiku,.topnva .nvabox:hover .tiku{background-position:-250px 0}
 .check .nvabox .video,.topnva .nvabox:hover .video{background-position:-350px 0}
-.check .nvabox .vip,.topnva .nvabox:hover .vip{background-position:-450px 0}
-.check .nvabox .xinxi,.topnva .nvabox:hover .xinxi{background-position:-500px 0}
-
+/*.check .nvabox .vip,.topnva .nvabox:hover .vip{background-position:-450px 0}
+.check .nvabox .xinxi,.topnva .nvabox:hover .xinxi{background-position:-500px 0}*/
 .check .check-tiku,.topnva:hover .check-tiku{border-top:solid #cc0000 3px; background:#fafafa; height:77px; color:#cc0000}
 .check .check-video,.topnva:hover .check-video{border-top:solid #0db3f1 3px; background:#fafafa; height:77px; color:#0db3f1}
-.check .check-vip{border-top:solid #fafafa 3px; background:#fafafa; height:77px; float:left; padding:0px !important}
+/*.check .check-vip{border-top:solid #fafafa 3px; background:#fafafa; height:77px; float:left; padding:0px !important}*/
 .topnva .nvabox span{ position:relative; left:-8px; color:#fff; -moz-border-radius:10px; font-size:14px; -webkit-border-radius:10px; border-radius:15px; background:#ff5500; padding:2px 6px;animation:mymove 5s infinite;-moz-animation:mymove 5s infinite; /* Firefox */-webkit-animation:mymove 5s infinite; /* Safari and Chrome */-o-animation:mymove 5s infinite; /* Opera */}
-@keyframes mymove{0%   {top:-30px}25%  {top:22px}75%  {top:-25px}100% {top:-25px}}
-@-moz-keyframes mymove /* Firefox */{0%   {top:-30px}25%  {top:22px}75%  {top:-25px}100% {top:-25px}}
-@-webkit-keyframes mymove /* Safari and Chrome */{0%   {top:-30px}25%  {top:22px}75%  {top:-25px}100% {top:-25px}}
-@-o-keyframes mymove /* Opera */{0%   {top:-30px}25%  {top:22px}75%  {top:-25px}100% {top:-25px}}
+@keyframes mymove{0% {top:-28px}25%  {top:0px}75%  {top:-25px}100% {top:-25px}}
+@-moz-keyframes mymove /* Firefox */{0% {top:-28px}25%  {top:0px}75%  {top:-25px}100% {top:-25px}}
+@-webkit-keyframes mymove /* Safari and Chrome */{0%  {top:-28px}25%  {top:0px}75%  {top:-25px}100% {top:-25px}}
+@-o-keyframes mymove /* Opera */{0%{top:-28px}25%  {top:0px}75%  {top:-25px}100% {top:-25px}}
 /*头部LOGO段导航结束*/
 /*分类导航*/
 .nav{width:230px; height:45px; padding-top:8px; font:16px/45px "微软雅黑"; position:absolute; _position:relative;*position:relative; cursor:pointer}

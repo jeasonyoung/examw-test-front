@@ -114,6 +114,8 @@ public class CollectionServiceImpl implements ICollectionService{
 			if(info.getType().equals(Constant.TYPE_SHARE_TITLE)){
 				for(StructureItemInfo item:items){
 					if(item.getId().equalsIgnoreCase(childItemId)){
+						item.setParentContent(info.getContent());
+						item.setSubjectId(info.getSubjectId());
 						UserItemFavoriteInfo result = this.changeModel(item, null,c);
 						result.setItemId(info.getId()+"#"+item.getId());
 						return result;
@@ -123,8 +125,11 @@ public class CollectionServiceImpl implements ICollectionService{
 				TreeSet<StructureItemInfo> set = new TreeSet<StructureItemInfo>();
 				set.addAll(info.getChildren());
 				Set<StructureItemInfo> children = set.last().getChildren();	//子题目
+				String content = getShareAnswerContent(info,set);
 				for(StructureItemInfo item:children){
 					if(item.getId().equalsIgnoreCase(childItemId)){
+						item.setSubjectId(info.getSubjectId());
+						item.setParentContent(content);
 						UserItemFavoriteInfo result = this.changeModel(item, null,c);
 						result.setItemId(info.getId()+"#"+item.getId());
 						return result;
@@ -134,6 +139,16 @@ public class CollectionServiceImpl implements ICollectionService{
 			return null;
 		}
 	}
+	private String getShareAnswerContent(StructureItemInfo info,TreeSet<StructureItemInfo> set) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(info.getContent());
+		set.remove(set.last());
+		int i = 65;
+		for(StructureItemInfo s:set){
+			builder.append((char)(i++)).append(s.getContent()).append(" <br/>");
+		}
+		return builder.toString();
+	}
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UserItemFavoriteInfo> loadCollectionItems(Collection info)
@@ -141,7 +156,7 @@ public class CollectionServiceImpl implements ICollectionService{
 		if(logger.isDebugEnabled()) logger.debug("收藏的试题集合...");
 		if(StringUtils.isEmpty(info.getUserId())) 
 			return null;
-		String url = String.format(this.api_collection_url);
+		String url = String.format(this.api_collection_url,info.getUserId());
 		String data = "subjectId="+info.getSubjectId()+"&userId="+info.getUserId()+"&productId="+info.getProductId();
 		String xml = HttpUtil.httpRequest(url,"GET",data,"utf-8");
 		if(!StringUtils.isEmpty(xml)){

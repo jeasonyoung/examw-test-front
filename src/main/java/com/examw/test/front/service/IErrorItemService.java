@@ -28,4 +28,13 @@ public interface IErrorItemService {
 	 * @return
 	 */
 	Map<String, Object> loadItemDetail(String productId,String subjectId,String userId, String itemId)throws Exception;
+	/**
+	 * 统计产品下的错题
+	 * @param productId
+	 * @param info
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
+	//Long totalErrorItemService(String productId,StructureItemInfo info,String userId)throws Exception;
 }

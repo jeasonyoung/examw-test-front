@@ -6,4 +6,4 @@
 <link href="<@s.url "/resources/front-default/pub.css"/>" rel="stylesheet" type="text/css">
 <link href="<@s.url "/resources/front-default/tiku.css"/>" rel="stylesheet" type="text/css">
 <!-- jquery -->
-<script type="text/javascript" src="<@s.url "/resources/jquery.min.1.11.1.js"/>"></script>
+<script type="text/javascript" src="http://img.examw.com/jquery.js"></script>

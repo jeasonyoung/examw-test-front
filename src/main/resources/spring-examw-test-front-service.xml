@@ -12,7 +12,6 @@
 	    <property name="api_product_detail_url" value="${api_product_url}" />
 	    <property name="api_product_subjects_url" value="${api_product_subjects_url}" />
 	    <property name="api_product_areas_url" value="${api_product_areas_url}" />
-	    <property name="cacheHelper" ref="cacheHelper"></property>
 	</bean>
 	<!-- 章节 -->
 	<bean id="chapterService" class="com.examw.test.front.service.impl.ChapterServiceImpl">

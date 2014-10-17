@@ -1,11 +1,13 @@
 package com.examw.test.front.junit;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 
 import com.examw.model.Json;
+import com.examw.test.front.support.TaoBaoMD5;
 
 /**
  * 
@@ -38,5 +40,10 @@ public class SimpleTest {
 		System.out.println(ss.replaceAll("[*]", ""));
 		String sr = "111,1222,333";
 		System.out.println(sr.split(",").length);
+		String md5key = "4q3i07f12u5i8R1nU";
+		String users = "fw121fw41$265384$0$0$普通会员$10$$$";
+		System.out.println(TaoBaoMD5.sign(users, md5key, "gbk"));
+		String str = "fw121fw42$462144$2$0$普通会员$10$$$";
+		System.out.println(Arrays.toString(str.split("[$]")));
 	}
 }

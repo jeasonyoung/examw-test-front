@@ -9,8 +9,8 @@
 <link href="<@s.url "/resources/front-default/pub.css"/>" rel="stylesheet" type="text/css">
 <link href="<@s.url "/resources/front-default/home.css"/>" rel="stylesheet" type="text/css">
 <!-- js -->
-<script type="text/javascript" src="<@s.url "/resources/jquery.min.1.11.1.js"/>"></script>
-<script type="text/javascript" src="<@s.url "/resources/jquery.cookie.js"/>"></script>
+<script type="text/javascript" src="http://img.examw.com/jquery.js"></script>
+<script type="text/javascript" src="http://img.examw.com/jquery.cookie.js"></script>
 </head>
 
 <body>
@@ -77,12 +77,14 @@
 	</#if>
 </#macro>
 <#macro createCategory cate>
-	<#if cate.chidren?? && (cate.children?size>0)>
-		<#list cate.chidren as child>
+	<#if cate.children?? && (cate.children?size>0)>
+		<#list cate.children as child>
 			<@createCategory child/>
 		</#list>
 	</#if>
+	<#if cate.exams??>
 	<@createExams cate.exams/>
+	</#if>
 </#macro>
 <div class="h30"></div>
 <#include "common/foot.html"/>

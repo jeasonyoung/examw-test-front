@@ -30,13 +30,13 @@
                 </div>
             </div>
         	<div class="box fl yinying">
-                <div class="hui-botton"><a href="错题记录.html">错题记录</a></div>
+                <div class="hui-botton"><a href="<@s.url "/library/error/${PRODUCTID}"/>">错题记录</a></div>
                 <div class="dangqian">试题解析</div>
-                <div class="hui-botton"><a href="#">再测试一次</a></div>
+                <div class="hui-botton"><a href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${PAPER.id}"/>">再测试一次</a></div>
                 <div class="h10"></div>
                 <div class="list">
                 	<ul>
-                        <li class="bb-no"><a href="#"><em class="back"></em>返回列表</a></li>
+                        <li class="bb-no"><a href="<@s.url "/library/simulate/${PRODUCTID}"/>"><em class="back"></em>返回列表</a></li>
                     </ul>
                 </div>
             </div>
@@ -282,7 +282,7 @@ $(function(){
 			dataType:'json',
 			success:function(data){
 				if(data.success){
-					if(data.data == 0) //取消收藏成功
+					if(data.data == 1) //取消收藏成功
 					{
 						$(obj).parent().siblings().attr("class","shoucang");
 						$(obj).html("收藏");

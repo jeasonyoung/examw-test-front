@@ -3,7 +3,6 @@ package com.examw.test.front.service;
 import java.io.IOException;
 import java.util.List;
 
-import com.examw.model.DataGrid;
 import com.examw.test.front.model.product.AreaInfo;
 import com.examw.test.front.model.product.FrontProductInfo;
 import com.examw.test.front.model.product.SubjectInfo;
@@ -22,13 +21,6 @@ public interface IProductService{
 	 * @throws IOException
 	 */
 	List<FrontProductInfo> loadProducts(String examId) throws IOException;
-	/**
-	 * 分页数据
-	 * @param info
-	 * @return
-	 * @throws IOException
-	 */
-	DataGrid<FrontProductInfo> dataGrid(FrontProductInfo info) throws IOException;
 	/**
 	 * 根据ID加载产品信息
 	 * @param id
