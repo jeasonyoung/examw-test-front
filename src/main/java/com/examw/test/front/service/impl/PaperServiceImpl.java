@@ -229,7 +229,8 @@ public class PaperServiceImpl implements IPaperService{
 	 * @throws Exception
 	 */
 	public UserPaperRecordInfo findLastedRecord(String userId,String paperId)throws Exception{
-		UserPaperRecordInfo info = (UserPaperRecordInfo) this.cacheHelper.getCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadLastedRecord", new String[]{userId,paperId});
+		//UserPaperRecordInfo info = (UserPaperRecordInfo) this.cacheHelper.getCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadLastedRecord", new String[]{userId,paperId});
+		UserPaperRecordInfo info = null;
 		if(info == null){
 			String url = String.format(this.api_user_paper_record_url,userId,paperId);
 			String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
@@ -239,9 +240,9 @@ public class PaperServiceImpl implements IPaperService{
 			}
 			if(json.isSuccess())
 				info = JSONUtil.JsonToObject((String)json.getData(), UserPaperRecordInfo.class);
-			if(info!=null){
-				this.cacheHelper.putCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadLastedRecord", new String[]{userId,paperId}, info);
-			}
+//			if(info!=null){
+//				this.cacheHelper.putCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadLastedRecord", new String[]{userId,paperId}, info);
+//			}
 		}
 		return info;
 	}
@@ -259,7 +260,8 @@ public class PaperServiceImpl implements IPaperService{
 	//设置用户的答案
 	private void setUserAnswer(PaperPreview paper, UserPaperRecordInfo info,List<UserItemFavoriteInfo> favors) {
 		List<StructureInfo> structures = paper.getStructures();
-		Set<UserItemRecordInfo> itemRecords = info.getItems();
+		TreeSet<UserItemRecordInfo> itemRecords = new TreeSet<>();
+		itemRecords.addAll(info.getItems());
 		if(itemRecords == null || itemRecords.size() ==0 ) return;
 		for(StructureInfo s:structures){
 			Set<StructureItemInfo> items = s.getItems();
@@ -270,7 +272,7 @@ public class PaperServiceImpl implements IPaperService{
 	}
 	//设置用户答案
 	private void setUserAnswer(StructureItemInfo item,
-			Set<UserItemRecordInfo> itemRecords,List<UserItemFavoriteInfo> favors) {
+			TreeSet<UserItemRecordInfo> itemRecords,List<UserItemFavoriteInfo> favors) {
 		switch(item.getType()){
 		case Constant.TYPE_SHARE_TITLE:
 			setShareTitleItemUserAnswer(item, itemRecords,favors);
@@ -285,6 +287,7 @@ public class PaperServiceImpl implements IPaperService{
 					item.setUserAnswer(info.getAnswer());	//设置用户答案
 					item.setUserScore(info.getScore());
 					item.setAnswerStatus(info.getStatus());
+					item.setRecordId(info.getId());
 					break;
 				}
 			}
@@ -304,6 +307,7 @@ public class PaperServiceImpl implements IPaperService{
 					child.setUserAnswer(info.getAnswer());	//设置用户答案
 					child.setUserScore(info.getScore());
 					child.setAnswerStatus(info.getStatus());
+					child.setRecordId(info.getId());
 					break;
 				}
 			}
@@ -324,6 +328,7 @@ public class PaperServiceImpl implements IPaperService{
 					child.setUserAnswer(info.getAnswer());	//设置用户答案
 					child.setUserScore(info.getScore());
 					child.setAnswerStatus(info.getStatus());
+					child.setRecordId(info.getId());
 					break;
 				}
 			}

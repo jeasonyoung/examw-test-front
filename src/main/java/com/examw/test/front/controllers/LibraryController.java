@@ -28,6 +28,7 @@ import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.service.IErrorItemService;
 import com.examw.test.front.service.IPaperService;
 import com.examw.test.front.service.IProductService;
+import com.examw.test.front.support.ItemTypeUtil;
 /**
  * 题库控制器
  * @author fengwei.
@@ -97,7 +98,9 @@ public class LibraryController {
 		info.setUserId(this.getUserId(null));
 		info.setSubjectId(subjectId);
 		try{
-			model.addAttribute("ITEMLIST",this.collectionService.loadCollectionItems(info));
+			model.addAttribute("ITEMLIST",this.collectionService.loadCollectionItemList(info));
+			//题型
+			ItemTypeUtil.loadItemType(model);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -151,24 +154,8 @@ public class LibraryController {
 			model.addAttribute("LAST_ITEM_ID", map.get("LAST_ITEM_ID"));
 			model.addAttribute("NEXT_ITEM_ID",map.get("NEXT_ITEM_ID"));
 			model.addAttribute("ITEM",map.get("ITEM"));
-			//单选
-			model.addAttribute("TYPE_SINGLE_VALUE", Constant.TYPE_SINGLE);
-			//多选
-			model.addAttribute("TYPE_MULTY_VALUE", Constant.TYPE_MULTY);
-			//不定向选
-			model.addAttribute("TYPE_UNCERTAIN_VALUE", Constant.TYPE_UNCERTAIN);
-			//判断
-			model.addAttribute("TYPE_JUDGE_VALUE", Constant.TYPE_JUDGE);
-			//问答
-			model.addAttribute("TYPE_QANDA_VALUE", Constant.TYPE_QANDA);
-			//共提干
-			model.addAttribute("TYPE_SHARE_TITLE_VALUE", Constant.TYPE_SHARE_TITLE);
-			//共答案
-			model.addAttribute("TYPE_SHARE_ANSWER_VALUE", Constant.TYPE_SHARE_ANSWER);
-			//判断[正确]
-			model.addAttribute("ANSWER_JUDGE_RIGTH",Constant.ANSWER_JUDGE_RIGTH);
-			//判断[错误]
-			model.addAttribute("ANSWER_JUDGE_WRONG",Constant.ANSWER_JUDGE_WRONG);
+			//题型
+			ItemTypeUtil.loadItemType(model);
 			//是否显示答案
 			model.addAttribute("IS_SHOW_ANSWER",StringUtils.isEmpty(flag)?true:false);
 		}catch(Exception e){

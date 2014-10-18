@@ -39,14 +39,14 @@
             <div class="list">
                 <ul>
                 <#list i.children?sort_by(["orderNo"]) as option>
-                <li item_index="${index}" option_id="${option.id}" s_item_id="${i.id}" <#if parent??>pid="${parent.id}"</#if> option_type="${input}" <#if i.userAnswer?contains(option.id)>class="over"<#else>class="out"</#if>><i><@option_flag option_index/>.</i><em>${option.content}</em></li>
+                <li item_index="${index}" option_id="${option.id}" record_id='${i.recordId?default("0")}' s_item_id="${i.id}" <#if parent??>pid="${parent.id}"</#if> option_type="${input}" <#if i.userAnswer?contains(option.id)>class="over"<#else>class="out"</#if>><i><@option_flag option_index/>.</i><em>${option.content}</em></li>
                 </#list>
                 </ul>
             </div>
             <div class="abcd">
                 <ul>
                 <#list i.children?sort_by(["orderNo"]) as option>
-                <li item_index="${index}" <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}" s_item_id="${i.id}" <#if parent??>pid="${parent.id}"</#if> option_type="${input}" actual="true"><@option_flag option_index/></li>
+                <li item_index="${index}" <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> record_id='${i.recordId?default("0")}' option_id="${option.id}" s_item_id="${i.id}" <#if parent??>pid="${parent.id}"</#if> option_type="${input}" actual="true"><@option_flag option_index/></li>
                 </#list>
                 </ul>
              </div>
@@ -70,8 +70,8 @@
         <div class="xz-daan fl">
             <div class="abcd">
                <ul>
-                 <li item_index="${index}" <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_RIGTH)>class="choose"<#else>class="off"</#if> actual="true" <#if parent??>pid="${parent.id}"</#if> s_item_id="${i.id}" option_id="${i.id}_${ANSWER_JUDGE_RIGTH}" option_value="${ANSWER_JUDGE_RIGTH}" option_type="radio">对</li>
-                 <li item_index="${index}" <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_WRONG)>class="choose"<#else>class="off"</#if> actual="true" <#if parent??>pid="${parent.id}"</#if> option_id="${i.id}_${ANSWER_JUDGE_WRONG}" option_value="${ANSWER_JUDGE_WRONG}" option_type="radio">错</li>
+                 <li item_index="${index}" record_id='${i.recordId?default("0")}' <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_RIGTH)>class="choose"<#else>class="off"</#if> actual="true" <#if parent??>pid="${parent.id}"</#if> s_item_id="${i.id}" option_id="${i.id}_${ANSWER_JUDGE_RIGTH}" option_value="${ANSWER_JUDGE_RIGTH}" option_type="radio">对</li>
+                 <li item_index="${index}" record_id='${i.recordId?default("0")}' <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_WRONG)>class="choose"<#else>class="off"</#if> actual="true" <#if parent??>pid="${parent.id}"</#if> option_id="${i.id}_${ANSWER_JUDGE_WRONG}" option_value="${ANSWER_JUDGE_WRONG}" option_type="radio">错</li>
             	</ul>
               </div>
          </div>

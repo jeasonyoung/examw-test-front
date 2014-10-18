@@ -1,6 +1,8 @@
 package com.examw.test.front.junit;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Arrays;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -45,5 +47,11 @@ public class SimpleTest {
 		System.out.println(TaoBaoMD5.sign(users, md5key, "gbk"));
 		String str = "fw121fw42$462144$2$0$普通会员$10$$$";
 		System.out.println(Arrays.toString(str.split("[$]")));
+		String ssss = "2871046%5B-%5DC%5B-%5D1%5B%7C%5D2870231%5B-%5DA%5B-%5D1%5B%7C%5D2868493%5B-%5D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D%3D@@@@@@@@%23%23%23%23%23%23%23%23%23%23%23%23%23%23%7C%7C%7C%7C%7C%7C%7C%26%26%26%26%26%26%26%26%26%26%26%u4E0D%u77E5%u9053%u7B54%u6848dddddddddddd%5B-%5D7";
+		String ns=new String(ssss.getBytes(),"iso8859-1");
+		System.out.println(ns);
+		System.out.println(URLDecoder.decode(ns));
+		System.out.println(URLEncoder.encode("-----=========#######@@@@@@@@我不知道啊","gbk"));
+		System.out.println(URLEncoder.encode("我不知道啊", "unicode"));
 	}
 }

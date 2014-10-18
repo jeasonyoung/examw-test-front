@@ -121,7 +121,7 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 			 if(info == null)continue;
 			 StructureItemInfo data = new StructureItemInfo();
 			 data = this.mapper.readValue(info.getItemContent(), StructureItemInfo.class);
-			 if(StringUtils.isEmpty(info.getAnswer()))
+			 if(!StringUtils.isEmpty(info.getAnswer()))
 			 {
 				 if(info.getItemId().contains("#")){
 					if(data.getType().equals(Constant.TYPE_SHARE_TITLE)){

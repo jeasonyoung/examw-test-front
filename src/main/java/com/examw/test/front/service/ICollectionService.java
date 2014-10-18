@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.examw.model.Json;
+import com.examw.test.front.model.library.StructureItemInfo;
 import com.examw.test.front.model.product.FrontSubjectInfo;
 import com.examw.test.front.model.record.Collection;
 import com.examw.test.front.model.record.UserItemFavoriteInfo;
@@ -30,6 +31,6 @@ public interface ICollectionService {
 	 * @throws IOException
 	 */
 	List<UserItemFavoriteInfo> loadCollectionItems(Collection info) throws IOException;
-	
+	List<StructureItemInfo> loadCollectionItemList(Collection info) throws Exception;
 	List<FrontSubjectInfo> loadCollectionSubjects(String productId,String userId)throws Exception;
 }

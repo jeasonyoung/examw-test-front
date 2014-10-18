@@ -115,21 +115,21 @@
                                     	<label style="color: #f06000;">[${paper.paperTypeName}]</label>
                                     	${paper.paperName}
                                     </div>
-                                    <p>${paper.lasttime}</p>
-                                    <#if paper.type == 1>
+                                    <p>${paper.lastTime?string("yyyy-MM-dd")}</p> 
+                                    <#if paper.paperType == 1>
                                     <p class="red">总共：5题</p><p class="red">做对：0题</p>
-                                    <#elseif paper.type == 2>
-                                    <p class="red">用时：1分钟</p><p class="red">得分：0分</p>
-                                    <#elseif paper.type == 3>
-                                    <p class="red">用时：5分钟</p><p class="red">得分：0分</p>
+                                    <#elseif paper.paperType == 2>
+                                    <p class="red">用时：${paper.usedTime/60}分钟</p><p class="red">得分：${paper.score}分</p>
+                                    <#elseif paper.paperType == 4>
+                                    <p class="red">用时：${(paper.usedTime/60)?ceiling}分钟</p><p class="red">得分：${paper.score}分</p>
                                     </#if>
                                 </ol>
                                 <#if paper.status == STATUS_DONE>
-                                <span><a href="<@s.url "/library/paper/${PRODUCTID}/analysis/${paper.id}"/>" class="red">查看解析</a></span>
-                                <span><div class="buy-botton"><div class="hong-botton"><a href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.id}"/>">再做一次</a></div></div></span>
+                                <span><a href="<@s.url "/library/paper/${PRODUCTID}/analysis/${paper.paperId}"/>" class="red">查看解析</a></span>
+                                <span><div class="buy-botton"><div class="hong-botton"><a href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.paperId}"/>">再做一次</a></div></div></span>
                                 <#else>
                                 <span><a class="red">未完成</a></span>
-                                <span><div class="buy-botton"><div class="hong-botton"><a href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.id}"/>">继续做题</a></div></div></span>
+                                <span><div class="buy-botton"><div class="hong-botton"><a href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.paperId}"/>">继续做题</a></div></div></span>
                                 </#if>
                             </div>
                         </li>
@@ -144,7 +144,7 @@
                 <!--无做题情况下-->
                 <div class="moni-list">
                     <ul>
-                        <li class="line">亲爱的同学，这个条件下 暂无您的练习记录,<a href="<@s.url "/library/simulate"/>?productId=${PRODUCTID}" class="red">立即练习</a></li>
+                        <li class="line">亲爱的同学，这个条件下 暂无您的练习记录,<a href="<@s.url "/library/simulate/${PRODUCTID}"/>" class="red">立即练习</a></li>
                     </ul>
                 </div>
                 </#if>

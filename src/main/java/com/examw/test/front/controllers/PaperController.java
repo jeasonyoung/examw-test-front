@@ -16,6 +16,7 @@ import com.examw.test.front.model.Constant;
 import com.examw.test.front.model.library.PaperPreview;
 import com.examw.test.front.model.library.PaperSubmitInfo;
 import com.examw.test.front.service.IPaperService;
+import com.examw.test.front.support.ItemTypeUtil;
 
 /**
  * 试卷控制器
@@ -63,24 +64,8 @@ public class PaperController {
 			PaperPreview info = this.paperService.loadPaperDetail(paperId,userId,productId);
 			model.addAttribute("PAPER", info);
 			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info));
-			//单选
-			model.addAttribute("TYPE_SINGLE_VALUE", Constant.TYPE_SINGLE);
-			//多选
-			model.addAttribute("TYPE_MULTY_VALUE", Constant.TYPE_MULTY);
-			//不定向选
-			model.addAttribute("TYPE_UNCERTAIN_VALUE", Constant.TYPE_UNCERTAIN);
-			//判断
-			model.addAttribute("TYPE_JUDGE_VALUE", Constant.TYPE_JUDGE);
-			//问答
-			model.addAttribute("TYPE_QANDA_VALUE", Constant.TYPE_QANDA);
-			//共提干
-			model.addAttribute("TYPE_SHARE_TITLE_VALUE", Constant.TYPE_SHARE_TITLE);
-			//共答案
-			model.addAttribute("TYPE_SHARE_ANSWER_VALUE", Constant.TYPE_SHARE_ANSWER);
-			//判断[正确]
-			model.addAttribute("ANSWER_JUDGE_RIGTH",Constant.ANSWER_JUDGE_RIGTH);
-			//判断[错误]
-			model.addAttribute("ANSWER_JUDGE_WRONG",Constant.ANSWER_JUDGE_WRONG);
+			//题型
+			ItemTypeUtil.loadItemType(model);
 			//是否显示答案
 			model.addAttribute("IS_SHOW_ANSWER",false);
 			//productID
@@ -108,24 +93,8 @@ public class PaperController {
 			model.addAttribute("PAPER", info);
 			model.addAttribute("ITEMS",this.paperService.loadBigItemsList(info));
 			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info));
-			//单选
-			model.addAttribute("TYPE_SINGLE_VALUE", Constant.TYPE_SINGLE);
-			//多选
-			model.addAttribute("TYPE_MULTY_VALUE", Constant.TYPE_MULTY);
-			//不定向选
-			model.addAttribute("TYPE_UNCERTAIN_VALUE", Constant.TYPE_UNCERTAIN);
-			//判断
-			model.addAttribute("TYPE_JUDGE_VALUE", Constant.TYPE_JUDGE);
-			//问答
-			model.addAttribute("TYPE_QANDA_VALUE", Constant.TYPE_QANDA);
-			//共提干
-			model.addAttribute("TYPE_SHARE_TITLE_VALUE", Constant.TYPE_SHARE_TITLE);
-			//共答案
-			model.addAttribute("TYPE_SHARE_ANSWER_VALUE", Constant.TYPE_SHARE_ANSWER);
-			//判断[正确]
-			model.addAttribute("ANSWER_JUDGE_RIGTH",Constant.ANSWER_JUDGE_RIGTH);
-			//判断[错误]
-			model.addAttribute("ANSWER_JUDGE_WRONG",Constant.ANSWER_JUDGE_WRONG);
+			//题型
+			ItemTypeUtil.loadItemType(model);
 			//是否显示答案
 			model.addAttribute("IS_SHOW_ANSWER",false);
 			
@@ -164,24 +133,8 @@ public class PaperController {
 			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info));
 			model.addAttribute("PAPER", info);
 			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info));
-			//单选
-			model.addAttribute("TYPE_SINGLE_VALUE", Constant.TYPE_SINGLE);
-			//多选
-			model.addAttribute("TYPE_MULTY_VALUE", Constant.TYPE_MULTY);
-			//不定向选
-			model.addAttribute("TYPE_UNCERTAIN_VALUE", Constant.TYPE_UNCERTAIN);
-			//判断
-			model.addAttribute("TYPE_JUDGE_VALUE", Constant.TYPE_JUDGE);
-			//问答
-			model.addAttribute("TYPE_QANDA_VALUE", Constant.TYPE_QANDA);
-			//共提干
-			model.addAttribute("TYPE_SHARE_TITLE_VALUE", Constant.TYPE_SHARE_TITLE);
-			//共答案
-			model.addAttribute("TYPE_SHARE_ANSWER_VALUE", Constant.TYPE_SHARE_ANSWER);
-			//判断[正确]
-			model.addAttribute("ANSWER_JUDGE_RIGTH",Constant.ANSWER_JUDGE_RIGTH);
-			//判断[错误]
-			model.addAttribute("ANSWER_JUDGE_WRONG",Constant.ANSWER_JUDGE_WRONG);
+			//题型
+			ItemTypeUtil.loadItemType(model);
 			//答对
 			model.addAttribute("STATUS_RIGHT", Constant.STATUS_RIGHT);
 			//答错

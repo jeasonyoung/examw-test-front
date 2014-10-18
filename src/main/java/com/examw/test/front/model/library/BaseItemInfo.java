@@ -443,6 +443,7 @@ public abstract class BaseItemInfo<T extends BaseItemInfo<T>>  extends Paging im
 	private BigDecimal userScore;	// 用户得分
 	private Integer answerStatus;	// 回答状态
 	private String parentContent; 	// 材料内容
+	private String recordId;		// 答题记录ID
 	/**
 	 * 获取 是否被收藏
 	 * @return isCollected
@@ -522,6 +523,22 @@ public abstract class BaseItemInfo<T extends BaseItemInfo<T>>  extends Paging im
 	 */
 	public String getParentContent() {
 		return parentContent;
+	}
+	/**
+	 * 获取 做题记录ID
+	 * @return recordId
+	 * 做题记录ID
+	 */
+	public String getRecordId() {
+		return recordId;
+	}
+	/**
+	 * 设置 做题记录ID
+	 * @param recordId
+	 * 做题记录ID
+	 */
+	public void setRecordId(String recordId) {
+		this.recordId = recordId;
 	}
 	
 }

@@ -1,11 +1,14 @@
 package com.examw.test.front.service.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 
@@ -21,6 +24,7 @@ import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.service.IPaperService;
 import com.examw.test.front.support.HttpUtil;
 import com.examw.test.front.support.JSONUtil;
+import com.examw.test.front.support.MethodCacheHelper;
 
 /**
  * 收藏服务接口
@@ -30,8 +34,10 @@ import com.examw.test.front.support.JSONUtil;
 public class CollectionServiceImpl implements ICollectionService{
 	private static final Logger logger = Logger.getLogger(CollectionServiceImpl.class);
 	private String api_collection_url;
-	private String api_collection_list_url;
+	private String api_collection_subject_list_url;
+	private String api_collection_item_list_url;
 	private IPaperService paperService;
+	private MethodCacheHelper cacheHelper;
 	/**
 	 * 设置 笔记数据查询数据接口地址
 	 * @param api_item_notes_url
@@ -49,12 +55,30 @@ public class CollectionServiceImpl implements ICollectionService{
 	}
 	
 	/**
-	 * 设置 
-	 * @param api_collection_list_url
+	 * 设置 收藏按科目收藏信息地址
+	 * @param api_collection_subject_list_url
 	 * 
 	 */
-	public void setApi_collection_list_url(String api_collection_list_url) {
-		this.api_collection_list_url = api_collection_list_url;
+	public void setApi_collection_subject_list_url(
+			String api_collection_subject_list_url) {
+		this.api_collection_subject_list_url = api_collection_subject_list_url;
+	}
+	/**
+	 * 设置  收藏试题信息地址
+	 * @param api_collection_item_list_url
+	 * 
+	 */
+	public void setApi_collection_item_list_url(String api_collection_item_list_url) {
+		this.api_collection_item_list_url = api_collection_item_list_url;
+	}
+	
+	/**
+	 * 设置 缓存帮助类
+	 * @param cacheHelper
+	 * 
+	 */
+	public void setCacheHelper(MethodCacheHelper cacheHelper) {
+		this.cacheHelper = cacheHelper;
 	}
 	/*
 	 *收藏或取消收藏
@@ -156,7 +180,7 @@ public class CollectionServiceImpl implements ICollectionService{
 		if(logger.isDebugEnabled()) logger.debug("收藏的试题集合...");
 		if(StringUtils.isEmpty(info.getUserId())) 
 			return null;
-		String url = String.format(this.api_collection_url,info.getUserId());
+		String url = String.format(this.api_collection_item_list_url,info.getUserId());
 		String data = "subjectId="+info.getSubjectId()+"&userId="+info.getUserId()+"&productId="+info.getProductId();
 		String xml = HttpUtil.httpRequest(url,"GET",data,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
@@ -167,10 +191,36 @@ public class CollectionServiceImpl implements ICollectionService{
 	
 	@SuppressWarnings("unchecked")
 	@Override
+	public List<StructureItemInfo> loadCollectionItemList(Collection info) throws Exception {
+		List<UserItemFavoriteInfo> list = (List<UserItemFavoriteInfo>) this.cacheHelper.getCache(StructureItemInfo.class.getName(), this.getClass()+".loadCollectionItemList", new String[]{info.getUserId(),info.getProductId(),info.getSubjectId()});
+		if(list==null){
+			list = this.loadCollectionItems(info);
+			if(list!=null){
+				this.cacheHelper.putCache(StructureItemInfo.class.getName(), this.getClass()+".loadCollectionItemList", new String[]{info.getUserId(),info.getProductId(),info.getSubjectId()}, list);
+			}
+		}
+		return this.changeModel(list);
+	}
+	
+	//模型转化
+	private List<StructureItemInfo> changeModel(List<UserItemFavoriteInfo> favorItemList) throws JsonParseException, JsonMappingException, IOException {
+		if(favorItemList == null || favorItemList.size() ==0)
+		return null;
+		List<StructureItemInfo> result = new ArrayList<StructureItemInfo>();
+		for(UserItemFavoriteInfo info:favorItemList){
+			if(info == null)continue;
+			StructureItemInfo data = new StructureItemInfo();
+			data = JSONUtil.JsonToObject(info.getItemContent(), StructureItemInfo.class);
+			result.add(data);
+		}
+		return result;
+	}
+	@SuppressWarnings("unchecked")
+	@Override
 	public List<FrontSubjectInfo> loadCollectionSubjects(String productId,
 			String userId) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("收藏的试题科目列表...");
-		String url = String.format(this.api_collection_list_url,productId,userId);
+		String url = String.format(this.api_collection_subject_list_url,productId,userId);
 		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml, List.class,FrontSubjectInfo.class);
