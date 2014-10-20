@@ -24,6 +24,7 @@ import com.examw.test.front.model.product.FrontProductInfo;
 import com.examw.test.front.model.product.SubjectInfo;
 import com.examw.test.front.model.record.Collection;
 import com.examw.test.front.model.record.UserPaperRecordInfo;
+import com.examw.test.front.model.user.User;
 import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.service.IErrorItemService;
 import com.examw.test.front.service.IPaperService;
@@ -49,11 +50,12 @@ public class LibraryController {
 	
 	//产品题库中心
 	@RequestMapping(value = "/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
-	public String library(@PathVariable String productId,Model model){
+	public String library(@PathVariable String productId,HttpServletRequest request,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载题库界面...");
 		try{
-			String userId = getUserId(null);
+			String userId = this.getUserId(request);
 			FrontProductInfo data = productService.loadProduct(productId);
+			request.getSession().setAttribute("SESSIONPRODUCT", data);
 			model.addAttribute("PRODUCT", data);
 			model.addAttribute("PRODUCTID",productId);
 			//计算错题个数
@@ -77,11 +79,11 @@ public class LibraryController {
 	
 	//收藏列表
 	@RequestMapping(value = "/collection/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
-	public String collection(@PathVariable String productId,Model model){
+	public String collection(@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载收藏界面...");
 		model.addAttribute("PRODUCTID", productId);
 		try{
-			String userId = this.getUserId(null);
+			String userId = this.getUserId(request);
 			model.addAttribute("SUBJECTLIST", this.collectionService.loadCollectionSubjects(productId, userId));
 		}catch(Exception e){
 			e.printStackTrace();
@@ -90,12 +92,12 @@ public class LibraryController {
 	}
 	//题目列表
 	@RequestMapping(value = "/collection/{productId}/items/{subjectId}", method = {RequestMethod.GET,RequestMethod.POST})
-	public String collectionDetail(@PathVariable String productId,@PathVariable String subjectId,Model model){
+	public String collectionDetail(@PathVariable String productId,@PathVariable String subjectId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载错题详细界面...");
 		model.addAttribute("PRODUCTID", productId);
 		Collection info = new Collection();
 		info.setProductId(productId);
-		info.setUserId(this.getUserId(null));
+		info.setUserId(this.getUserId(request));
 		info.setSubjectId(subjectId);
 		try{
 			model.addAttribute("ITEMLIST",this.collectionService.loadCollectionItemList(info));
@@ -108,10 +110,10 @@ public class LibraryController {
 	}
 	//错题列表
 	@RequestMapping(value = "/error/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
-	public String error(@PathVariable String productId,StructureItemInfo info,Model model){
+	public String error(@PathVariable String productId,StructureItemInfo info,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载错题界面...");
 		try{
-			String userId = this.getUserId(null);
+			String userId = this.getUserId(request);
 			List<SubjectInfo> subjectList = this.productService.loadProductSubjects(productId);
 			model.addAttribute("SUBJECTLIST", subjectList);
 			if(!StringUtils.isEmpty(info.getSubjectId())){
@@ -138,10 +140,10 @@ public class LibraryController {
 	}
 	//错题详细
 	@RequestMapping(value = "/error/{productId}/item/{itemId}", method = {RequestMethod.GET,RequestMethod.POST})
-	public String errorDetail(@PathVariable String productId,@PathVariable String itemId,String flag,Model model){
+	public String errorDetail(@PathVariable String productId,@PathVariable String itemId,String flag,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载错题详细界面...");
 		model.addAttribute("PRODUCTID", productId);
-		String userId = this.getUserId(null);
+		String userId = this.getUserId(request);
 		try{
 			List<SubjectInfo> subjectList = this.productService.loadProductSubjects(productId);
 			String subjectId = "";
@@ -166,10 +168,10 @@ public class LibraryController {
 	
 	
 	@RequestMapping(value = "/simulate/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
-	public String simulate(@PathVariable String productId,PaperInfo info,Model model){
+	public String simulate(@PathVariable String productId,PaperInfo info,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考试界面[试卷列表]...");
 		try{
-			String userId = this.getUserId(null);
+			String userId = this.getUserId(request);
 			DataGrid<FrontPaperInfo> data = this.paperService.dataGrid(productId, info, userId);
 			//productId
 			model.addAttribute("PRODUCTID", productId);
@@ -206,9 +208,9 @@ public class LibraryController {
 	}
 	
 	@RequestMapping(value = "last-exam/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
-	public String lastExam(@PathVariable String productId,Model model){
+	public String lastExam(@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载错题界面...");
-		String userId = this.getUserId(null);
+		String userId = this.getUserId(request);
 		try{
 			UserPaperRecordInfo record = this.paperService.findProductLastedRecord(userId, productId);
 			if(record == null){
@@ -262,9 +264,9 @@ public class LibraryController {
 	 * @return
 	 */
 	@RequestMapping(value = "/record/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
-	public String records(@PathVariable String productId,PaperInfo info,Model model){
+	public String records(@PathVariable String productId,PaperInfo info,Model model,HttpServletRequest request){
 		try{
-			String userId = this.getUserId(null);
+			String userId = this.getUserId(request);
 			//包含科目集合
 			model.addAttribute("SUBJECTLIST", this.productService.loadProductSubjects(productId));
 			DataGrid<UserPaperRecordInfo> datagrid = this.paperService.recordDataGrid(userId, productId,info);
@@ -306,6 +308,6 @@ public class LibraryController {
 	}
 	
 	private String getUserId(HttpServletRequest request){
-		return "34c5421a-a629-4884-9b85-48609028e30b";
+		return ((User)(request.getSession().getAttribute("USER"))).getProductUserId();
 	}
 }

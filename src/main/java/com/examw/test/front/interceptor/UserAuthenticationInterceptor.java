@@ -102,44 +102,51 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	    		}
 	    	}
 	    }
-	    //3、如果用户已经登录 放行    
-	    Cookie[] cookies = request.getCookies();
-	    String users = null;
-	    if(cookies!=null){
-	    	for(Cookie c:cookies){
-	    		if("Examwww".equals(c.getName())){
-	    			users = c.getValue();
-	    			if(logger.isDebugEnabled())
-	    				logger.debug(users);
-	    		}
-	    	}
-	    }
-	    if(!StringUtils.isEmpty(users)) {  
-	        //更好的实现方式的使用cookie  
-	    	String[] arr = users.split("#");
-	    	//String md5key = "4q3i07f12u5i8R1nU";
-	    	String userStr = URLDecoder.decode(arr[0], "utf-8");
-	    	try{
-	    	if(arr[1].equals(TaoBaoMD5.sign(userStr, md5Str, "gbk"))){
-	    		//表示已经登陆
-	    		User user = this.createUser(userStr);
-	    		if(user!=null){
-	    			request.getSession().setAttribute("USER", user);
-	    			if(handler instanceof HandlerMethod){
-	    				HandlerMethod hm = (HandlerMethod)handler;
-	    				if(hm != null && (hm.getBean() instanceof IUserAware)){
-	    					IUserAware userAware = (IUserAware)hm.getBean();
-	    					if(logger.isDebugEnabled())logger.debug("准备注入用户信息...");
-	    					userAware.setUserId(user.getId());
-	    					userAware.setUserName(user.getName());
-	    					if(logger.isDebugEnabled())logger.debug(String.format("注入[%1$s]用户信息:id=%2$s;name=%3$s;nick=%4$s", user.getUsername(), user.getId(), user.getName()));
-	    				}
-	    			}
-	    		}
-	    		return true;
-	    	}}catch(Exception e){
-	    		
-	    	}
+	    //3、如果用户已经登录 放行
+	    //从seesion取得用户
+	    User user = (User) request.getSession().getAttribute("USER");
+	    if(user == null){	//用户为空
+	    	Cookie[] cookies = request.getCookies();
+		    String users = null;
+		    if(cookies!=null){
+		    	for(Cookie c:cookies){
+		    		if("Examwww".equals(c.getName())){
+		    			users = c.getValue();
+		    			if(logger.isDebugEnabled())
+		    				logger.debug(users);
+		    		}
+		    	}
+		    }
+		    if(!StringUtils.isEmpty(users)) {  
+		        //更好的实现方式的使用cookie  
+		    	String[] arr = users.split("#");
+		    	//String md5key = "4q3i07f12u5i8R1nU";
+		    	String userStr = URLDecoder.decode(arr[0], "utf-8");
+		    	try{
+		    		if(arr[1].equals(TaoBaoMD5.sign(userStr, md5Str, "gbk"))){
+		    			//表示已经登陆
+		    			user = this.createUser(userStr);
+		    			if(user!=null){
+		    				request.getSession().setAttribute("USER", user);
+		    				if(handler instanceof HandlerMethod){
+		    					HandlerMethod hm = (HandlerMethod)handler;
+		    					if(hm != null && (hm.getBean() instanceof IUserAware)){
+		    						IUserAware userAware = (IUserAware)hm.getBean();
+		    						if(logger.isDebugEnabled())logger.debug("准备注入用户信息...");
+		    						userAware.setUserId(user.getId());
+		    						userAware.setUserName(user.getName());
+		    						if(logger.isDebugEnabled())logger.debug(String.format("注入[%1$s]用户信息:id=%2$s;name=%3$s;nick=%4$s", user.getUsername(), user.getId(), user.getName()));
+		    					}
+		    				}
+		    			}
+		    		return true;
+		    		}
+		    	}catch(Exception e){
+		    		e.printStackTrace();
+		    	}
+		    }
+	    }else{
+	    	return true;
 	    }
 	    //4、非法请求 即这些请求需要登录后才能访问  
 	    //重定向到登录页面  
@@ -148,13 +155,14 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	}
 	    private User createUser(String users){
 			if(StringUtils.isEmpty(users)) return null;
-			//fw121fw42$462144$2$0$普通会员$10$$$
+			//asdfasdf-sdfs-ddfsdfe-ssdfadf$fw121fw42$462144$2$0$普通会员$10$$$
 			String[] arr = users.split("[$]");
 			try{
 				User user = new User();
-				user.setId(arr[1]);
-				user.setUsername(arr[0]);
-				user.setCoin(Integer.valueOf(arr[2]));
+				user.setProductUserId(arr[0]);
+				user.setUsername(arr[1]);
+				user.setId(arr[2]);
+				user.setCoin(Integer.valueOf(arr[3]));
 				return user;
 			}catch(Exception e){
 				e.printStackTrace();

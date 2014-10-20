@@ -1,7 +1,7 @@
 package com.examw.test.front.controllers;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -13,6 +13,7 @@ import com.examw.model.DataGrid;
 import com.examw.model.Json;
 import com.examw.test.front.model.record.Collection;
 import com.examw.test.front.model.record.NoteInfo;
+import com.examw.test.front.model.user.User;
 import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.service.INoteService;
 
@@ -32,10 +33,10 @@ public class ItemController {
 	
 	@RequestMapping(value ="collect", method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
-	public Json collectOrCancel(Collection info){
+	public Json collectOrCancel(Collection info,HttpSession session){
 		if(logger.isDebugEnabled()) logger.debug("收藏或取消收藏...");
 		if(info == null) return null;
-		String userId = getUserId(null);
+		String userId = this.getUserId(session);
 		try{
 			info.setUserId(userId);
 			return this.collectionService.collectOrCancel(info);
@@ -82,7 +83,7 @@ public class ItemController {
 		return null;
 	}
 	
-	private String getUserId(HttpServletRequest request){
-		return "34c5421a-a629-4884-9b85-48609028e30b";
+	private String getUserId(HttpSession session){
+		return ((User)(session.getAttribute("USER"))).getId();
 	}
 }

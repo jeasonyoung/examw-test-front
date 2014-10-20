@@ -15,6 +15,7 @@ import com.examw.model.Json;
 import com.examw.test.front.model.Constant;
 import com.examw.test.front.model.library.PaperPreview;
 import com.examw.test.front.model.library.PaperSubmitInfo;
+import com.examw.test.front.model.user.User;
 import com.examw.test.front.service.IPaperService;
 import com.examw.test.front.support.ItemTypeUtil;
 
@@ -58,7 +59,7 @@ public class PaperController {
 	public String paperDetail(@PathVariable String paperId,@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情...");
 		//TODO 模拟一个用户ID
-		String userId = getUserId(null);
+		String userId = getUserId(request);
 		//TODO 判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
 		try{
 			PaperPreview info = this.paperService.loadPaperDetail(paperId,userId,productId);
@@ -86,7 +87,7 @@ public class PaperController {
 	public String paperDetailSigleModel(@PathVariable String paperId,@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情...");
 		//TODO 模拟一个用户ID
-		String userId = getUserId(null);
+		String userId = getUserId(request);
 		//TODO 判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
 		try{
 			PaperPreview info = this.paperService.loadPaperDetail(paperId,userId,productId);
@@ -112,7 +113,7 @@ public class PaperController {
 	public Json sumbitForNextTime(PaperSubmitInfo info,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("试卷下次再做提交答案...");
 		if(info == null) return null;
-		String userId = getUserId(request);
+		String userId = this.getUserId(request);
 		try{
 			info.setUserId(userId);
 			return this.paperService.sumbitPaper(info);
@@ -124,10 +125,10 @@ public class PaperController {
 	}
 	
 	@RequestMapping(value ="/{productId}/analysis/{paperId}", method = {RequestMethod.GET,RequestMethod.POST})
-	public String paperAnalysis(@PathVariable String paperId,@PathVariable String productId,Model model){
+	public String paperAnalysis(@PathVariable String paperId,@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题解析详情...");
 		//TODO 模拟一个用户ID
-		String userId = getUserId(null);
+		String userId = this.getUserId(request);
 		try{
 			PaperPreview info = this.paperService.loadPaperAnalysis(paperId,userId,productId);
 			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info));
@@ -149,6 +150,6 @@ public class PaperController {
 	}
 	
 	private String getUserId(HttpServletRequest request){
-		return "34c5421a-a629-4884-9b85-48609028e30b";
+		return ((User)(request.getSession().getAttribute("USER"))).getProductUserId();
 	}
 }

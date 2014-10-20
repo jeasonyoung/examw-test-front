@@ -1,4 +1,5 @@
 <#assign product_id = "${PRODUCTID?default(PRODUCT.id)}"/>
+<#assign product_name = "${SESSIONPRODUCT.name}"/>
 <div class="top fl">
 	<div class="main">
     	<div class="fl">
@@ -15,7 +16,7 @@
 <div class="nvatiku fl">
     <div class="main">
     	<div class="nav fl">
-            <div class="menuout" onMouseOver="this.className='menuover'" onMouseOut="this.className='menuout'"><div class="fl">一级建筑师 · 题库</div><span></span>
+            <!-- <div class="menuout" onMouseOver="this.className='menuover'" onMouseOut="this.className='menuout'"><div class="fl">一级建筑师 · 题库</div><span></span>
                 <div class="nav-list fl">
                     <div class="list" id="moren">
                         <ul>
@@ -24,7 +25,8 @@
                         </ul>
                     </div>
                 </div>
-            </div>
+            </div> -->
+            <div class="menuout" style="width:400px"><div class="fl">${product_name}</div><!-- <span></span> --></div>
         </div>
         <div class="nva fr">
         	<div class="list">

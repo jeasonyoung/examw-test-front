@@ -4,13 +4,13 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * 
+ * 用户
  * @author fengwei.
  * @since 2014年9月27日 下午4:37:28.
  */
 public class User implements Serializable{
 	private static final long serialVersionUID = 1L;
-	private String id,username,password,name;
+	private String id,username,password,name,productUserId;
 	private BigDecimal cash;
 	private Integer coin;
 	/**
@@ -110,4 +110,21 @@ public class User implements Serializable{
 	public void setCoin(Integer coin) {
 		this.coin = coin;
 	}
+	/**
+	 * 获取 产品用户ID
+	 * @return productUserId
+	 * 产品用户ID
+	 */
+	public String getProductUserId() {
+		return productUserId;
+	}
+	/**
+	 * 设置 产品用户ID
+	 * @param productUserId
+	 * 产品用户ID
+	 */
+	public void setProductUserId(String productUserId) {
+		this.productUserId = productUserId;
+	}
+	
 }
