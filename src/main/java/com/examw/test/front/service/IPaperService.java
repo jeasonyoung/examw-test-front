@@ -44,7 +44,7 @@ public interface IPaperService {
 	 * @return
 	 * @throws IOException
 	 */
-	PaperPreview loadPaperDetail(String paperId,String userId,String productId)throws Exception;
+	PaperPreview findPaperDetail(String paperId,String userId,String productId)throws Exception;
 	/**
 	 * 加载试卷试题的集合
 	 * @param paper
@@ -69,8 +69,8 @@ public interface IPaperService {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<StructureItemInfo> loadItemsList(PaperPreview paper)throws IOException;
-	public List<StructureItemInfo> loadBigItemsList(PaperPreview paper)throws IOException;
+	public List<StructureItemInfo> findItemsList(PaperPreview paper)throws IOException;
+	public List<StructureItemInfo> findBigItemsList(PaperPreview paper)throws IOException;
 	/**
 	 * 试卷基本信息[分页]
 	 * @param info
@@ -102,7 +102,7 @@ public interface IPaperService {
 	 * @return
 	 * @throws Exception
 	 */
-	List<UserPaperRecordInfo> loadUserPaperRecords(String userId,String productId)throws Exception;
+	List<UserPaperRecordInfo> findUserPaperRecords(String userId,String productId)throws Exception;
 	/**
 	 * 分页数据
 	 * @param userId

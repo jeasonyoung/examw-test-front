@@ -62,9 +62,9 @@ public class PaperController {
 		String userId = getUserId(request);
 		//TODO 判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
 		try{
-			PaperPreview info = this.paperService.loadPaperDetail(paperId,userId,productId);
+			PaperPreview info = this.paperService.findPaperDetail(paperId,userId,productId);
 			model.addAttribute("PAPER", info);
-			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info));
+			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
 			//题型
 			ItemTypeUtil.loadItemType(model);
 			//是否显示答案
@@ -90,10 +90,10 @@ public class PaperController {
 		String userId = getUserId(request);
 		//TODO 判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
 		try{
-			PaperPreview info = this.paperService.loadPaperDetail(paperId,userId,productId);
+			PaperPreview info = this.paperService.findPaperDetail(paperId,userId,productId);
 			model.addAttribute("PAPER", info);
-			model.addAttribute("ITEMS",this.paperService.loadBigItemsList(info));
-			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info));
+			model.addAttribute("ITEMS",this.paperService.findBigItemsList(info));
+			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
 			//题型
 			ItemTypeUtil.loadItemType(model);
 			//是否显示答案
@@ -131,9 +131,9 @@ public class PaperController {
 		String userId = this.getUserId(request);
 		try{
 			PaperPreview info = this.paperService.loadPaperAnalysis(paperId,userId,productId);
-			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info));
+			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
 			model.addAttribute("PAPER", info);
-			model.addAttribute("ITEMLIST",this.paperService.loadItemsList(info));
+			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
 			//题型
 			ItemTypeUtil.loadItemType(model);
 			//答对

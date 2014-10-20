@@ -154,7 +154,7 @@ public class PaperServiceImpl implements IPaperService{
 	 * @throws IOException
 	 */
 	@SuppressWarnings("unchecked")
-	public List<UserPaperRecordInfo> loadUserPaperRecords(String userId,String productId) throws IOException{
+	public List<UserPaperRecordInfo> findUserPaperRecords(String userId,String productId) throws IOException{
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考场用户试卷记录列表...");
 		if(StringUtils.isEmpty(productId))
 		return null;
@@ -203,7 +203,7 @@ public class PaperServiceImpl implements IPaperService{
 	 * @see com.examw.test.front.service.IPaperService#loadPaperDetail(java.lang.String)
 	 */
 	@Override
-	public PaperPreview loadPaperDetail(String paperId,String userId,String productId) throws Exception {
+	public PaperPreview findPaperDetail(String paperId,String userId,String productId) throws Exception {
 		PaperPreview paper = this.findPaperDetail(paperId);
 		//查询用户试卷考试记录,没有记录的话添加记录
 		UserPaperRecordInfo info = this.findLastedRecord(userId, paperId);
@@ -250,7 +250,7 @@ public class PaperServiceImpl implements IPaperService{
 	public UserPaperRecordInfo findProductLastedRecord(String userId,
 			String productId) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("加载产品下最新的试卷记录");
-		List<UserPaperRecordInfo> list =loadUserPaperRecords(userId,productId);
+		List<UserPaperRecordInfo> list =findUserPaperRecords(userId,productId);
 		if(list !=null && list.size()>0)
 		{
 			return list.get(0);
@@ -261,8 +261,8 @@ public class PaperServiceImpl implements IPaperService{
 	private void setUserAnswer(PaperPreview paper, UserPaperRecordInfo info,List<UserItemFavoriteInfo> favors) {
 		List<StructureInfo> structures = paper.getStructures();
 		TreeSet<UserItemRecordInfo> itemRecords = new TreeSet<>();
+		if(info.getItems() == null || info.getItems().size() ==0 ) return;
 		itemRecords.addAll(info.getItems());
-		if(itemRecords == null || itemRecords.size() ==0 ) return;
 		for(StructureInfo s:structures){
 			Set<StructureItemInfo> items = s.getItems();
 			for(StructureItemInfo item:items){
@@ -365,7 +365,7 @@ public class PaperServiceImpl implements IPaperService{
 	 * @see com.examw.test.front.service.IPaperService#loadItemsList(com.examw.test.front.model.PaperPreview)
 	 */
 	@Override
-	public java.util.List<com.examw.test.front.model.library.StructureItemInfo> loadItemsList(PaperPreview paper) throws IOException {
+	public java.util.List<com.examw.test.front.model.library.StructureItemInfo> findItemsList(PaperPreview paper) throws IOException {
 		if(paper == null) return null;
 		List<StructureItemInfo> result = new ArrayList<StructureItemInfo>();
 		List<StructureInfo> structures = paper.getStructures();
@@ -428,7 +428,7 @@ public class PaperServiceImpl implements IPaperService{
 	 * @see com.examw.test.front.service.IPaperService#loadBigItemsList(com.examw.test.front.model.library.PaperPreview)
 	 */
 	@Override
-	public List<StructureItemInfo> loadBigItemsList(PaperPreview paper)
+	public List<StructureItemInfo> findBigItemsList(PaperPreview paper)
 			throws IOException {
 		if(paper == null) return null;
 		List<StructureItemInfo> result = new ArrayList<StructureItemInfo>();
@@ -512,7 +512,7 @@ public class PaperServiceImpl implements IPaperService{
 		//从缓存中取用户试卷最新记录
 		List<UserPaperRecordInfo> records = (List<UserPaperRecordInfo>) this.cacheHelper.getCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadUserPaperRecords", new Object[]{userId,productId});
 		if(records == null){
-			records = this.loadUserPaperRecords(userId, productId);
+			records = this.findUserPaperRecords(userId, productId);
 			if(records!=null)
 				this.cacheHelper.putCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadUserPaperRecords", new Object[]{userId,productId}, records);
 		}
@@ -825,7 +825,7 @@ public class PaperServiceImpl implements IPaperService{
 		//从缓存中取用户试卷最新记录
 		List<UserPaperRecordInfo> records = (List<UserPaperRecordInfo>) this.cacheHelper.getCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadUserPaperRecords", new Object[]{userId,productId});
 		if(records == null){
-			records = this.loadUserPaperRecords(userId, productId);
+			records = this.findUserPaperRecords(userId, productId);
 			if(records!=null)
 				this.cacheHelper.putCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadUserPaperRecords", new Object[]{userId,productId}, records);
 		}
