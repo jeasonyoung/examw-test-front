@@ -49,7 +49,7 @@
                 	<#else>
                 	<i><@option_flag option_index/>.</i>
                 	</#if>
-                	<em>${option.content}</em>
+                	<em> ${option.content}</em>
                 </li>
                 </#list>
                 </ul>
@@ -135,15 +135,44 @@
          <@item_analysis i index/>
     </div>
 </#macro>
+<!-- 问答题 -->
 <#macro item_qanda i index>
 	<div class="box fl">
        <div class="timu fl" id="font14"><a name="13" id="13"></a>
            <i>${index}.</i>
-           <em><span id="cailiao14">[${i.typeName}]<a></a></span>${i.content}</em>
+           <em><span id="cailiao14">[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${i.pid}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>
        </div>
        <div class="xz-daan fl">
-            <textarea name="" cols="" rows="" class="wenben"></textarea>
+            <textarea readonly="readonly" name="" cols="" rows="" class="wenben">${i.userAnswer}</textarea>
        </div>
+       <div class="daanbox fl">
+               <div class="fr" id="font14">
+                    <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
+                    <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
+                    <!--<div class="f-r fr"><em class="jiucuo"></em><i><a href="#">纠错</a></i></div>-->
+                    <#if (i.isCollected)>
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
+                    <#else>
+                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
+                    </#if>
+               </div>
+         </div>
+         <div class="jiexi-box fl" name="jiexi" item_id="${(i.id)}" <#if index != 1>style="display:none"</#if>>
+         	  <div class="cankaobox fl">
+                   <i>我的答案：</i>${i.userAnswer}
+              </div>
+              <#if i.answer??>
+              <div class="cankaobox fl">
+                   <i>参考答案：</i>${i.answer}
+              </div>
+              </#if>
+              <#if i.analysis??>
+              <div class="cankaobox fl">
+                   <i>参考解析：</i>${i.analysis}
+              </div>
+              </#if>
+              <div class="h10"></div>
+         <div>
     </div>
 </#macro>
 <!-- 共享题干题  -->
@@ -273,7 +302,7 @@
        			<div class="list">
           			<ul>
 		</#if>
-		<li item_status="${item.answerStatus}"><a <#if item.answerStatus == STATUS_RIGHT>class="dui"<#elseif item.answerStatus == STATUS_WRONG>class="cuo"</#if> href="javascript:void(0)" onclick="focusTo(this,${item_index+1})" item_id="${item.id}" s_item_id="${item.structureItemId}">${item_index+1}</a></li>
+		<li item_status="${item.answerStatus}"><a <#if item.answerStatus == STATUS_RIGHT>class="dui"<#else>class="cuo"</#if> href="javascript:void(0)" onclick="focusTo(this,${item_index+1})" item_id="${item.id}" s_item_id="${item.structureItemId}">${item_index+1}</a></li>
 		<#if item_index != 0 && (item_index+1)%5==0>
 			 	</ul>
         	</div>

@@ -13,7 +13,7 @@
 	<#elseif item.type == TYPE_JUDGE_VALUE>
 		<@item_judge parent=p i=item index=index/>
 	<#elseif item.type == TYPE_QANDA_VALUE>
-		<@item_qanda i=item index=index/>
+		<@item_qanda parent=p i=item index=index/>
 	<#elseif item.type == TYPE_SHARE_TITLE_VALUE>
 		<@item_share_title i=item index=index/>
 	<#elseif item.type == TYPE_SHARE_ANSWER_VALUE>
@@ -21,6 +21,7 @@
 	<#else>
 	</#if>
 </#macro>
+<!-- 选择题 -->
 <#macro item_choose parent i input index>
 	<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_index="${index}">
 		<!--
@@ -39,7 +40,7 @@
             <div class="list">
                 <ul>
                 <#list i.children?sort_by(["orderNo"]) as option>
-                <li item_index="${index}" option_id="${option.id}" record_id='${i.recordId?default("0")}' s_item_id="${i.id}" <#if parent??>pid="${parent.id}"</#if> option_type="${input}" <#if i.userAnswer?contains(option.id)>class="over"<#else>class="out"</#if>><i><@option_flag option_index/>.</i><em>${option.content?replace("[A-D][.]","")}</em></li>
+                <li item_index="${index}" option_id="${option.id}" record_id='${i.recordId?default("0")}' s_item_id="${i.id}" <#if parent??>pid="${parent.id}"</#if> option_type="${input}" <#if i.userAnswer?contains(option.id)>class="over"<#else>class="out"</#if>><!--<i><@option_flag option_index/>.</i>--><em>  ${option.content?replace("[A-D][.]","")}</em></li>
                 </#list>
                 </ul>
             </div>
@@ -53,6 +54,7 @@
          </div>
     </div>
 </#macro>
+<!-- 判断题 -->
 <#macro item_judge parent i index>
 	<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_index="${index}">
 		<!--
@@ -71,20 +73,21 @@
             <div class="abcd">
                <ul>
                  <li item_index="${index}" record_id='${i.recordId?default("0")}' <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_RIGTH)>class="choose"<#else>class="off"</#if> actual="true" <#if parent??>pid="${parent.id}"</#if> s_item_id="${i.id}" option_id="${i.id}_${ANSWER_JUDGE_RIGTH}" option_value="${ANSWER_JUDGE_RIGTH}" option_type="radio">对</li>
-                 <li item_index="${index}" record_id='${i.recordId?default("0")}' <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_WRONG)>class="choose"<#else>class="off"</#if> actual="true" <#if parent??>pid="${parent.id}"</#if> option_id="${i.id}_${ANSWER_JUDGE_WRONG}" option_value="${ANSWER_JUDGE_WRONG}" option_type="radio">错</li>
+                 <li item_index="${index}" record_id='${i.recordId?default("0")}' <#if (i.userAnswer?? && i.userAnswer == ANSWER_JUDGE_WRONG)>class="choose"<#else>class="off"</#if> actual="true" <#if parent??>pid="${parent.id}"</#if> s_item_id="${i.id}" option_id="${i.id}_${ANSWER_JUDGE_WRONG}" option_value="${ANSWER_JUDGE_WRONG}" option_type="radio">错</li>
             	</ul>
               </div>
          </div>
     </div>
 </#macro>
-<#macro item_qanda i index>
+<!-- 问答题   -->
+<#macro item_qanda parent i index>
 	<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_index="${index}">
        <div class="timu fl" id="font14"><a name="13" id="13"></a>
            <i>${index}.</i>
            <em><span id="cailiao14">[${i.typeName}]<a></a></span>${i.content}</em>
        </div>
        <div class="xz-daan fl">
-            <textarea name="" cols="" rows="" class="wenben"></textarea>
+            <textarea onblur="answerTextArea(this)" item_id="${i.id}" <#if parent??>pid="${parent.id}"</#if> name="item_text" cols="" rows="" class="wenben"><#if i.userAnswer??>${i.userAnswer}</#if></textarea>
        </div>
     </div>
 </#macro>
@@ -128,12 +131,12 @@
 <#macro show_share_answer_item items parent index>
 	<#list items.children as i>
 		<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_index="${index+i_index}">
-		<#if i.parentContent??>
+		<!--<#if i.parentContent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
 			<em><@item_share_answer_content parent/></em>
 		</div>
-		</#if>
+		</#if>-->
        <div class="timu fl" >
            <i>${index+i_index}.</i>
               <em><span>[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${parent.id}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>

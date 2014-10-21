@@ -246,6 +246,10 @@ public class PaperServiceImpl implements IPaperService{
 		}
 		return info;
 	}
+	/*
+	 * 查询产品下的最新考试记录
+	 * @see com.examw.test.front.service.IPaperService#findProductLastedRecord(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public UserPaperRecordInfo findProductLastedRecord(String userId,
 			String productId) throws Exception {
@@ -509,15 +513,21 @@ public class PaperServiceImpl implements IPaperService{
 			if(list!=null)
 				this.cacheHelper.putCache(FrontProductInfo.class.getName(), this.getClass().getName()+"loadPaperList", new Object[]{productId}, list);
 		}
-		//从缓存中取用户试卷最新记录
-		List<UserPaperRecordInfo> records = (List<UserPaperRecordInfo>) this.cacheHelper.getCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadUserPaperRecords", new Object[]{userId,productId});
+		//从缓存中取用户试卷最新记录 [取消缓存]
+		/*List<UserPaperRecordInfo> records = (List<UserPaperRecordInfo>) this.cacheHelper.getCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadUserPaperRecords", new Object[]{userId,productId});
 		if(records == null){
 			records = this.findUserPaperRecords(userId, productId);
 			if(records!=null)
 				this.cacheHelper.putCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadUserPaperRecords", new Object[]{userId,productId}, records);
-		}
+		}*/
+		List<UserPaperRecordInfo> records = this.findUserPaperRecords(userId, productId);
 		DataGrid<FrontPaperInfo> datagrid = new DataGrid<FrontPaperInfo>();
 		List<FrontPaperInfo> result = new ArrayList<FrontPaperInfo>();
+		if(records == null || records.size()==0){
+			datagrid.setRows(result);
+			datagrid.setTotal(0L);
+			return datagrid;
+		}
 		//按条件筛选
 		for(FrontPaperInfo paper : list){
 			boolean flag = true;
@@ -592,8 +602,9 @@ public class PaperServiceImpl implements IPaperService{
 		record.setUsedTime((long)(paper.getTime() * 60 - info.getLimitTime())); // 使用时间
 		String chooseAnswers = info.getChooseAnswers();
 		Set<UserItemRecordInfo> itemRecords = new TreeSet<UserItemRecordInfo>();
+		Set<UserItemRecordInfo> itemRecordsNeedSave = new TreeSet<UserItemRecordInfo>();
 		if (!StringUtils.isEmpty(chooseAnswers)) {
-			if(logger.isDebugEnabled()) logger.debug("解析答案字符串...."+chooseAnswers);
+			if(logger.isDebugEnabled()) logger.debug("解析选择题答案字符串...."+chooseAnswers);
 			try {
 				chooseAnswers = URLDecoder.decode(chooseAnswers, "utf-8");
 			} catch (UnsupportedEncodingException e) {
@@ -619,12 +630,43 @@ public class PaperServiceImpl implements IPaperService{
 						itemRecord.setAnswer(arr[1]);
 					}
 					itemRecords.add(itemRecord);
+					if(isAnswerChanged(itemRecord,record.getItems())){
+						itemRecordsNeedSave.add(itemRecord);
+					}
 				}
 			}
 		}
-		record.setItems(itemRecords);
-		if (!StringUtils.isEmpty(info.getTextAnswer())) {
+		if (!StringUtils.isEmpty(info.getTextAnswers())) {
+			String textAnswers = info.getTextAnswers();
+			if(logger.isDebugEnabled()) logger.debug("解析问答题答案字符串...."+textAnswers);
+			String[] answers = textAnswers.split("&");// 拆分题目与答案
+			for (String s : answers) {
+				String[] arr = s.split("=");
+				UserItemRecordInfo itemRecord = null;
+				if (!arr[0].contains("#"))
+				{
+					itemRecord = this.changeModel(this.getStructureItemInfo(paper, arr[0]),null);
+				}
+				else
+				{
+					String[] p_c_id = arr[0].split("#");
+					itemRecord = this.changeModel(this.getStructureItemInfo(paper, p_c_id[0]),p_c_id[1]);
+				}
+				
+				if(itemRecord!=null){
+					itemRecord.setId(UUID.randomUUID().toString());
+					itemRecord.setLastTime(new Date());
+					if (arr.length > 1) { // 没有答案
+						itemRecord.setAnswer(URLDecoder.decode(arr[1], "utf-8"));
+					}
+					itemRecords.add(itemRecord);
+					if(isAnswerChanged(itemRecord,record.getItems())){
+						itemRecordsNeedSave.add(itemRecord);
+					}
+				}
+			}
 		}
+		record.setItems(itemRecordsNeedSave);
 		judgePaper(paper,record, itemRecords);
 		if (!model.equals(Constant.STATUS_DONE)) {
 			record.setScore(null);
@@ -688,6 +730,20 @@ public class PaperServiceImpl implements IPaperService{
 			return null;
 		}
 	}
+	//判断答案是否改变
+	private boolean isAnswerChanged(UserItemRecordInfo info,Set<UserItemRecordInfo> items){
+		if(items == null || items.size()==0) return true;
+		for(UserItemRecordInfo item:items){
+			if(item.getItemId().equalsIgnoreCase(info.getItemId())){
+				if(item.getAnswer().equalsIgnoreCase(info.getAnswer()))
+					return false;
+				else
+					return true;
+			}
+		}
+		return true;
+	}
+	//获取共享答案题的题目内容,选项的汇总
 	private String getShareAnswerContent(StructureItemInfo info,TreeSet<StructureItemInfo> set) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(info.getContent());
@@ -814,24 +870,32 @@ public class PaperServiceImpl implements IPaperService{
 		}
 		return true;
 	}
-	
-	@SuppressWarnings("unchecked")
+	/*
+	 * 查询考试记录
+	 * @see com.examw.test.front.service.IPaperService#recordDataGrid(java.lang.String, java.lang.String, com.examw.test.front.model.library.PaperInfo)
+	 */
 	@Override
 	public DataGrid<UserPaperRecordInfo> recordDataGrid(String userId,
 			String productId, PaperInfo info) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("加载考试记录分页列表信息...");
 		Integer page = info.getPage()==null?1:info.getPage();
 		Integer rows = info.getRows()==null?10:info.getRows();
-		//从缓存中取用户试卷最新记录
-		List<UserPaperRecordInfo> records = (List<UserPaperRecordInfo>) this.cacheHelper.getCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadUserPaperRecords", new Object[]{userId,productId});
+		//从缓存中取用户试卷最新记录	[不使用缓存]
+		/*List<UserPaperRecordInfo> records = (List<UserPaperRecordInfo>) this.cacheHelper.getCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadUserPaperRecords", new Object[]{userId,productId});
 		if(records == null){
 			records = this.findUserPaperRecords(userId, productId);
 			if(records!=null)
 				this.cacheHelper.putCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadUserPaperRecords", new Object[]{userId,productId}, records);
-		}
+		}*/
+		List<UserPaperRecordInfo> records = this.findUserPaperRecords(userId, productId);
 		DataGrid<UserPaperRecordInfo> datagrid = new DataGrid<UserPaperRecordInfo>();
 		List<UserPaperRecordInfo> result = new ArrayList<UserPaperRecordInfo>();
-				//按条件筛选
+		if(records == null || records.size()==0){
+			datagrid.setRows(result);
+			datagrid.setTotal(0L);
+			return datagrid;
+		}
+		//按条件筛选
 		for(UserPaperRecordInfo paper : records){
 			boolean flag = true;
 			if(flag && !StringUtils.isEmpty(info.getSubjectId())){

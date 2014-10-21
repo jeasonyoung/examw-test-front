@@ -13,6 +13,7 @@
 <script type="text/javascript" src="http://img.examw.com/jquery.js"></script>
 </head>
 <body>
+<#assign current_page="index"/>
 <#include "common/head.html" />
 <div class="main">
 	<div class="h30"></div>
@@ -44,8 +45,8 @@
                 	<div class="h10"></div>
                     <div class="jianjie">
                     	<ul>
-    						<li>产品价格：<span>${PRODUCT.discount}元</span></li>
-    						<li>优惠价格：<span>${PRODUCT.price}元</span></li>
+    						<li>产品价格：<span>${PRODUCT.price}元</span></li>
+    						<li>优惠价格：<span>${PRODUCT.discount}元</span></li>
                         	<li>更新时间：<span>${PRODUCT.lastTime?substring(0,11)}</span></li>
                         	<li>试题数量：<span>${PRODUCT.itemCount}题</span></li>
                             <li>试题解析：<span>有</span></li>

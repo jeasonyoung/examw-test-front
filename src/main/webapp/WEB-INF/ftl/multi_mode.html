@@ -14,6 +14,7 @@
 </head>
 <body>
 <#assign MODEL = "multi" />
+#assign current_page="simulate"/>
 <#include "common/item.ftl"/>
 <#include "common/head.html" />
 <div class="main">
@@ -363,7 +364,7 @@ $(function(){
 	}
 	//<!-- 下次做提交  -->
 	answerNexttime = function(){
-			var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":0,"prodouctId":productId};
+			var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":0,"prodouctId":productId,"textAnswers":getTextAreaValue()};
 			dialog({
 				id:'nexttimeDialog',
 				title: '下次再做',
@@ -398,7 +399,7 @@ $(function(){
 	}
 	//<!-- 交卷 -->
 	submitAnswer = function(withTips){
-		var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":1,"productId":productId};
+		var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":1,"productId":productId,"textAnswers":getTextAreaValue()};
 		var leftNum = totalNum-window.tempChooseAnswer.split("&").length+1;
 		var content = "是否选择确定交卷?";
 		if(leftNum > 0){
@@ -438,6 +439,29 @@ $(function(){
 	               }
 	           });
 		}
+	}
+	//获取文字题的答案
+	function getTextAreaValue(){
+		var textareas = $("textarea[name='item_text']");
+		var textAnswers = "";
+		$.each(textareas,function(i){
+			var value = $(textareas[i]).val();
+			if($.trim(value)!=""){
+				var pid = $(textareas[i]).attr("pid");
+				if(pid)
+					textAnswers += (pid+"#"+$(textareas[i]).attr("item_id")+"="+encodeURIComponent(value)+"&");
+				else
+					textAnswers += ($(textareas[i]).attr("item_id")+"="+encodeURIComponent(value)+"&");
+			}
+		});
+		return textAnswers;
+	}
+	//改变文字题的状态
+	answerTextArea = function(obj){
+		if($.trim($(obj).val())!="")
+			$("#answerCard a[s_item_id='"+$(obj).attr("item_id")+"']").attr("class","yida");
+		else
+			$("#answerCard a[s_item_id='"+$(obj).attr("item_id")+"']").removeClass("yida");
 	}
 });
 </script>

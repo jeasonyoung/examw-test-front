@@ -132,9 +132,14 @@
  		});
  		//点击考试选中
  		$("ul[name='category_children'] li").click(function(){
- 			if($(this).children("span").length == 0){
+ 			if($(this).children("span").length == 0){	//选中
  				$(this).append("<span></span>");
  				$(this).children("input").attr("disabled",false);
+ 				//只选中一个其他子类不选中,父类同级的子类也不选中 [需要多选的话注释以下4句]
+ 				$(this).siblings().children("span").remove();
+ 				$(this).siblings().children("input").attr("disabled",true);
+ 				$(this).parent().siblings().children("li").children("span").remove();
+ 				$(this).parent().siblings().children("li").children("input").attr("disabled",true);
  			}else{
  				$(this).children("span").remove();
  				$(this).children("input").attr("disabled",true);

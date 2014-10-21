@@ -82,7 +82,7 @@ public class PaperSubmitInfo implements Serializable{
 	 * @return textAnswer
 	 * 文字题答案
 	 */
-	public String getTextAnswer() {
+	public String getTextAnswers() {
 		return textAnswers;
 	}
 	/**
@@ -90,7 +90,7 @@ public class PaperSubmitInfo implements Serializable{
 	 * @param textAnswer
 	 * 文字题答案
 	 */
-	public void setTextAnswer(String textAnswer) {
+	public void setTextAnswers(String textAnswer) {
 		this.textAnswers = textAnswer;
 	}
 	/**

@@ -9,6 +9,7 @@
 <!-- 分页工具  -->
 </head>
 <body>
+<#assign current_page="record"/>
 <#include "common/head.html" />
 <div class="main">
 	<div class="h30"></div>
@@ -107,7 +108,11 @@
             	<#if PAPERLIST?? && (PAPERLIST?size >0)>
                 <div class="moni-list">
                     <ul>
+                    	<#assign ids = ""/>
                     	<#list PAPERLIST as paper>
+                    	<#if ids?contains(paper.paperId)>
+                    	<#else>
+                    	<#assign ids = ids+paper.paperId+","/>
                         <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
                             <div class="title">
                                 <ol>
@@ -121,7 +126,7 @@
                                     <#elseif paper.paperType == 2>
                                     <p class="red">用时：${paper.usedTime/60}分钟</p><p class="red">得分：${paper.score}分</p>
                                     <#elseif paper.paperType == 4>
-                                    <p class="red">用时：${(paper.usedTime/60)?ceiling}分钟</p><p class="red">得分：${paper.score}分</p>
+                                    <p class="red">用时：${(paper.usedTime/60)?ceiling}分钟</p><p class="red">得分：${paper.score?default(0)}分</p>
                                     </#if>
                                 </ol>
                                 <#if paper.status == STATUS_DONE>
@@ -133,6 +138,7 @@
                                 </#if>
                             </div>
                         </li>
+                        </#if>
                         </#list>
                     </ul>
                 </div>
