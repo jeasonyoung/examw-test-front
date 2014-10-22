@@ -24,7 +24,7 @@ import com.examw.test.front.support.JSONUtil;
 import com.examw.test.front.support.MethodCacheHelper;
 
 /**
- * 
+ * 错题服务接口实现类
  * @author fengwei.
  * @since 2014年10月10日 下午2:51:33.
  */

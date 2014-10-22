@@ -4,30 +4,48 @@
 	<!-- service -->
 	<!-- 分类 -->
 	<bean id="categoryService" class="com.examw.test.front.service.impl.CategoryServiceImpl">
+	    <!-- 考试分类数据远程地址  -->
 	    <property name="api_url" value="${api_category_url}" />
 	</bean>
 	<!-- 产品 -->
 	<bean id="productService" class="com.examw.test.front.service.impl.ProductServiceImpl">
+	    <!-- 产品集合数据远程地址  -->
 	    <property name="api_product_list_url" value="${api_products_url}" />
+	    <!-- 产品详情数据远程地址  -->
 	    <property name="api_product_detail_url" value="${api_product_url}" />
+	    <!-- 产品科目数据远程地址  -->
 	    <property name="api_product_subjects_url" value="${api_product_subjects_url}" />
+	    <!-- 产品地区数据远程地址  -->
 	    <property name="api_product_areas_url" value="${api_product_areas_url}" />
 	</bean>
 	<!-- 章节 -->
 	<bean id="chapterService" class="com.examw.test.front.service.impl.ChapterServiceImpl">
+	    <!-- 章节集合数据远程地址 -->
 	    <property name="api_list_url" value="${api_chapters_url}" />
+	    <!-- 章节详情数据远程地址 -->
 	    <property name="api_chapter_detail_url" value="${api_chapter_url}" />
+	    <!-- 知识点详情数据远程地址 -->
 	    <property name="api_knowledge_detail_url" value="${api_knowledge_url}" />
 	</bean>
 	<!-- 试卷 -->
 	<bean id="paperService" class="com.examw.test.front.service.impl.PaperServiceImpl">
+	    <!-- 试卷集合数据远程地址 -->
 	    <property name="api_paperlist_url" value="${api_papers_url}" />
+	    <!-- 试卷详细数据远程地址 -->
 	    <property name="api_paper_detail_url" value="${api_paper_url}" />
+	    <!-- 试卷类型数据远程地址 -->
 	    <property name="api_papertype_url" value="${api_paper_type_url}" />
+	    <!-- 用户考试记录集合数据远程地址 -->
 	    <property name="api_user_paper_records_url" value="${api_user_paper_records_url}" />
+	    <!-- 用户考试数据数据远程地址 -->
 	    <property name="api_user_paper_record_url" value="${api_user_paper_record_url}" />
+	    <!-- 添加考试记录数据远程地址 -->
 	    <property name="api_user_paper_record_add_url" value="${api_user_paper_record_add_url}" />
-	     <property name="api_user_collections_url" value="${api_user_collection_item_url}" />
+	    <!-- 试题收藏集合数据远程地址 -->
+	    <property name="api_user_collections_url" value="${api_user_collection_item_url}" />
+	    <!-- web终端代码 -->
+	    <property name="web_terminal_code" value="${web_terminal_code}"/>
+	    <!-- 数据缓存帮助类 -->
 	    <property name="cacheHelper" ref="cacheHelper"/>
 	</bean>
 	<!-- 笔记 -->
@@ -37,20 +55,31 @@
 	</bean>
 	<!-- 收藏 -->
 	<bean id="collectionService" class="com.examw.test.front.service.impl.CollectionServiceImpl">
+	    <!-- 试题收藏或取消收藏远程地址 -->
 	    <property name="api_collection_url" value="${api_user_collection_add_url}" />
+	    <!-- 带收藏数量的科目集合数据远程地址 -->
 	    <property name="api_collection_subject_list_url" value="${api_user_collection_subject_url}" />
+	    <!-- 试题收藏试题集合数据远程地址 -->
 	    <property name="api_collection_item_list_url" value="${api_user_collection_item_url}" />
+	    <!-- web终端代码 -->
+	    <property name="web_terminal_code" value="${web_terminal_code}"/>
+	    <!-- 试卷服务接口 -->
 	    <property name="paperService" ref="paperService"/>
+	    <!-- 数据缓存帮助类 -->
 	    <property name="cacheHelper" ref="cacheHelper"/>
 	</bean>
 	<!-- 错题 -->
 	<bean id="errorItemService" class="com.examw.test.front.service.impl.ErrorItemServiceImpl">
+	    <!-- 错题集合数据远程地址 -->
 	    <property name="api_error_items_url" value="${api_item_errors_url}" />
+	    <!-- 数据缓存帮助类 -->
 	    <property name="cacheHelper" ref="cacheHelper"/>
 	</bean>
 	<!-- 用户 -->
 	<bean id="userService" class="com.examw.test.front.service.impl.UserServiceImpl">
+	    <!-- 用户后端ID获取远程地址 -->
 	    <property name="api_user_verify_url" value="${api_user_verify_url}" />
+	    <!-- md5加密字符串 -->
 	    <property name="md5Key" value="${md5key}"/>
 	</bean>
 </beans>

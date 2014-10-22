@@ -66,7 +66,11 @@ public class ChapterServiceImpl implements IChapterService{
 		}
 		return null;
 	}
-
+	
+	/*
+	 * 加载章节详情
+	 * @see com.examw.test.front.service.IChapterService#loadKnowledgeDetail(java.lang.String)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public KnowledgeInfo loadKnowledgeDetail(String id) throws Exception {
@@ -83,7 +87,11 @@ public class ChapterServiceImpl implements IChapterService{
 		}
 		return null;
 	}
-
+	
+	/*
+	 * 加载某小节信息
+	 * @see com.examw.test.front.service.IChapterService#loadKnowledges(java.lang.String)
+	 */
 	@Override
 	public SyllabusInfo loadKnowledges(String chapterId)
 			throws Exception {

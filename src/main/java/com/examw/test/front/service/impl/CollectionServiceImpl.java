@@ -33,10 +33,17 @@ import com.examw.test.front.support.MethodCacheHelper;
  */
 public class CollectionServiceImpl implements ICollectionService{
 	private static final Logger logger = Logger.getLogger(CollectionServiceImpl.class);
+	//收藏|取消收藏地址
 	private String api_collection_url;
+	//带收藏个数的科目信息地址
 	private String api_collection_subject_list_url;
+	//收藏的题目信息
 	private String api_collection_item_list_url;
-	private IPaperService paperService;
+	//试卷服务接口
+	private IPaperService paperService;	
+	//web终端代码
+	private Integer web_terminal_code;
+	//缓存帮助类
 	private MethodCacheHelper cacheHelper;
 	/**
 	 * 设置 笔记数据查询数据接口地址
@@ -72,6 +79,14 @@ public class CollectionServiceImpl implements ICollectionService{
 		this.api_collection_item_list_url = api_collection_item_list_url;
 	}
 	
+	/**
+	 * 设置 web终端代码
+	 * @param web_terminal_code
+	 * 
+	 */
+	public void setWeb_terminal_code(Integer web_terminal_code) {
+		this.web_terminal_code = web_terminal_code;
+	}
 	/**
 	 * 设置 缓存帮助类
 	 * @param cacheHelper
@@ -116,6 +131,7 @@ public class CollectionServiceImpl implements ICollectionService{
 		}
 		return null;
 	}
+	//数据模型转化
 	private UserItemFavoriteInfo changeModel(StructureItemInfo info,String childItemId,Collection c){
 		if(info == null) return null;
 		if(childItemId == null)
@@ -125,8 +141,7 @@ public class CollectionServiceImpl implements ICollectionService{
 			data.setItemId(info.getId());
 			info.setUserAnswer(c.getUserAnswer());
 			data.setItemContent(JSONUtil.ObjectToJson(info));
-			//TODO 改终端代码
-			data.setTerminalCode(123456);
+			data.setTerminalCode(web_terminal_code);
 			data.setUserId(c.getUserId());
 			data.setItemType(info.getType());
 			data.setSubjectId(info.getSubjectId());
@@ -163,6 +178,7 @@ public class CollectionServiceImpl implements ICollectionService{
 			return null;
 		}
 	}
+	//获取共享答案题目的内容
 	private String getShareAnswerContent(StructureItemInfo info,TreeSet<StructureItemInfo> set) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(info.getContent());
@@ -173,6 +189,10 @@ public class CollectionServiceImpl implements ICollectionService{
 		}
 		return builder.toString();
 	}
+	/*
+	 * 加载收藏题目集合数据
+	 * @see com.examw.test.front.service.ICollectionService#loadCollectionItems(com.examw.test.front.model.record.Collection)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UserItemFavoriteInfo> loadCollectionItems(Collection info)
@@ -188,7 +208,10 @@ public class CollectionServiceImpl implements ICollectionService{
 		}
 		return null;
 	}
-	
+	/*
+	 * 加载被收藏的考试题目的集合
+	 * @see com.examw.test.front.service.ICollectionService#loadCollectionItemList(com.examw.test.front.model.record.Collection)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<StructureItemInfo> loadCollectionItemList(Collection info) throws Exception {
@@ -215,6 +238,10 @@ public class CollectionServiceImpl implements ICollectionService{
 		}
 		return result;
 	}
+	/*
+	 * 加载带收藏数量的科目的集合
+	 * @see com.examw.test.front.service.ICollectionService#loadCollectionSubjects(java.lang.String, java.lang.String)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<FrontSubjectInfo> loadCollectionSubjects(String productId,

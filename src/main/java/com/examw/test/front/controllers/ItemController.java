@@ -84,6 +84,6 @@ public class ItemController {
 	}
 	
 	private String getUserId(HttpSession session){
-		return ((User)(session.getAttribute("USER"))).getId();
+		return ((User)(session.getAttribute("USER"))).getProductUserId();
 	}
 }

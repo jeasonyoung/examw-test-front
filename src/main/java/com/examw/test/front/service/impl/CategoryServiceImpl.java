@@ -26,7 +26,10 @@ public class CategoryServiceImpl implements ICategoryService{
 	public void setApi_url(String api_url) {
 		this.api_url = api_url;
 	}
-
+	/*
+	 * 加载所有的考试类型-考试
+	 * @see com.examw.test.front.service.ICategoryService#loadAllCategoryAndExams()
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<FrontCategoryInfo> loadAllCategoryAndExams() throws IOException {

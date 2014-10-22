@@ -31,6 +31,19 @@ public interface ICollectionService {
 	 * @throws IOException
 	 */
 	List<UserItemFavoriteInfo> loadCollectionItems(Collection info) throws IOException;
+	/**
+	 * 加载被收藏的考试题目的集合
+	 * @param info
+	 * @return
+	 * @throws Exception
+	 */
 	List<StructureItemInfo> loadCollectionItemList(Collection info) throws Exception;
+	/**
+	 * 加载某产品下带收藏数量的科目的集合
+	 * @param productId
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
 	List<FrontSubjectInfo> loadCollectionSubjects(String productId,String userId)throws Exception;
 }

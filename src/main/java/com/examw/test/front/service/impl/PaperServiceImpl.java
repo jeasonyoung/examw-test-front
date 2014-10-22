@@ -43,13 +43,23 @@ import com.examw.test.front.support.MethodCacheHelper;
  */
 public class PaperServiceImpl implements IPaperService{
 	private static final Logger logger = Logger.getLogger(PaperServiceImpl.class);
+	//试卷列表数据接口地址
 	private String api_paperlist_url;
+	//试卷详情数据远程地址
 	private String api_paper_detail_url;
+	//试卷类型数据远程地址
 	private String api_papertype_url;
+	//用户考试记录集合数据远程地址
 	private String api_user_paper_records_url;
+	//用户考试记录数据远程地址
 	private String api_user_paper_record_url;
+	//用户考试记录数据添加远程地址
 	private String api_user_paper_record_add_url;
+	//用户收藏数据集合远程地址
 	private String api_user_collections_url;
+	//web终端代码
+	private Integer web_terminal_code;
+	//数据缓存帮助类
 	private MethodCacheHelper cacheHelper;
 	/**
 	 * 设置 试卷列表数据接口地址
@@ -113,6 +123,16 @@ public class PaperServiceImpl implements IPaperService{
 	public void setApi_user_collections_url(String api_user_collections_url) {
 		this.api_user_collections_url = api_user_collections_url;
 	}
+	
+	/**
+	 * 设置 web终端代码
+	 * @param web_terminal_code
+	 * 
+	 */
+	public void setWeb_terminal_code(Integer web_terminal_code) {
+		if(logger.isDebugEnabled()) logger.debug(String.format("注入web终端代码[%1$s]...",web_terminal_code));
+		this.web_terminal_code = web_terminal_code;
+	}
 
 	/**
 	 * 设置 缓存辅助类
@@ -122,6 +142,10 @@ public class PaperServiceImpl implements IPaperService{
 	public void setCacheHelper(MethodCacheHelper cacheHelper) {
 		this.cacheHelper = cacheHelper;
 	}
+	/*
+	 * 加载试卷类型数据
+	 * @see com.examw.test.front.service.IPaperService#loadPaperType()
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, String> loadPaperType() throws IOException {
@@ -222,7 +246,7 @@ public class PaperServiceImpl implements IPaperService{
 		return paper;
 	}
 	/**
-	 * 获取最新的考试记录
+	 * 获取最新的考试记录		[去掉了缓存]
 	 * @param userId
 	 * @param paperId
 	 * @return
@@ -358,8 +382,7 @@ public class PaperServiceImpl implements IPaperService{
 		info.setId(UUID.randomUUID().toString());
 		info.setPaperId(paper.getId());	//试卷Id
 		info.setUsedTime(0L);
-		//TODO 改终端代码
-		info.setTerminalCode(123456);
+		info.setTerminalCode(web_terminal_code);
 		info.setStatus(Constant.STATUS_UNDONE); //刚加入未完成
 		return info;
 	}
@@ -696,8 +719,7 @@ public class PaperServiceImpl implements IPaperService{
 			BeanUtils.copyProperties(info, data, new String[]{"createTime","lastTime"});
 			data.setItemId(info.getId());
 			data.setItemContent(JSONUtil.ObjectToJson(info));
-			//TODO 改终端代码
-			data.setTerminalCode(123456);
+			data.setTerminalCode(web_terminal_code);
 			return data;
 		}
 		else{
