@@ -27,8 +27,7 @@
 .cont-r .box{ width:828px; height:auto;-webkit-border-top-left-radius:5px;-webkit-border-top-right-radius:5px;-webkit-border-bottom-right-radius:5px;-webkit-border-bottom-left-radius:5px;-moz-border-radius-topleft:5px;-moz-border-radius-topright:5px;-moz-border-radius-bottomright:5px;-moz-border-radius-bottomleft:5px;border-top-left-radius:5px;border-top-right-radius:5px;border-bottom-right-radius:5px;border-bottom-left-radius:5px;border-bottom:#b3b3b3 solid 1px;border-left:#e8e8e8 solid 1px;border-right:#d4d4d4 solid 1px;border-top:#e8e8e8 solid 1px; background:#fff; margin-bottom:20px}
 /*题目名称*/
 .cont-r .daxiao{ float:right; padding-right:10px}
-.cont-r .daxiao .list li{ float:right; font:14px/24px "宋体"; margin:10px 10px 10px 0}
-.cont-r .daxiao .list li a:hover{ color:#fff}
+.cont-r .daxiao .list li{ float:right; font:14px/24px "宋体"; margin:10px 10px 10px 0;cursor: pointer;}
 .cont-r .daxiao .list .out{width:auto; height:auto; float:right; padding:0px 6px; background:#f2f2f2; border:#d4d4d4 solid 1px;-moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px}
 .cont-r .daxiao .list .over,.cont-r .daxiao .list .bg{width:auto; height:auto; float:right; padding:0px 6px; background:#64ad75; border:#3f9a54 solid 1px;-moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px}
 .cont-r .daxiao .list .bg a,.cont-r .daxiao .list .over a{ color:#fff}

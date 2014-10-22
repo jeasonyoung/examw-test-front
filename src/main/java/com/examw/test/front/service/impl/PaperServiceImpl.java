@@ -470,8 +470,13 @@ public class PaperServiceImpl implements IPaperService{
 //	
 	@Override
 	public PaperPreview loadPaperAnalysis(String paperId, String userId,String productId) throws Exception {
-		PaperPreview paper = this.findPaperDetail(paperId);
 		UserPaperRecordInfo info = this.findLastedRecord(userId, paperId);
+		if(info == null){
+			throw new RuntimeException("没有考试记录");
+		}else if(info.getStatus().equals(Constant.STATUS_UNDONE)){
+			throw new RuntimeException("考试未完成");
+		}
+		PaperPreview paper = this.findPaperDetail(paperId);
 		List<UserItemFavoriteInfo> list = this.loadItemFavorites(userId);
 		setUserAnswer(paper,info,list);	//附上用户答案
 		paper.setUserScore(info.getScore());
@@ -523,11 +528,6 @@ public class PaperServiceImpl implements IPaperService{
 		List<UserPaperRecordInfo> records = this.findUserPaperRecords(userId, productId);
 		DataGrid<FrontPaperInfo> datagrid = new DataGrid<FrontPaperInfo>();
 		List<FrontPaperInfo> result = new ArrayList<FrontPaperInfo>();
-		if(records == null || records.size()==0){
-			datagrid.setRows(result);
-			datagrid.setTotal(0L);
-			return datagrid;
-		}
 		//按条件筛选
 		for(FrontPaperInfo paper : list){
 			boolean flag = true;

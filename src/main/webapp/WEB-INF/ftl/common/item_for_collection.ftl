@@ -140,7 +140,7 @@
 </#macro>
 <#macro item_qanda i index>
 	<div class="box fl">
-       <div class="timu fl" id="font14"><a name="13" id="13"></a>
+       <div class="timu fl" >
            <i>${index}.</i>
            <em><span id="cailiao14">[${i.typeName}]<a></a></span>${i.content}</em>
        </div>

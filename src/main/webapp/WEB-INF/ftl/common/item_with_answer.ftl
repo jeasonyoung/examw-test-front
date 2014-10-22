@@ -138,7 +138,7 @@
 <!-- 问答题 -->
 <#macro item_qanda i index>
 	<div class="box fl">
-       <div class="timu fl" id="font14"><a name="13" id="13"></a>
+       <div class="timu fl"></a>
            <i>${index}.</i>
            <em><span id="cailiao14">[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${i.pid}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>
        </div>

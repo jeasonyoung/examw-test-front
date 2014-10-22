@@ -82,7 +82,7 @@
 <!-- 问答题   -->
 <#macro item_qanda parent i index>
 	<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_index="${index}">
-       <div class="timu fl" id="font14"><a name="13" id="13"></a>
+       <div class="timu fl">
            <i>${index}.</i>
            <em><span id="cailiao14">[${i.typeName}]<a></a></span>${i.content}</em>
        </div>
@@ -119,7 +119,11 @@
 	</div>
 		<#assign share_answer_item = (i.children?sort_by(["orderNo"]))?last/>
 		<@show_share_answer_item share_answer_item i index/>
+		<#if MODEL == "multi">
         <#assign xuhao = xuhao + share_answer_item.children?size />
+        <#else>
+        <#assign xuhao = xuhao + share_answer_item.children?size - 1 />
+        </#if>
 </#macro>
 <#macro item_share_answer_content i>
 	<#list i.children?sort_by(["orderNo"]) as child>

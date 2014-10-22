@@ -45,9 +45,9 @@
             	<div class="daxiao">
                 	<div class="list">
                     	<ul id="fontset">
-                        	<li id="f-f14" current="true" class="out bg" onMouseOver="this.className='over bg'" onMouseOut="this.className='out bg'"><a href="#">小</a></li>
-                            <li id="f-f16" class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><a href="#">中</a></li>
-                            <li id="f-f18" class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><a href="#">大</a></li>
+                        	<li id="f-f14" current="true" class="out bg" ><a>小</a></li>
+                            <li id="f-f16" class="out" ><a>中</a></li>
+                            <li id="f-f18" class="out" ><a>大</a></li>
                             <li>字体大小:</li>
                         </ul>
                     </div>
@@ -244,8 +244,9 @@ $(function(){
 	//<!-- 字体选择 -->
 	$("#fontset li").click(function(){
 		if($(this)==$("#fontset li[current='true']")) return;
-		$(this).addClass("bg").attr("current",'true');
 		$("#paper_body").addClass($(this).attr("id")).removeClass($("#fontset li[current='true']").attr("id"));
+		$(this).addClass("bg");
+		$(this).attr("current",'true');
 		$(this).siblings().removeClass("bg").attr("current",'false');
 	});
 	//<!-- timer -->

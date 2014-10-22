@@ -166,7 +166,7 @@ public class LibraryController {
 		return "errors_detail";
 	}
 	
-	
+	//模拟考场界面[试卷列表]
 	@RequestMapping(value = "/simulate/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String simulate(@PathVariable String productId,PaperInfo info,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考试界面[试卷列表]...");
@@ -206,7 +206,7 @@ public class LibraryController {
 		}
 		return "simulate";
 	}
-	
+	//上一次考试
 	@RequestMapping(value = "last-exam/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String lastExam(@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载错题界面...");
@@ -306,7 +306,7 @@ public class LibraryController {
 		model.addAttribute("PRODUCTID",productId);
 		return "exam_center";
 	}
-	
+	//获取用户的ID
 	private String getUserId(HttpServletRequest request){
 		return ((User)(request.getSession().getAttribute("USER"))).getProductUserId();
 	}

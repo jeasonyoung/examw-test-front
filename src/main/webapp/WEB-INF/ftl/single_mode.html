@@ -31,9 +31,9 @@
                 	<ul>
                     	<li><a href="javascript:void(0)" onclick="focusTo(null,0)"><em class="shang"></em>上一题</a></li>
                         <li><a href="javascript:void(0)" onclick="focusTo(null,1)"><em class="xia"></em>下一题</a></li>
-                        <li><a href="<@s.url "/library/paper/do/multi"/>?paperId=${PAPER.id}"><em class="dan-liang"></em>批量模式</a></li>
-                        <li><a href="答案页面.html"><em class="kandaan"></em>查看答案</a></li>
-                        <li class="bb-no"><a href="#"><em class="jisuanqi"></em>计算器</a></li>
+                        <li><a href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${PAPER.id}"/>"><em class="dan-liang"></em>批量模式</a></li>
+                        <!-- <li><a href="答案页面.html"><em class="kandaan"></em>查看答案</a></li>
+                        <li class="bb-no"><a href="#"><em class="jisuanqi"></em>计算器</a></li> -->
                     </ul>
                 </div>
             </div>
@@ -42,10 +42,10 @@
         	<div class="box fl yinying">
             	<div class="daxiao">
                 	<div class="list">
-                    	<ul>
-                        	<li class="out bg" onMouseOver="this.className='over bg'" onMouseOut="this.className='out bg'"><a href="#">小</a></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><a href="#">中</a></li>
-                            <li class="out" onMouseOver="this.className='over'" onMouseOut="this.className='out'"><a href="#">大</a></li>
+                         <ul id="fontset">
+                        	<li id="f-f14" current="true" class="out bg" ><a>小</a></li>
+                            <li id="f-f16" class="out" ><a>中</a></li>
+                            <li id="f-f18" class="out" ><a>大</a></li>
                             <li>字体大小:</li>
                         </ul>
                     </div>
@@ -179,12 +179,13 @@ $(function(){
 	//<!-- 字体选择 -->
 	$("#fontset li").click(function(){
 		if($(this)==$("#fontset li[current='true']")) return;
-		$(this).addClass("bg").attr("current",'true');
 		$("#paper_body").addClass($(this).attr("id")).removeClass($("#fontset li[current='true']").attr("id"));
+		$(this).addClass("bg");
+		$(this).attr("current",'true');
 		$(this).siblings().removeClass("bg").attr("current",'false');
 	});
 	//<!-- timer -->
-	window.limit_time = parseInt('${PAPER.time}');        // 单位：秒
+	window.limit_time = parseInt('${PAPER.leftTime?c}');        // 单位：秒
 	window.timer         = setInterval(updateTime,1000);                          // 过1秒执行
 	function updateTime(){
 		/*

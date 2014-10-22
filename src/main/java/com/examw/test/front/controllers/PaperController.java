@@ -123,7 +123,7 @@ public class PaperController {
 		}
 		return null;
 	}
-	
+	//获取试卷的解析
 	@RequestMapping(value ="/{productId}/analysis/{paperId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String paperAnalysis(@PathVariable String paperId,@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题解析详情...");
@@ -144,7 +144,10 @@ public class PaperController {
 			model.addAttribute("PRODUCTID",productId);
 		}catch(Exception e){
 			e.printStackTrace();
-			if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情异常...");
+			if(logger.isDebugEnabled()) logger.debug("加载试卷解析详情异常..."+e.getMessage());
+			if(e.getMessage().equals("考试未完成"))
+				return "redirect:/library/paper/"+productId+"/do/multi/"+paperId;
+			return "redirect:/library/paper/"+productId+"/"+paperId;
 		}
 		return "multi_mode_showanswer";
 	}

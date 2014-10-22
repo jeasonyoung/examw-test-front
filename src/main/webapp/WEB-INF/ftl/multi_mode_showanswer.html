@@ -168,8 +168,9 @@ $(function(){
 	//<!-- 字体选择 -->
 	$("#fontset li").click(function(){
 		if($(this)==$("#fontset li[current='true']")) return;
-		$(this).addClass("bg").attr("current",'true');
 		$("#paper_body").addClass($(this).attr("id")).removeClass($("#fontset li[current='true']").attr("id"));
+		$(this).addClass("bg");
+		$(this).attr("current",'true');
 		$(this).siblings().removeClass("bg").attr("current",'false');
 	});
 	//<!-- timer -->
