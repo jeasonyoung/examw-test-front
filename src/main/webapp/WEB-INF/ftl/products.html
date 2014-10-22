@@ -32,7 +32,7 @@
                     <#list PRODUCTLIST as p>
                     <li class="porduct-out" onMouseOver="this.className='porduct-over'" onMouseOut="this.className='porduct-out'">
                         <div class="title">
-                            <em>&middot;<a href="#" target="_blank" title="${p.name}">${p.name}</a></em>
+                            <em>&middot;<a href='<@s.url "/library/${p.id}"/>' target="_blank" title="${p.name}">${p.name}</a></em>
                             <span >${p.price}元</span>
                             <span class="red">${p.discount}元</span>
                             <span>${p.itemCount}题</span>

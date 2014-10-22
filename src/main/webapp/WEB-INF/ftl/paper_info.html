@@ -39,8 +39,8 @@
                   		</ul>
                   	</div>
                   	<div class="botton-box">
-                  		<div class="botton"><div class="hong-botton"><a href="javascript:void(0);" onclick="start('${PRODUCTID}','${PAPER.id}');">普通模考</a></div></div>
-                        <div class="botton"><div class="hei-botton"><a href="#">全真模考</a></div></div>
+                  		<div class="botton"><div class="hong-botton"><a href="javascript:void(0);" onclick="start('${PRODUCTID}','${PAPER.id}',0);">普通模考</a></div></div>
+                        <div class="botton"><div class="hei-botton"><a href="javascript:void(0);" onclick="start('${PRODUCTID}','${PAPER.id}',1);">全真模考</a></div></div>
                   	</div>
                 </div>
             </div>
@@ -48,12 +48,12 @@
                 <div class="moni-list">
                     <ul>
                         <li class="moni-over"><b>题型介绍</b></li>
-                        <#list PAPER.structures as rule>
+                        <#list PAPER.structures?sort_by(["orderNo"]) as rule>
                         <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
                             <div class="title">
                                 <i>
                                     <div class="title"><dd>${rule.typeName}</dd></div>
-                                    <p>${rule_index+1}、${rule.description}</p>
+                                    <p>${rule_index+1}、${rule.title} ${rule.description}</p>
                                 </i>
                             </div>
                         </li>
@@ -69,8 +69,11 @@
 <#include "common/foot.html" />
 </body>
 <script type="text/javascript">
-	function start(productId,id){
-		location = "<@s.url "/library/paper/"/>"+productId+"/do/multi/"+id;		
+	function start(productId,id,flag){
+		if(flag == 0)
+			location = "<@s.url "/library/paper/"/>"+productId+"/do/multi/"+id;
+		else
+			location = "<@s.url "/library/paper/"/>"+productId+"/do/single/"+id;
 	}
 </script>
 </html>
