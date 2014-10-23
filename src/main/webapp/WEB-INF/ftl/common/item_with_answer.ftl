@@ -1,9 +1,7 @@
 <#assign answerflag=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]/>
 <#assign xuhao = 0/>	<!-- 计算序号 -->
 <#assign total = 0/>	<!-- 总数 -->
-<#macro option_flag index>
-	${answerflag[index]}
-</#macro>
+<#macro option_flag index>${answerflag[index]}</#macro>
 
 <#macro show_item father item index>
 	<#if item.type == TYPE_SINGLE_VALUE>
@@ -43,9 +41,7 @@
             <div class="list">
                 <ul>
                 <#list i.children?sort_by(["orderNo"]) as option>
-                <li>
-                	<#if i.answer?contains(option.id)>
-                	<span><@option_flag option_index/>．</span>
+                <li><#if i.answer?contains(option.id)><span><@option_flag option_index/>. </span>
                 	<#else>
                 	<i><@option_flag option_index/>．</i>
                 	</#if>

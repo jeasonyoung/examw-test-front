@@ -23,9 +23,13 @@
     	<div class="cont-l fl" id="leftArea">
         	<div class="box fl yinying">
             	<div class="time" id="showtime">00:00:00</div>
+            	<#if ISDAILY>
+            	<div class="jiaojuan-botton"><a href="javascript:void(0)" onclick="submitAnswer(1)">结束作答</a></div>
+            	<#else>
                 <div class="hui-botton"><a href="javascript:void(0)" onclick="pause_do();">暂停</a></div>
                 <div class="hui-botton"><a href="javascript:void(0)" onclick="answerNexttime('<@s.url "/library/simulate/${PRODUCTID}"/>')">下次再做</a></div>
                 <div class="jiaojuan-botton"><a href="javascript:void(0)" onclick="submitAnswer(1)">提交试卷</a></div>
+                </#if>
                 <div class="h10"></div>
             </div>
             <!-- 
@@ -251,18 +255,9 @@ $(function(){
 	});
 	//<!-- timer -->
 	window.limit_time = parseInt('${PAPER.leftTime?c}');        // 单位：秒
-	window.timer         = setInterval(updateTime,1000);                          // 过1秒执行
+	window.timer         = setInterval(updateTime,1000);        // 过1秒执行
+	<#if !ISDAILY>
 	function updateTime(){
-		/*
-		var pause_time = parseInt($('#pause_do').attr('time'));  // 暂停时间
-		if (! isNaN(pause_time) ){
-			$('#pause_do').attr('time','a');
-			var oDateNow = (new Date()).getTime();
-			//var aa = parseInt((oDateNow - parseInt(pause_time))/1000);
-			console.log('pause_time  not isNaN.');
-			window.limit_time = window.limit_time + parseInt((oDateNow - parseInt(pause_time))/1000);
-		}
-		*/
 		if (window.limit_time==300){
 			//小于5分钟提示
 			alert('请抓紧时间答题');
@@ -293,8 +288,33 @@ $(function(){
 		var iSec = fillZero(parseInt(iRemain),2);
 		var sTime = iHour+':'+iMin+':'+iSec;
 		$('#showtime').html(sTime);
+		//$('#showtime').css("transform","rotate("+(window.limit_time%36)*10+"deg)")
 		window.limit_time--;
 	}
+	<#else>
+	function updateTime(){
+		// 转换
+		var fillZero = function (num,n){
+			var str = ''+num;   //数字转换为字符串
+			while(str.length<n){
+				str = '0'+str;
+			}
+			return str;
+		};
+		var iRemain = window.limit_time;
+		//剩余小时
+		var iHour = fillZero(parseInt(iRemain/3600),2);
+		iRemain%=3600;  //剩下的秒数
+		//剩余分钟
+		var iMin = fillZero(parseInt(iRemain/60),2);
+		iRemain%=60;
+		//剩余秒
+		var iSec = fillZero(parseInt(iRemain),2);
+		var sTime = iHour+':'+iMin+':'+iSec;
+		$('#showtime').html(sTime);
+		window.limit_time++;
+	}
+	</#if>
 	//<!-- 暂停 -->
 	pause_do = function(){
 		window.clearInterval(timer);
@@ -426,7 +446,7 @@ $(function(){
 	     		 	      }]
 		}).showModal();
 		else{
-			submit();
+			submit(data);
 		}
 		//提交
 		function submit(data){

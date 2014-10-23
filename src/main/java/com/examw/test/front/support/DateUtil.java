@@ -1,5 +1,6 @@
 package com.examw.test.front.support;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -38,5 +39,16 @@ public class DateUtil {
         }  
         return ct / 31104000 + "年前";  */
         return formatter.format(time);	//直接显示日期
-    }  
+    }
+    public static String format(Date date){
+    	return formatter.format(date);
+    }
+    public static Date parse(String dateStr){
+    	try {
+			return formatter.parse(dateStr);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+    	return null;
+    }
 }
