@@ -1,1 +1,3 @@
 ExamwCom  = ${ExamwCom}
+<#assign text = "A.提供非专利技术的使用权取得的所得属于特许权使用费所得"/>
+<div>matches: <#if text?matches("[A-Z]{1}[.][\\W\\w]*")>${text?substring(2)}<#else>not matched</#if><div>

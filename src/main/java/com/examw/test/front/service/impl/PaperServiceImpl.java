@@ -7,6 +7,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -170,6 +171,29 @@ public class PaperServiceImpl implements IPaperService{
 		}
 		return null;
 	}
+	/*
+	 * 加载试卷的年份
+	 * @see com.examw.test.front.service.IPaperService#loadPaperYear(java.util.List)
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Integer> loadPaperYear(String productId) throws Exception {
+		List<FrontPaperInfo> list = (List<FrontPaperInfo>) this.cacheHelper.getCache(FrontPaperInfo.class.getName(), this.getClass().getName()+"loadPaperList", new Object[]{productId});
+		if(list == null){
+			list = this.loadPaperList(productId);
+			if(list!=null)
+				this.cacheHelper.putCache(FrontProductInfo.class.getName(), this.getClass().getName()+"loadPaperList", new Object[]{productId}, list);
+		}
+		List<Integer> result = new ArrayList<Integer>();
+		if(list == null || list.size()==0) return result;
+		Map<Integer,Integer> map = new HashMap<Integer,Integer>();
+		for(FrontPaperInfo info:list){
+			if(info==null) continue;
+			map.put(info.getYear(), 1);
+		}
+		result.addAll(map.keySet());
+		return result;
+	}
 	/**
 	 * 加载用户最新试卷记录
 	 * @param userId
@@ -240,6 +264,9 @@ public class PaperServiceImpl implements IPaperService{
 			info.setUserId(userId);
 			//提交记录
 			HttpUtil.upload(this.api_user_paper_record_add_url, info);
+			//试卷有缓存,清除对象题目的答案
+			clearUserAnswer(paper);
+			
 		}
 		paper.setPaperRecordId(info.getId());	//设置试卷考试记录ID
 		paper.setLeftTime(paper.getTime()*60 - info.getUsedTime());	//设置剩余考试时间
@@ -362,6 +389,48 @@ public class PaperServiceImpl implements IPaperService{
 			}
 			//判断是否被收藏
 			isCollected(item.getId()+"#"+child.getId(), child, favors);
+		}
+	}
+	//清除用户的答案
+	private void clearUserAnswer(PaperPreview paper){
+		if(logger.isDebugEnabled()) logger.debug("再做一次,清除用户的答案...");
+		List<StructureInfo> structures = paper.getStructures();
+		for(StructureInfo s:structures){
+			Set<StructureItemInfo> items = s.getItems();
+			for(StructureItemInfo item:items){
+				clearUserAnswer(item);
+			}
+		}
+	}
+	//清除用户的答案
+	private void clearUserAnswer(StructureItemInfo item){
+		switch(item.getType()){
+		case Constant.TYPE_SHARE_TITLE:	//共享题干题
+			Set<StructureItemInfo> children = item.getChildren();
+			for(StructureItemInfo child:children){
+				child.setUserAnswer(null);	//清除用户答案
+				child.setUserScore(null);
+				child.setAnswerStatus(null);
+				child.setRecordId(null);
+			}
+			break;
+		case Constant.TYPE_SHARE_ANSWER: //共享答案题
+			TreeSet<StructureItemInfo> set = new TreeSet<>();
+			set.addAll(item.getChildren());
+			Set<StructureItemInfo> children2 = set.last().getChildren();
+			for(StructureItemInfo child:children2){
+				child.setUserAnswer(null);	//清除用户答案
+				child.setUserScore(null);
+				child.setAnswerStatus(null);
+				child.setRecordId(null);
+			}
+			break;
+		default:
+			item.setUserAnswer(null);	//清除用户答案
+			item.setUserScore(null);
+			item.setAnswerStatus(null);
+			item.setRecordId(null);
+			break;
 		}
 	}
 	//判断是否被收藏

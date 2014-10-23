@@ -25,7 +25,7 @@
                             <span class="f-bold">产品定价</span>
                             <span class="f-bold">优惠价</span>
                             <span class="f-bold">试题数量</span>
-                            <span class="f-bold">未购/已购</span>
+                            <span class="f-bold">立即体验</span>
                         </div>
                     </li>
                     <#if PRODUCTLIST?? && (PRODUCTLIST?size>0)>
@@ -37,8 +37,8 @@
                             <span class="red">${p.discount}元</span>
                             <span>${p.itemCount}题</span>
                             <span>
-                            	<div class="shiyong-botton"><div class="hei-cheng"><a href='<@s.url "/library/${p.id}"/>'>试用</a></div></div>
-                                <div class="shiyong-botton"><div class="t-cheng"><a href="#">购买</a></div></div>
+                            	<div class="shiyong-botton"><div class="t-cheng"><a href='<@s.url "/library/${p.id}"/>'>立即体验</a></div></div>
+                                <!-- <div class="shiyong-botton"><div class="t-cheng"><a href="#">购买</a></div></div> -->
                             </span>
                         </div>
                     </li>

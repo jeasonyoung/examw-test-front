@@ -24,7 +24,7 @@
         	<div class="box fl yinying">
             	<div class="time" id="showtime">00:00:00</div>
                 <div class="hui-botton"><a href="javascript:void(0)" onclick="pause_do();">暂停</a></div>
-                <div class="hui-botton"><a href="javascript:void(0)" onclick="answerNexttime()">下次再做</a></div>
+                <div class="hui-botton"><a href="javascript:void(0)" onclick="answerNexttime('<@s.url "/library/simulate/${PRODUCTID}"/>')">下次再做</a></div>
                 <div class="jiaojuan-botton"><a href="javascript:void(0)" onclick="submitAnswer(1)">提交试卷</a></div>
                 <div class="h10"></div>
             </div>
@@ -54,7 +54,7 @@
                 </div>
             	<div class="name"><h1>${PAPER.name}</h1></div>
                 <div class="h20"></div>
-                <div class="shuoming" >
+                <div class="shuoming" > 
                 	<p>&gt; 本卷共分为${PAPER.structures?size}大题 ${PAPER.total}小题，作答时间为${PAPER.time}分钟，总分${PAPER.score}分，${PAPER.score*0.6}分及格。</p>
                     <p>&gt; 试卷来源：${PAPER.sourceName}</p>
                 </div>
@@ -76,7 +76,7 @@
             <div <#if structure_index != 0></#if> >
             <#assign total = total + structure.total/> 
             <#assign xuhao = total-structure.total + 1 />
-            <div class="tx-box fl" structure_id="${structure.id}">${structure.title}(${structure.description})</div>
+            <div class="tx-box fl" structure_id="${structure.id}">${structure.title} ${structure.description}</div>
             <#list structure.items?sort_by(["orderNo"]) as i>
             	<#if i.type != TYPE_SHARE_TITLE_VALUE && i.type != TYPE_SHARE_ANSWER_VALUE>
             		<@show_item p=null item=i index=(i_index + xuhao) />
@@ -364,7 +364,7 @@ $(function(){
 		}
 	}
 	//<!-- 下次做提交  -->
-	answerNexttime = function(){
+	answerNexttime = function(url){
 			var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":0,"prodouctId":productId,"textAnswers":getTextAreaValue()};
 			dialog({
 				id:'nexttimeDialog',
@@ -388,7 +388,7 @@ $(function(){
 		 	               dataType:'json',
 		 	               success:function(data){
 		 	            	   if(data.success){
-		 	            		   location='<@s.url "/library/simulate/${PRODUCTID}"/>';
+		 	            		   location=url;
 		 	            	   }
 		 	               }
 		 	           });
@@ -464,6 +464,12 @@ $(function(){
 		else
 			$("#answerCard a[s_item_id='"+$(obj).attr("item_id")+"']").removeClass("yida");
 	}
+	//点击顶部其他链接需要提醒保存答案
+	$("#top_head").find("a").click(function(){
+		var url = $(this).attr("href");
+		answerNexttime(url);
+		return false;
+	});
 });
 </script>
 </html>

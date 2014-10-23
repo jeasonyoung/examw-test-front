@@ -20,13 +20,6 @@
     	<div class="width998 yinying">
         	<div class="week">
             	<ul id="week">
-       				<li><a href="#">星期五<br>2014-08-29</a></li>
-                    <li><a href="#">星期六<br>2014-08-30</a></li>
-                    <li><a href="#">星期天<br>2014-08-31</a></li>
-                    <li><a href="#">星期一<br>2014-09-01</a></li>
-                    <li><a href="#">星期二<br>2014-09-02</a></li>
-                    <li><a href="#">星期三<br>2014-09-03</a></li>
-                    <li class="mr-no bg">今天<br>2014-09-04</li>
                 </ul>
             </div>
             <div class="moni-list">
@@ -34,7 +27,7 @@
                     <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
                         <div class="title">
                             <i>
-                            	<div class="title"><a href="#跳到测试页" target="_blank" title="2014年经济师考试《经济师》每日一练（09月04日）">2014年经济师考试《经济师》每日一练（09月04日）</a></div>
+                            	<div class="title"><a href="#" target="_blank" title="2014年经济师考试《经济师》每日一练（09月04日）">2014年经济师考试《经济师》每日一练（09月04日）</a></div>
                                 <p>共有 2人参与练习，平均正确率达44%</p>
                             </i>
                             <span>只完成30/101道</span>
@@ -53,72 +46,26 @@
                             <span><div class="buy-botton"><div class="hei-botton"><a href="#">再做一次</a></div></div></span>
                         </div>
                     </li>
+                    <#list PAPERLIST as paper>
                     <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
                         <div class="title">
-                        	<i>
-                            	<div class="title"><a href="#跳到测试页" target="_blank" title="2014年经济师考试《初级经济师》每日一练（09月04日）">2014年经济师考试《初级经济师》每日一练（09月04日）</a></div>
-                                <p>共有 0人参与练习，平均正确率达0%</p>
+                            <i>
+                            	<div class="title">
+                            		<a <#if paper.status != STATUS_DONE>href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.id}"/>"<#else>href="<@s.url "/library/paper/${PRODUCTID}/analysis/${paper.id}"/>"</#if> target="_blank" title="${paper.name}">${paper.name}</a></div>
+                                <p>共有 ${paper.totalUser}人参与练习，平均正确率达44%</p>
                             </i>
-                            <span></span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
+                            <#if paper.status != STATUS_DONE>
+                            <span>只完成${paper.score}/${paper.total}道</span>
+                            <span>未完成</span>
+                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">继续做题</a></div></div></span>
+                            <#else>
+                            <span>全部完成</span>
+                            <span><a href="<@s.url "/library/paper/${PRODUCTID}/analysis/${paper.id}"/>" target="_blank"><font class="red">查看解析</font></a></span>
+                            <span><div class="buy-botton"><div class="hei-botton"><a href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.id}"/>">再做一次</a></div></div></span>
+                            </#if>
                         </div>
                     </li>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                        	<i>
-                            	<div class="title"><a href="#跳到测试页" target="_blank" title="2014年经济师考试《初级经济师》每日一练（09月04日）">2014年经济师考试《初级经济师》每日一练（09月04日）</a></div>
-                                <p>共有 0人参与练习，平均正确率达0%</p>
-                            </i>
-                            <span></span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                        	<i>
-                            	<div class="title"><a href="#跳到测试页" target="_blank" title="2014年经济师考试《初级经济师》每日一练（09月04日）">2014年经济师考试《初级经济师》每日一练（09月04日）</a></div>
-                                <p>共有 0人参与练习，平均正确率达0%</p>
-                            </i>
-                            <span></span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                        	<i>
-                            	<div class="title"><a href="#跳到测试页" target="_blank" title="2014年经济师考试《初级经济师》每日一练（09月04日）">2014年经济师考试《初级经济师》每日一练（09月04日）</a></div>
-                                <p>共有 0人参与练习，平均正确率达0%</p>
-                            </i>
-                            <span></span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                        	<i>
-                            	<div class="title"><a href="#跳到测试页" target="_blank" title="2014年经济师考试《初级经济师》每日一练（09月04日）">2014年经济师考试《初级经济师》每日一练（09月04日）</a></div>
-                                <p>共有 0人参与练习，平均正确率达0%</p>
-                            </i>
-                            <span></span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                        	<i>
-                            	<div class="title"><a href="#跳到测试页" target="_blank" title="2014年经济师考试《初级经济师》每日一练（09月04日）">2014年经济师考试《初级经济师》每日一练（09月04日）</a></div>
-                                <p>共有 0人参与练习，平均正确率达0%</p>
-                            </i>
-                            <span></span>
-                            <span></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
-                        </div>
-                    </li>
+                    </#list>
                 </ul>
             </div>
         </div>
@@ -164,13 +111,13 @@ Date.prototype.format = function(format)
  } 
  $(function(){
 		$("#week").html("");
-		var current_date = "2014/09/28";
+		var current_date = (new Date()).format("yyyy/MM/dd");
 		for(var i = 0;i<7;i++){
 			var d = new Date();
 			d.setDate(d.getDate()-i);
 			var li = $("<li><a href='javascript:void(0)'>"+d.format("eee")+"<br/>"+d.format("yyyy-MM-dd")+"</a></li>");
 			if(i == 0){
-				li = $("<li><a href='javascript:void(0)'>今天<br/>"+d.format("yyyy-MM-dd")+"</a></li>");
+				li = $("<li>今天<br/>"+d.format("yyyy-MM-dd")+"</li>");
 			}
 			if(d.format("yyyy/MM/dd") == current_date){
 				li.attr("class","mr-no bg");

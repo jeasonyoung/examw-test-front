@@ -1,9 +1,8 @@
 <#assign answerflag=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]/>
 <#assign xuhao = 0/>	<!-- 计算序号 -->
 <#assign total = 0/>	<!-- 总数 -->
-<#macro option_flag index>
-	${answerflag[index]}
-</#macro>
+<!-- 计算序号对应的ABCD -->
+<#macro option_flag index>${answerflag[index]}</#macro>
 
 <#macro show_item p item index>
 	<#if item.type == TYPE_SINGLE_VALUE>
@@ -40,7 +39,7 @@
             <div class="list">
                 <ul>
                 <#list i.children?sort_by(["orderNo"]) as option>
-                <li item_index="${index}" option_id="${option.id}" record_id='${i.recordId?default("0")}' s_item_id="${i.id}" <#if parent??>pid="${parent.id}"</#if> option_type="${input}" <#if i.userAnswer?contains(option.id)>class="over"<#else>class="out"</#if>><!--<i><@option_flag option_index/>.</i>--><em>  ${option.content?replace("[A-D][.]","")}</em></li>
+                <li item_index="${index}" option_id="${option.id}" record_id='${i.recordId?default("0")}' s_item_id="${i.id}" <#if parent??>pid="${parent.id}"</#if> option_type="${input}" <#if i.userAnswer?contains(option.id)>class="over"<#else>class="out"</#if>><i><@option_flag option_index/>．</i><em><#if option.content?matches("[A-Z]{1}[.][\\W\\w]*")>${option.content?substring(2)}<#else>${option.content}</#if></em></li>
                 </#list>
                 </ul>
             </div>

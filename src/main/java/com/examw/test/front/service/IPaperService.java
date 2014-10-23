@@ -32,6 +32,13 @@ public interface IPaperService {
 	 */
 	List<FrontPaperInfo> loadPaperList(String productId)throws IOException;
 	/**
+	 * 加载所有试题的年份
+	 * @param productId
+	 * @return
+	 * @throws Exception
+	 */
+	List<Integer> loadPaperYear(String productId) throws Exception;
+	/**
 	 * 根据试卷ID加载试卷详情
 	 * @param paperId 试卷id
 	 * @return

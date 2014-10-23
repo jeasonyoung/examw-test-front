@@ -36,8 +36,8 @@
                 <ul>
                 <#list i.children?sort_by(["orderNo"]) as option>
                 <li>
-                	<i><@option_flag option_index/>.</i>
-                	<em>${option.content}</em>
+                	<i><@option_flag option_index/>．</i>
+                	<em><#if option.content?matches("[A-Z]{1}[.][\\W\\w]*")>${option.content?substring(2)}<#else>${option.content}</#if></em>
                 </li>
                 </#list>
                 </ul>

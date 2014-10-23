@@ -109,9 +109,10 @@ a:hover,a:active{color:#cc0000; text-decoration:none}
 .nvatiku .nva .list li a:link,.nvatiku .nva .list li a:visited,.nvatiku .nva .list li a:active{ color:#252525; padding:0px 18px; margin:0 5px; height:30px; float:left}
 .nvatiku .nva .list li a:hover{ color:#fff; background:#f30f4a; padding:0px 18px; margin:0 5px; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px;height:30px; float:left}
 .nvatiku .nva .list li.bg{ color:#fff; padding:0px 2px; margin:0 5px; background:#f30f4a; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px;height:30px; float:left; cursor:pointer}
+.nvatiku .nva .list li.bg a{color:#fff;}
 /*998px的宽度*/
 .content{ width:1000px}
-.width998{ width:998px; height:auto; float:left;-webkit-border-top-left-radius:3px;-webkit-border-top-right-radius:3px;-webkit-border-bottom-right-radius:3px;-webkit-border-bottom-left-radius:3px;-moz-border-radius-topleft:3px;-moz-border-radius-topright:3px;-moz-border-radius-bottomright:3px;-moz-border-radius-bottomleft:3px;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border-bottom:#ddd solid 1px;border-left:#e8e8e8 solid 1px;border-right:#e8e8e8 solid 1px;border-top:#e8e8e8 solid 1px; background:#fff}
+.width998{ width:1001px; height:auto; float:left;-webkit-border-top-left-radius:3px;-webkit-border-top-right-radius:3px;-webkit-border-bottom-right-radius:3px;-webkit-border-bottom-left-radius:3px;-moz-border-radius-topleft:3px;-moz-border-radius-topright:3px;-moz-border-radius-bottomright:3px;-moz-border-radius-bottomleft:3px;border-top-left-radius:3px;border-top-right-radius:3px;border-bottom-right-radius:3px;border-bottom-left-radius:3px;border-bottom:#ddd solid 1px;border-left:#e8e8e8 solid 1px;border-right:#e8e8e8 solid 1px;border-top:#e8e8e8 solid 1px; background:#fff}
 /*弹出框架*/
 #wBox .wBox_b { filter:alpha(opacity=80); -moz-opacity:0.8; opacity: 0.8; background-color:#ff6000; width:10px;}
 #wBox {position: absolute; top: 0;left: 0; z-index: 100; text-align: left; display:none;}

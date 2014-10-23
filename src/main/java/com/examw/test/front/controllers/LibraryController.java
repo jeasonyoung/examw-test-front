@@ -191,6 +191,8 @@ public class LibraryController {
 			model.addAttribute("SUBJECTLIST", this.productService.loadProductSubjects(productId));
 			//包含地区
 			model.addAttribute("AREALIST", this.productService.loadProductAreas(productId));
+			//包含年份
+			model.addAttribute("YEARLIST", this.paperService.loadPaperYear(productId));
 			//试卷集合
 			model.addAttribute("PAPERLIST", data.getRows());
 			//试卷类型
@@ -212,6 +214,7 @@ public class LibraryController {
 		if(logger.isDebugEnabled()) logger.debug("加载错题界面...");
 		String userId = this.getUserId(request);
 		try{
+			model.addAttribute("PRODUCTID", productId);
 			UserPaperRecordInfo record = this.paperService.findProductLastedRecord(userId, productId);
 			if(record == null){
 				return "redirect:/simulate/"+productId;
@@ -234,6 +237,7 @@ public class LibraryController {
 	 */
 	@RequestMapping(value = "/daily/{productId}", method = RequestMethod.GET)
 	public String daily(@PathVariable String productId,Model model){
+		model.addAttribute("PRODUCTID", productId);
 		return "daily_practice";
 	}
 	

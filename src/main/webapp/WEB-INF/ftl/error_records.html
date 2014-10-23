@@ -88,6 +88,7 @@
                             <div class="title">
                                 <ol>
                                     <div class="title">
+                                    ${item_index+(PAGE-1)*10+1}．
                                     <#if (item.content?length > 30)>
                                     ${item.content?substring(0,30)}
                                     <#else>
@@ -124,7 +125,7 @@
 	   total = Number("${TOTAL}");
 	   if(total > 0)
 		{
-		   total = Math.floor(total%5==0?total/5:(total/5+1));
+		   total = Math.floor(total%10==0?total/10:(total/10+1));
 		   $("#pager").pager({ pagenumber: ${PAGE}, pagecount: total, buttonClickCallback: PageClick });
 		}
 	    //切换科目
