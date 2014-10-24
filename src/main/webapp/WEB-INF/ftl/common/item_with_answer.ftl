@@ -41,7 +41,7 @@
             <div class="list">
                 <ul>
                 <#list i.children?sort_by(["orderNo"]) as option>
-                <li><#if i.answer?contains(option.id)><span><@option_flag option_index/>. </span>
+                <li class="out"><#if i.answer?contains(option.id)><span><@option_flag option_index/>. </span>
                 	<#else>
                 	<i><@option_flag option_index/>．</i>
                 	</#if>

@@ -190,7 +190,7 @@ public class LibraryController {
 			//包含科目集合
 			model.addAttribute("SUBJECTLIST", this.productService.loadProductSubjects(productId));
 			//包含地区
-			model.addAttribute("AREALIST", this.productService.loadProductAreas(productId));
+			//model.addAttribute("AREALIST", this.productService.loadProductAreas(productId));
 			//包含年份
 			model.addAttribute("YEARLIST", this.paperService.loadPaperYear(productId));
 			//试卷集合

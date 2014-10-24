@@ -70,6 +70,7 @@
 					<list>
 						<value>/resources*</value>
 						<value>/getUserInfo</value>
+						<value>/logout</value>
 						<!-- <value>/</value>  -->
 					</list>
 				</property>

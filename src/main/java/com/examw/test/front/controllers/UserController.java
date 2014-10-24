@@ -59,6 +59,9 @@ public class UserController {
 	public String logout(HttpServletRequest request,HttpServletResponse response){
 		//删除cookie
 	    response.setHeader("Set-Cookie","Examwww=");
+	    //删除session中的值
+	    request.getSession().removeAttribute("USER");
+	    request.getSession().removeAttribute("PRODUCTNAME");
 		return "redirect:http://test.examw.com/user/Login/CheckUser.asp?CheckType=Logout";
 	}
 	
