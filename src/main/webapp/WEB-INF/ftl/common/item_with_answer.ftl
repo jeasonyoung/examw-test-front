@@ -298,7 +298,7 @@
        			<div class="list">
           			<ul>
 		</#if>
-		<li item_status="${item.answerStatus}"><a <#if item.answerStatus == STATUS_RIGHT>class="dui"<#else>class="cuo"</#if> href="javascript:void(0)" onclick="focusTo(this,${item_index+1})" item_id="${item.id}" s_item_id="${item.structureItemId}">${item_index+1}</a></li>
+		<li item_status="${item.answerStatus}"><a <#if item.answerStatus == STATUS_RIGHT>class="dui"<#else>class="cuo"</#if> href="javascript:void(0)" onclick="focusTo(this,${item_index+1})" item_id="${item.id}" s_item_id="${item.id}">${item_index+1}</a></li>
 		<#if item_index != 0 && (item_index+1)%5==0>
 			 	</ul>
         	</div>

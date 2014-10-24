@@ -1,6 +1,7 @@
 package com.examw.test.front.controllers;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.service.IErrorItemService;
 import com.examw.test.front.service.IPaperService;
 import com.examw.test.front.service.IProductService;
+import com.examw.test.front.support.DateUtil;
 import com.examw.test.front.support.ItemTypeUtil;
 /**
  * 题库控制器
@@ -235,9 +237,24 @@ public class LibraryController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = "/daily/{productId}", method = RequestMethod.GET)
-	public String daily(@PathVariable String productId,Model model){
-		model.addAttribute("PRODUCTID", productId);
+	@RequestMapping(value = "/daily/{productId}/{date}", method = RequestMethod.GET)
+	public String daily(@PathVariable String productId,@PathVariable String date,Model model){
+		if(logger.isDebugEnabled()) logger.debug("获取每日一练试卷...");
+		try{
+			Date dateParam = DateUtil.parse(date);
+			//解析错误就加载今天的数据
+			if(dateParam == null){
+				Calendar calendar = Calendar.getInstance();
+				calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)-7, 0, 0, 0);
+				dateParam = calendar.getTime();
+				date = DateUtil.format(dateParam);
+			}
+			//model.addAttribute("PAPERLIST", this.paperService.loadDailyPaperList(productId, date));
+			model.addAttribute("CURRENT_DATE",date);
+			model.addAttribute("PRODUCTID", productId);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		return "daily_practice";
 	}
 	

@@ -254,7 +254,7 @@ $(function(){
 		$(this).siblings().removeClass("bg").attr("current",'false');
 	});
 	//<!-- timer -->
-	window.limit_time = parseInt('${PAPER.leftTime?c}');        // 单位：秒
+	window.limit_time = 20;//parseInt('${PAPER.leftTime?c}');        // 单位：秒
 	window.timer         = setInterval(updateTime,1000);        // 过1秒执行
 	<#if !ISDAILY>
 	function updateTime(){
@@ -446,6 +446,10 @@ $(function(){
 	     		 	      }]
 		}).showModal();
 		else{
+			dialog({
+				id:"submitDialog",
+				content:'<div style="padding:20px 20px"><span class="ui-dialog-loading">Loading..</span></div><div>时间到,提交试卷中...</div>'
+			}).showModal();
 			submit(data);
 		}
 		//提交

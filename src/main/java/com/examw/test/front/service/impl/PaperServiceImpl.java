@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +35,7 @@ import com.examw.test.front.model.record.UserItemFavoriteInfo;
 import com.examw.test.front.model.record.UserItemRecordInfo;
 import com.examw.test.front.model.record.UserPaperRecordInfo;
 import com.examw.test.front.service.IPaperService;
+import com.examw.test.front.support.DateUtil;
 import com.examw.test.front.support.HttpUtil;
 import com.examw.test.front.support.JSONUtil;
 import com.examw.test.front.support.MethodCacheHelper;
@@ -58,6 +61,8 @@ public class PaperServiceImpl implements IPaperService{
 	private String api_user_paper_record_add_url;
 	//用户收藏数据集合远程地址
 	private String api_user_collections_url;
+	//每日一练试卷列表
+	private String api_daily_papers_url;
 	//web终端代码
 	private Integer web_terminal_code;
 	//数据缓存帮助类
@@ -105,6 +110,15 @@ public class PaperServiceImpl implements IPaperService{
 	 */
 	public void setApi_user_paper_record_url(String api_user_paper_record_url) {
 		this.api_user_paper_record_url = api_user_paper_record_url;
+	}
+	
+	/**
+	 * 设置 每日一练试卷的地址
+	 * @param api_daily_papers_url
+	 * 
+	 */
+	public void setApi_daily_papers_url(String api_daily_papers_url) {
+		this.api_daily_papers_url = api_daily_papers_url;
 	}
 
 	/**
@@ -866,7 +880,7 @@ public class PaperServiceImpl implements IPaperService{
 						if (item.getId()
 								.equals(itemRecord.getItemId())) {
 							// 判断对错
-							if(!judgeItemIsRight(item, itemRecord, min, per))
+							if(judgeItemIsRight(item, itemRecord, min, per))
 							actualRuleTotal = actualRuleTotal.add(itemRecord
 									.getScore());
 							break;
@@ -878,7 +892,7 @@ public class PaperServiceImpl implements IPaperService{
 							for (StructureItemInfo child : children) {
 								if ((item.getId()+"#"+child.getId()).equals(itemRecord.getItemId())) {
 									// 判断对错
-									if(!judgeItemIsRight(child, itemRecord, min, per))
+									if(judgeItemIsRight(child, itemRecord, min, per))
 										actualRuleTotal = actualRuleTotal
 											.add(itemRecord.getScore());
 									break;
@@ -891,7 +905,7 @@ public class PaperServiceImpl implements IPaperService{
 							for(StructureItemInfo i:children){
 								if((item.getId()+"#"+i.getId()).equalsIgnoreCase(itemRecord.getItemId())){
 									//判断对错
-									if(!judgeItemIsRight(i, itemRecord, min, per))
+									if(judgeItemIsRight(i, itemRecord, min, per))
 										actualRuleTotal = actualRuleTotal
 											.add(itemRecord.getScore());
 									break;
@@ -1015,5 +1029,41 @@ public class PaperServiceImpl implements IPaperService{
 			}
 		}
 		return datagrid;
+	}
+	
+	@Override
+	public List<FrontPaperInfo> findDailyPaperList(String productId,Calendar calendar,String userId)
+			throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷列表...");
+		if(StringUtils.isEmpty(productId))
+		return null;
+		List<FrontPaperInfo> list = this.findDailyPaperList(productId);
+		//查出当天的记录
+		if(list == null||list.size()==0) return null;
+		List<FrontPaperInfo> result = new ArrayList<FrontPaperInfo>();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		for(FrontPaperInfo paper:list){
+			if(paper == null) continue;
+			if(format.parse(paper.getCreateTime()).compareTo(calendar.getTime())==-1){
+				result.add(paper);
+			}
+		}
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<FrontPaperInfo> findDailyPaperList(String productId) throws Exception{
+		String today = DateUtil.format(new Date());
+		List<FrontPaperInfo> list = (List<FrontPaperInfo>) this.cacheHelper.getCache(FrontPaperInfo.class.getName(), this.getClass().getName()+"loadPaperList", new Object[]{productId,today});
+		if(list == null){
+			String url = String.format(this.api_daily_papers_url,productId);
+			String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+			if(!StringUtils.isEmpty(xml)){
+				list = JSONUtil.JsonToCollection(xml, List.class, FrontPaperInfo.class);
+			}
+			if(list!=null)
+				this.cacheHelper.putCache(FrontProductInfo.class.getName(), this.getClass().getName()+"loadPaperList", new Object[]{productId}, list);
+		}
+		return list;
 	}
 }

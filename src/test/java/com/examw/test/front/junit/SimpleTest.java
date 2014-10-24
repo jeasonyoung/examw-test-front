@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.Calendar;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 
 import com.examw.model.Json;
+import com.examw.test.front.support.DateUtil;
 import com.examw.test.front.support.TaoBaoMD5;
 
 /**
@@ -54,5 +56,9 @@ public class SimpleTest {
 		System.out.println(URLDecoder.decode(text2,"utf-8").split("&").length);
 		System.out.println(URLEncoder.encode("-----=========#######@@@@@@@@我不知道啊","gbk"));
 		System.out.println(URLEncoder.encode("我不知道啊", "unicode"));
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)-7, 0, 0, 0);
+		System.out.println(calendar.getTime());
+		System.out.println(DateUtil.parse("2014-10-24"));
 	}
 }

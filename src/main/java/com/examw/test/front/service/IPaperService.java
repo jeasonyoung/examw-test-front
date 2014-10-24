@@ -1,6 +1,7 @@
 package com.examw.test.front.service;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -118,4 +119,10 @@ public interface IPaperService {
 	 * @throws Exception
 	 */
 	DataGrid<UserPaperRecordInfo> recordDataGrid(String userId,String productId,PaperInfo info)throws Exception;
+	/**
+	 * 根据条件加载每日一练试卷信息
+	 * @param info
+	 * @return
+	 */
+	List<FrontPaperInfo> findDailyPaperList(String productId,Calendar date,String userId)throws Exception;
 }
