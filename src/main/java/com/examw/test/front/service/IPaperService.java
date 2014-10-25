@@ -70,7 +70,8 @@ public interface IPaperService {
 	 * @return
 	 * @throws IOException
 	 */
-	PaperPreview loadPaperAnalysis(String paperId,String userId,String productId)throws Exception;
+	PaperPreview findPaperAnalysis(String paperId,String userId,String productId)throws Exception;
+	PaperPreview findPaperAnalysis(String paperId,String recordId,String userId,String productId)throws Exception;
 	/**
 	 * 提取试题的集合
 	 * @param paper	试卷信息

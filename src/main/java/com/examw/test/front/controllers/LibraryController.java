@@ -32,6 +32,7 @@ import com.examw.test.front.service.IPaperService;
 import com.examw.test.front.service.IProductService;
 import com.examw.test.front.support.DateUtil;
 import com.examw.test.front.support.ItemTypeUtil;
+import com.examw.test.front.support.PaperTypeUtil;
 /**
  * 题库控制器
  * @author fengwei.
@@ -238,19 +239,23 @@ public class LibraryController {
 	 * @return
 	 */
 	@RequestMapping(value = "/daily/{productId}/{date}", method = RequestMethod.GET)
-	public String daily(@PathVariable String productId,@PathVariable String date,Model model){
+	public String daily(@PathVariable String productId,@PathVariable String date,HttpServletRequest request,Model model){
 		if(logger.isDebugEnabled()) logger.debug("获取每日一练试卷...");
 		try{
 			Date dateParam = DateUtil.parse(date);
 			//解析错误就加载今天的数据
-			if(dateParam == null){
-				Calendar calendar = Calendar.getInstance();
-				calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)-7, 0, 0, 0);
-				dateParam = calendar.getTime();
+			Calendar calendar = Calendar.getInstance();
+			if(dateParam != null){
+				calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
 				date = DateUtil.format(dateParam);
+			}else
+			{
+				calendar.setTime(new Date());
+				date = DateUtil.format(calendar.getTime());
 			}
-			//model.addAttribute("PAPERLIST", this.paperService.loadDailyPaperList(productId, date));
+			model.addAttribute("PAPERLIST", this.paperService.findDailyPaperList(productId, calendar, this.getUserId(request)));
 			model.addAttribute("CURRENT_DATE",date);
+			model.addAttribute("TODAY", DateUtil.format(new Date()));
 			model.addAttribute("PRODUCTID", productId);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -310,6 +315,8 @@ public class LibraryController {
 			model.addAttribute("TOTAL",datagrid.getTotal());
 			model.addAttribute("STATUS_DONE",Constant.STATUS_DONE);
 			model.addAttribute("STATUS_UNDONE",Constant.STATUS_UNDONE);
+			//试卷类型
+			PaperTypeUtil.loadItemType(model);
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载考试记录数据异常...");

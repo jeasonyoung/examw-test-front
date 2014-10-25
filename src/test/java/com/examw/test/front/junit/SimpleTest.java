@@ -1,6 +1,7 @@
 package com.examw.test.front.junit;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Arrays;
@@ -59,6 +60,8 @@ public class SimpleTest {
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)-7, 0, 0, 0);
 		System.out.println(calendar.getTime());
-		System.out.println(DateUtil.parse("2014-10-24"));
+		System.out.println(DateUtil.parse("2014-10-24").compareTo(calendar.getTime()));
+		BigDecimal score = new BigDecimal(1);
+		System.out.println(score.divide(BigDecimal.TEN).doubleValue());
 	}
 }

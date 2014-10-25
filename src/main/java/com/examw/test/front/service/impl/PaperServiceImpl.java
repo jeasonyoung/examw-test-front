@@ -56,6 +56,8 @@ public class PaperServiceImpl implements IPaperService{
 	//用户考试记录集合数据远程地址
 	private String api_user_paper_records_url;
 	//用户考试记录数据远程地址
+	private String api_user_paper_lasted_record_url;
+	//用户考试记录数据远程地址
 	private String api_user_paper_record_url;
 	//用户考试记录数据添加远程地址
 	private String api_user_paper_record_add_url;
@@ -103,15 +105,26 @@ public class PaperServiceImpl implements IPaperService{
 		this.api_paper_detail_url = api_paper_detail_url;
 	}
 	
+	
 	/**
 	 * 设置 用户试卷记录地址
+	 * @param api_user_paper_lasted_record_url
+	 * 
+	 */
+	public void setApi_user_paper_lasted_record_url(
+			String api_user_paper_lasted_record_url) {
+		this.api_user_paper_lasted_record_url = api_user_paper_lasted_record_url;
+	}
+
+	/**
+	 * 设置  用户试卷记录地址
 	 * @param api_user_paper_record_url
 	 * 
 	 */
 	public void setApi_user_paper_record_url(String api_user_paper_record_url) {
 		this.api_user_paper_record_url = api_user_paper_record_url;
 	}
-	
+
 	/**
 	 * 设置 每日一练试卷的地址
 	 * @param api_daily_papers_url
@@ -283,7 +296,8 @@ public class PaperServiceImpl implements IPaperService{
 			
 		}
 		paper.setPaperRecordId(info.getId());	//设置试卷考试记录ID
-		paper.setLeftTime(paper.getTime()*60 - info.getUsedTime());	//设置剩余考试时间
+		if(paper.getTime()!=null)
+			paper.setLeftTime(paper.getTime()*60 - info.getUsedTime());	//设置剩余考试时间
 		return paper;
 	}
 	/**
@@ -297,7 +311,26 @@ public class PaperServiceImpl implements IPaperService{
 		//UserPaperRecordInfo info = (UserPaperRecordInfo) this.cacheHelper.getCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadLastedRecord", new String[]{userId,paperId});
 		UserPaperRecordInfo info = null;
 		if(info == null){
-			String url = String.format(this.api_user_paper_record_url,userId,paperId);
+			String url = String.format(this.api_user_paper_lasted_record_url,userId,paperId);
+			String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+			Json json = null;
+			if(!StringUtils.isEmpty(xml)){
+				json = JSONUtil.JsonToObject(xml, Json.class);
+			}
+			if(json.isSuccess())
+				info = JSONUtil.JsonToObject((String)json.getData(), UserPaperRecordInfo.class);
+//			if(info!=null){
+//				this.cacheHelper.putCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadLastedRecord", new String[]{userId,paperId}, info);
+//			}
+		}
+		return info;
+	}
+	public UserPaperRecordInfo findRecordById(String userId,String recordId)throws Exception{
+		//UserPaperRecordInfo info = (UserPaperRecordInfo) this.cacheHelper.getCache(UserPaperRecordInfo.class.getName(), this.getClass().getName()+"loadLastedRecord", new String[]{userId,paperId});
+		if(StringUtils.isEmpty(recordId)) return null;
+		UserPaperRecordInfo info = null;
+		if(info == null){
+			String url = String.format(this.api_user_paper_record_url,userId,recordId);
 			String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
 			Json json = null;
 			if(!StringUtils.isEmpty(xml)){
@@ -575,8 +608,22 @@ public class PaperServiceImpl implements IPaperService{
 //	}
 //	
 	@Override
-	public PaperPreview loadPaperAnalysis(String paperId, String userId,String productId) throws Exception {
+	public PaperPreview findPaperAnalysis(String paperId, String userId,String productId) throws Exception {
 		UserPaperRecordInfo info = this.findLastedRecord(userId, paperId);
+		if(info == null){
+			throw new RuntimeException("没有考试记录");
+		}else if(info.getStatus().equals(Constant.STATUS_UNDONE)){
+			throw new RuntimeException("考试未完成");
+		}
+		PaperPreview paper = this.findPaperDetail(paperId);
+		List<UserItemFavoriteInfo> list = this.loadItemFavorites(userId);
+		setUserAnswer(paper,info,list);	//附上用户答案
+		paper.setUserScore(info.getScore());
+		return paper;
+	}
+	
+	public PaperPreview findPaperAnalysis(String paperId,String recordId,String userId,String productId) throws Exception {
+		UserPaperRecordInfo info = this.findRecordById(userId,recordId);
 		if(info == null){
 			throw new RuntimeException("没有考试记录");
 		}else if(info.getStatus().equals(Constant.STATUS_UNDONE)){
@@ -680,14 +727,19 @@ public class PaperServiceImpl implements IPaperService{
 		if(result == null || result.size() == 0) return;
 		if(records == null || records.size() == 0) return;
 		for(FrontPaperInfo info:result){
-			for(UserPaperRecordInfo record:records){
-				if(info.getId().equalsIgnoreCase(record.getPaperId())){
-					info.setUserScore(record.getScore());//用户得分
-					info.setUsedTime(record.getUsedTime()); //使用时间
-					info.setExamTime(record.getCreateTime());
-					info.setExamStatus(record.getStatus());
-					break;
-				}
+			this.setUserRecordInfo(info, records);
+		}
+	}
+	//设置用户的考试记录
+	private void setUserRecordInfo(FrontPaperInfo info,List<UserPaperRecordInfo> records)
+	{
+		for(UserPaperRecordInfo record:records){
+			if(info.getId().equalsIgnoreCase(record.getPaperId())){
+				info.setUserScore(record.getScore());//用户得分
+				info.setUsedTime(record.getUsedTime()); //使用时间
+				info.setExamTime(record.getCreateTime());
+				info.setExamStatus(record.getStatus());
+				break;
 			}
 		}
 	}
@@ -705,7 +757,10 @@ public class PaperServiceImpl implements IPaperService{
 		}
 		Integer model = info.getModel();
 		record.setStatus(model);
-		record.setUsedTime((long)(paper.getTime() * 60 - info.getLimitTime())); // 使用时间
+		if(paper.getTime()!=null)
+			record.setUsedTime((long)(paper.getTime() * 60 - info.getLimitTime())); // 使用时间
+		else
+			record.setUsedTime((long)info.getLimitTime());
 		String chooseAnswers = info.getChooseAnswers();
 		Set<UserItemRecordInfo> itemRecords = new TreeSet<UserItemRecordInfo>();
 		Set<UserItemRecordInfo> itemRecordsNeedSave = new TreeSet<UserItemRecordInfo>();
@@ -776,6 +831,13 @@ public class PaperServiceImpl implements IPaperService{
 		judgePaper(paper,record, itemRecords);
 		if (!model.equals(Constant.STATUS_DONE)) {
 			record.setScore(null);
+		}
+		//如果是章节练习或者每日一练
+		if(paper.getType().equals(Constant.PAPER_TYPE_CHAPTER) || paper.getType().equals(Constant.PAPER_TYPE_DAILY)){
+			if(itemRecords.size() == paper.getTotal().intValue())
+			record.setStatus(Constant.STATUS_DONE);
+			//TODO	每日一练,章节练习 分数  已经做了多少题
+			record.setScore(new BigDecimal(itemRecords.size()));//+record.getScore().divide(BigDecimal.TEN).doubleValue()));
 		}
 		//时间提交过去有问题
 		record.setCreateTime(null);
@@ -1042,10 +1104,21 @@ public class PaperServiceImpl implements IPaperService{
 		if(list == null||list.size()==0) return null;
 		List<FrontPaperInfo> result = new ArrayList<FrontPaperInfo>();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		List<UserPaperRecordInfo> records = this.findUserPaperRecords(userId, productId);
+		boolean flag = (records == null || records.size() == 0);
 		for(FrontPaperInfo paper:list){
 			if(paper == null) continue;
-			if(format.parse(paper.getCreateTime()).compareTo(calendar.getTime())==-1){
-				result.add(paper);
+			Date paperDate = format.parse(paper.getCreateTime());
+			if(logger.isDebugEnabled()) logger.debug("试卷的日期:"+DateUtil.format(paperDate)+"  选取的日期:"+DateUtil.format(calendar.getTime()));
+			if(paperDate.compareTo(calendar.getTime())==-1){
+				calendar.add(Calendar.DAY_OF_MONTH, -1);
+				if(paperDate.compareTo(calendar.getTime())==1)
+				{
+					//查询练习记录,附上用户记录信息
+					if(!flag) this.setUserRecordInfo(paper, records);
+					result.add(paper);
+					calendar.add(Calendar.DAY_OF_MONTH, 1);
+				}
 			}
 		}
 		return result;

@@ -20,6 +20,7 @@
 	<div class="h30"></div>
 	<div class="content fl">
     	<div class="cont-l fl" id="leftArea">
+    		<#if PAPER.score??>
         	<div class="box fl yinying">
             	<div class="list">
                 	<ul>
@@ -30,6 +31,7 @@
                     </ul>
                 </div>
             </div>
+            </#if>
         	<div class="box fl yinying">
                 <div class="hui-botton"><a href="<@s.url "/library/error/${PRODUCTID}"/>">错题记录</a></div>
                 <div class="dangqian">试题解析</div>
@@ -37,7 +39,7 @@
                 <div class="h10"></div>
                 <div class="list">
                 	<ul>
-                        <li class="bb-no"><a href="<@s.url "/library/simulate/${PRODUCTID}"/>"><em class="back"></em>返回列表</a></li>
+                        <li class="bb-no"><a <#if PAPER.score??>href="<@s.url "/library/simulate/${PRODUCTID}"/>"<#else>href="<@s.url "/library/daily/${PRODUCTID}/0"/>"</#if>><em class="back"></em>返回列表</a></li>
                     </ul>
                 </div>
             </div>
@@ -56,10 +58,12 @@
                 </div>
             	<div class="name"><h1>${PAPER.name}</h1></div>
                 <div class="h20"></div>
+                <#if PAPER.score??>
                 <div class="shuoming" >
                 	<p>&gt; 本卷共分为${PAPER.structures?size}大题 ${PAPER.total}小题，作答时间为${PAPER.time}分钟，总分${PAPER.score}分，${PAPER.score*0.6}分及格。</p>
                     <p>&gt; 试卷来源：${PAPER.sourceName}</p>
                 </div>
+                </#if>
                 <div class="tixing fl">
                 	<div class="list">
                     	<ul>

@@ -35,7 +35,7 @@
                 	<li <#if current_page=="center">class="bg"</#if>><a href="<@s.url "/library/"/>${product_id}">首 页</a></li>
                     <li <#if current_page=="simulate">class="bg"</#if>><a href="<@s.url "/library/simulate/${product_id}"/>">模拟考场</a></li>
                     <li <#if current_page=="chapter">class="bg"</#if>><a href="<@s.url "/library/chapter/list/${product_id}"/>">章节练习</a></li>
-                    <li <#if current_page=="daily">class="bg"</#if>><a href="<@s.url "/library/daily/${product_id}"/>">每日一练</a><span>7</span></li>
+                    <li <#if current_page=="daily">class="bg"</#if>><a href="<@s.url "/library/daily/${product_id}/0"/>">每日一练</a><span>7</span></li>
                     <!-- <li ><a href="#">评估报告</a></li> -->
                     <li <#if current_page=="record">class="bg"</#if>><a href="<@s.url "/library/record/${product_id}"/>">练习记录</a></li>
                 </ul>

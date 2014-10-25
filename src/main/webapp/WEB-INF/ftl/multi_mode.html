@@ -23,7 +23,7 @@
     	<div class="cont-l fl" id="leftArea">
         	<div class="box fl yinying">
             	<div class="time" id="showtime">00:00:00</div>
-            	<#if ISDAILY>
+            	<#if !PAPER.score??>
             	<div class="jiaojuan-botton"><a href="javascript:void(0)" onclick="submitAnswer(1)">结束作答</a></div>
             	<#else>
                 <div class="hui-botton"><a href="javascript:void(0)" onclick="pause_do();">暂停</a></div>
@@ -59,8 +59,10 @@
             	<div class="name"><h1>${PAPER.name}</h1></div>
                 <div class="h20"></div>
                 <div class="shuoming" > 
+                	<#if PAPER.score??>
                 	<p>&gt; 本卷共分为${PAPER.structures?size}大题 ${PAPER.total}小题，作答时间为${PAPER.time}分钟，总分${PAPER.score}分，${PAPER.score*0.6}分及格。</p>
                     <p>&gt; 试卷来源：${PAPER.sourceName}</p>
+                    </#if>
                 </div>
                 <div class="tixing fl">
                 	<div class="list">
@@ -254,9 +256,14 @@ $(function(){
 		$(this).siblings().removeClass("bg").attr("current",'false');
 	});
 	//<!-- timer -->
-	window.limit_time = 20;//parseInt('${PAPER.leftTime?c}');        // 单位：秒
+	<#if PAPER.leftTime??>
+	window.limit_time = parseInt('${PAPER.leftTime?c}');        // 单位：秒
+	<#else>
+	window.limit_time = 0;
+	</#if>
+	
 	window.timer         = setInterval(updateTime,1000);        // 过1秒执行
-	<#if !ISDAILY>
+	<#if PAPER.score??>
 	function updateTime(){
 		if (window.limit_time==300){
 			//小于5分钟提示

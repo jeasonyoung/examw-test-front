@@ -130,7 +130,7 @@ public class PaperController {
 		//TODO 模拟一个用户ID
 		String userId = this.getUserId(request);
 		try{
-			PaperPreview info = this.paperService.loadPaperAnalysis(paperId,userId,productId);
+			PaperPreview info = this.paperService.findPaperAnalysis(paperId,userId,productId);
 			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
 			model.addAttribute("PAPER", info);
 			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
@@ -141,6 +141,35 @@ public class PaperController {
 			//答错
 			model.addAttribute("STATUS_WRONG", Constant.STATUS_WRONG);
 			
+			model.addAttribute("PRODUCTID",productId);
+		}catch(Exception e){
+			e.printStackTrace();
+			if(logger.isDebugEnabled()) logger.debug("加载试卷解析详情异常..."+e.getMessage());
+			if(e.getMessage().equals("考试未完成"))
+				return "redirect:/library/paper/"+productId+"/do/multi/"+paperId;
+			return "redirect:/library/paper/"+productId+"/"+paperId;
+		}
+		return "multi_mode_showanswer";
+	}
+	
+	//获取试卷的解析 [根据试卷记录的ID查找记录]
+	@RequestMapping(value ="/{productId}/analysis/{paperId}/{recordId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String paperRecordAnalysis(@PathVariable String paperId,@PathVariable String recordId,@PathVariable String productId,Model model,HttpServletRequest request){
+		if(logger.isDebugEnabled()) logger.debug("加载试卷试题解析详情...");
+		//TODO 模拟一个用户ID
+		String userId = this.getUserId(request);
+		try{
+			PaperPreview info = this.paperService.findPaperAnalysis(paperId,recordId,userId,productId);
+			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
+			model.addAttribute("PAPER", info);
+			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
+			//题型
+			ItemTypeUtil.loadItemType(model);
+			//答对
+			model.addAttribute("STATUS_RIGHT", Constant.STATUS_RIGHT);
+			//答错
+			model.addAttribute("STATUS_WRONG", Constant.STATUS_WRONG);
+				
 			model.addAttribute("PRODUCTID",productId);
 		}catch(Exception e){
 			e.printStackTrace();

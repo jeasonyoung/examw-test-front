@@ -108,11 +108,7 @@
             	<#if PAPERLIST?? && (PAPERLIST?size >0)>
                 <div class="moni-list">
                     <ul>
-                    	<#assign ids = ""/>
                     	<#list PAPERLIST as paper>
-                    	<#if ids?contains(paper.paperId)>
-                    	<#else>
-                    	<#assign ids = ids+paper.paperId+","/>
                         <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
                             <div class="title">
                                 <ol>
@@ -120,17 +116,15 @@
                                     	<label style="color: #f06000;">[${paper.paperTypeName}]</label>
                                     	${paper.paperName}
                                     </div>
-                                    <p>${paper.lastTime?string("yyyy-MM-dd")}</p> 
-                                    <#if paper.paperType == 1>
-                                    <p class="red">总共：5题</p><p class="red">做对：0题</p>
-                                    <#elseif paper.paperType == 2>
-                                    <p class="red">用时：${paper.usedTime/60}分钟</p><p class="red">得分：${paper.score}分</p>
-                                    <#elseif paper.paperType == 4>
+                                    <p>${paper.lastTime?string("yyyy-MM-dd")}</p>
+                                    <#if paper.paperType == PAPER_TYPE_CHAPTER || paper.paperType == PAPER_TYPE_DAILY>
+                                    <p class="red">总共：${paper.score?floor}题</p><p class="red">已做：${paper.score}题</p>
+                                    <#else>
                                     <p class="red">用时：${(paper.usedTime/60)?ceiling}分钟</p><p class="red">得分：${paper.score?default(0)}分</p>
                                     </#if>
                                 </ol>
                                 <#if paper.status == STATUS_DONE>
-                                <span><a href="<@s.url "/library/paper/${PRODUCTID}/analysis/${paper.paperId}"/>" class="red">查看解析</a></span>
+                                <span><a href="<@s.url "/library/paper/${PRODUCTID}/analysis/${paper.paperId}/${paper.id}"/>" class="red">查看解析</a></span>
                                 <span><div class="buy-botton"><div class="hong-botton"><a href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.paperId}"/>">再做一次</a></div></div></span>
                                 <#else>
                                 <span><a class="red">未完成</a></span>
@@ -138,7 +132,6 @@
                                 </#if>
                             </div>
                         </li>
-                        </#if>
                         </#list>
                     </ul>
                 </div>

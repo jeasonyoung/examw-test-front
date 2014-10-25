@@ -66,4 +66,26 @@ public class Constant {
 	 * 试卷答题状态[record status] 2:未完成
 	 */
 	public static final int STATUS_UNDONE = 0;	//未完成
+	
+	//试卷类型
+	/*
+	 * <entry key="1" value="历年真题" />
+				<entry key="2" value="模拟试题" />
+				<entry key="3" value="预测试题" />
+				<entry key="4" value="练习题" />
+				<entry key="5" value="章节练习" />
+				<entry key="6" value="每日一练" />
+	 */
+	/*** 历年真题 */
+	public static final int PAPER_TYPE_REAL = 1;
+	/*** 模拟试题 */
+	public static final int PAPER_TYPE_SIMU = 2;
+	/*** 预测试题 */
+	public static final int PAPER_TYPE_FORECAS = 3;
+	/*** 练习题 */
+	public static final int PAPER_TYPE_PRACTICE = 4;
+	/*** 章节练习 */
+	public static final int PAPER_TYPE_CHAPTER = 5;
+	/*** 每日一练 */
+	public static final int PAPER_TYPE_DAILY = 6;
 }

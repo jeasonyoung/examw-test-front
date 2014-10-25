@@ -39,10 +39,14 @@
 	    <property name="api_user_paper_records_url" value="${api_user_paper_records_url}" />
 	    <!-- 用户考试数据数据远程地址 -->
 	    <property name="api_user_paper_record_url" value="${api_user_paper_record_url}" />
+	    <!-- 用户考试数据数据远程地址 -->
+	    <property name="api_user_paper_lasted_record_url" value="${api_user_paper_lasted_record_url}" />
 	    <!-- 添加考试记录数据远程地址 -->
 	    <property name="api_user_paper_record_add_url" value="${api_user_paper_record_add_url}" />
 	    <!-- 试题收藏集合数据远程地址 -->
 	    <property name="api_user_collections_url" value="${api_user_collection_item_url}" />
+	    <!-- 每日一练试卷集合数据远程地址 -->
+	    <property name="api_daily_papers_url" value="${api_daily_papers_url}" />
 	    <!-- web终端代码 -->
 	    <property name="web_terminal_code" value="${web_terminal_code}"/>
 	    <!-- 数据缓存帮助类 -->

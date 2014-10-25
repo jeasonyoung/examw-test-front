@@ -24,40 +24,19 @@
             </div>
             <div class="moni-list">
               	<ul>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                            <i>
-                            	<div class="title"><a href="#" target="_blank" title="2014年经济师考试《经济师》每日一练（09月04日）">2014年经济师考试《经济师》每日一练（09月04日）</a></div>
-                                <p>共有 2人参与练习，平均正确率达44%</p>
-                            </i>
-                            <span>只完成30/101道</span>
-                            <span>未完成</span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">继续做题</a></div></div></span>
-                        </div>
-                    </li>
-                    <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
-                        <div class="title">
-                        	<i>
-                            	<div class="title"><a href="#跳到测试页" target="_blank" title="2014年经济师考试《中级经济师》每日一练（09月04日）">2014年经济师考试《中级经济师》每日一练（09月04日）</a></div>
-                                <p>共有 2人参与练习，平均正确率达40%</p>
-                            </i>
-                            <span>全部完成</span>
-                            <span><a href="#" target="_blank"><font class="red">查看解析</font></a></span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">再做一次</a></div></div></span>
-                        </div>
-                    </li>
+              		<#if PAPERLIST?? && (PAPERLIST?size>0)>
                     <#list PAPERLIST as paper>
                     <li class="moni-out" onMouseOver="this.className='moni-over'" onMouseOut="this.className='moni-out'">
                         <div class="title">
                             <i>
                             	<div class="title">
                             		<a <#if paper.status != STATUS_DONE>href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.id}"/>"<#else>href="<@s.url "/library/paper/${PRODUCTID}/analysis/${paper.id}"/>"</#if> target="_blank" title="${paper.name}">${paper.name}</a></div>
-                                <p>共有 ${paper.totalUser}人参与练习，平均正确率达44%</p>
+                                <p>共有 ${paper.userTotal}人参与练习</p>
                             </i>
-                            <#if paper.status != STATUS_DONE>
-                            <span>只完成${paper.score}/${paper.total}道</span>
+                            <#if paper.examStatus != STATUS_DONE>
+                            <span>只完成${paper.userScore}/${paper.total}道</span>
                             <span>未完成</span>
-                            <span><div class="buy-botton"><div class="hei-botton"><a href="#">继续做题</a></div></div></span>
+                            <span><div class="buy-botton"><div class="hei-botton"><a href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.id}"/>">继续做题</a></div></div></span>
                             <#else>
                             <span>全部完成</span>
                             <span><a href="<@s.url "/library/paper/${PRODUCTID}/analysis/${paper.id}"/>" target="_blank"><font class="red">查看解析</font></a></span>
@@ -66,6 +45,9 @@
                         </div>
                     </li>
                     </#list>
+                    <#else>
+                  	 	<li class="line">亲爱的同学，暂无该天的每日一练试卷，做做模拟题，<a href="<@s.url "/library/simulate/${PRODUCTID}"/>" class="red">立即练习</a></li>
+                    </#if>
                 </ul>
             </div>
         </div>
@@ -111,18 +93,30 @@ Date.prototype.format = function(format)
  } 
  $(function(){
 		$("#week").html("");
-		var current_date = (new Date()).format("yyyy/MM/dd");
+		var current_date = "${CURRENT_DATE}";
 		for(var i = 0;i<7;i++){
-			var d = new Date();
+			var d = new Date("${TODAY}");
 			d.setDate(d.getDate()-i);
-			var li = $("<li><a href='javascript:void(0)'>"+d.format("eee")+"<br/>"+d.format("yyyy-MM-dd")+"</a></li>");
+			var li ;//= $("<li><a href='javascript:void(0)' onclick='chooseDate(\""+d.format("yyyy-MM-dd")+"\")'>"+d.format("eee")+"<br/>"+d.format("yyyy-MM-dd")+"</a></li>");
 			if(i == 0){
-				li = $("<li>今天<br/>"+d.format("yyyy-MM-dd")+"</li>");
+				if(d.format("yyyy-MM-dd") == current_date)
+					li = $("<li>今天<br/>"+d.format("yyyy-MM-dd")+"</li>");
+				else
+					li = $("<li><a href='javascript:void(0)' onclick='chooseDate(\""+d.format("yyyy-MM-dd")+"\")'>今天<br/>"+d.format("yyyy-MM-dd")+"</a></li>");
+			}else
+			{
+				if(d.format("yyyy-MM-dd") == current_date)
+					li = $("<li>"+d.format("eee")+"<br/>"+d.format("yyyy-MM-dd")+"</li>");
+				else
+					li = $("<li><a href='javascript:void(0)' onclick='chooseDate(\""+d.format("yyyy-MM-dd")+"\")'>"+d.format("eee")+"<br/>"+d.format("yyyy-MM-dd")+"</a></li>");
 			}
-			if(d.format("yyyy/MM/dd") == current_date){
+			if(d.format("yyyy-MM-dd") == current_date){
 				li.attr("class","mr-no bg");
 			} 
 			$("#week").prepend(li);
+		}
+		chooseDate = function(date){
+			location = '<@s.url "/library/daily/${PRODUCTID}/"/>'+date;
 		}
  })
 </script>
