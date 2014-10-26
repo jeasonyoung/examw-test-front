@@ -66,25 +66,52 @@
 			}
 		}
 		//<!-- 收藏或取消收藏 -->
-		collectOrCancel = function(obj,structureItemId,itemId){
+		//<!-- 收藏或取消收藏 -->
+		collectOrCancel = function(obj,itemId,userAnswer){
+			var pid = $(obj).attr("pid");
+			if(pid) itemId = pid+"#"+itemId;
+			if($(obj).html()=="收藏")
+			{
+				var d = dialog({
+					id:'favorDialog',
+					title: '题目收藏',
+					drag: true,
+			        content: "<div class='cont-r' style='width: 438px;'><div class='xz-daan fl' style='width: 438px;padding:0 0'><div>收藏备注</div><textarea id='favorText' class='wenben' rows='' cols='' name='' style='width: 438px; height: 104px;'></textarea></div><div>",
+			        okValue:"收藏",
+			        cacelValue:"取消",
+			        ok: function () {
+			        	var data = {"itemId":itemId,"userAnswer":userAnswer,"productId":productId,"paperId":paperId,"remarks":$('#favorText').val()}
+			            collector(d,obj,data);
+			        }
+			    });
+				d.showModal();
+				return;
+			}else{
+				var data = {"itemId":itemId,"userAnswer":userAnswer,"productId":productId,"paperId":paperId}
+				collector(null,obj,data)
+			}
+			
+		}
+		function collector(d,obj,value){
 			$.ajax({
 				type:"POST",
 				url:'<@s.url "/library/item/collect"/>',
-				data:{"structureItemId":structureItemId,"itemId":itemId},
+				data:value,
 				dataType:'json',
 				success:function(data){
 					if(data.success){
-						if(data.data == 0) //取消收藏成功
+						if(data.data == 1) //取消收藏成功
 						{
 							$(obj).parent().siblings().attr("class","shoucang");
 							$(obj).html("收藏");
+							if(d) d.close().remove();
 							showTips(obj,"取消收藏成功!");
 						}
 						else{
-							//$(obj).parent().siblings().attr("class","shoucang-h");
-							//$(obj).html("移除此收藏");
-							//showTips(obj,"收藏成功，您可以到“练习记录中”去查看收藏的试题！");
-							$("div[name='item_whole'][item_id='"+itemId+"']").remove();
+							$(obj).parent().siblings().attr("class","shoucang-h");
+							$(obj).html("移除此收藏");
+							if(d) d.close().remove();
+							showTips(obj,"收藏成功，您可以到“练习记录中”去查看收藏的试题！");
 						}
 					}
 				}

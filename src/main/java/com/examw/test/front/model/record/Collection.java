@@ -11,6 +11,7 @@ import java.util.Date;
 public class Collection implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String id,userId,itemId,userAnswer,productId,paperId,subjectId;
+	private String remarks;
 	/**
 	 * 获取 
 	 * @return subjectId
@@ -131,5 +132,20 @@ public class Collection implements Serializable {
 	public void setPaperId(String examId) {
 		this.paperId = examId;
 	}
-	
+	/**
+	 * 获取 
+	 * @return remarks
+	 * 
+	 */
+	public String getRemarks() {
+		return remarks;
+	}
+	/**
+	 * 设置 
+	 * @param remarks
+	 * 
+	 */
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
 }

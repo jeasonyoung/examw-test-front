@@ -105,6 +105,12 @@ public class CollectionServiceImpl implements ICollectionService{
 		if(StringUtils.isEmpty(info.getItemId()) || StringUtils.isEmpty(info.getUserId())) 
 			return null;
 		String url = String.format(this.api_collection_url,info.getUserId());
+		if(StringUtils.isEmpty(info.getPaperId())){
+			UserItemFavoriteInfo favor = new UserItemFavoriteInfo();
+			favor.setItemId(info.getItemId());
+			favor.setUserId(info.getUserId());
+			return HttpUtil.upload(url, favor);
+		}
 		PaperPreview paper = this.paperService.findPaperDetail(info.getPaperId());
 		UserItemFavoriteInfo favor = null;
 		if(info.getItemId().contains("#")){
@@ -140,11 +146,13 @@ public class CollectionServiceImpl implements ICollectionService{
 			BeanUtils.copyProperties(info, data, new String[]{"createTime","lastTime"});
 			data.setItemId(info.getId());
 			info.setUserAnswer(c.getUserAnswer());
+			info.setRemarks(c.getRemarks());	//设置收藏备注
 			data.setItemContent(JSONUtil.ObjectToJson(info));
 			data.setTerminalCode(web_terminal_code);
 			data.setUserId(c.getUserId());
 			data.setItemType(info.getType());
 			data.setSubjectId(info.getSubjectId());
+			data.setRemarks(c.getRemarks());
 			data.setId(null);
 			return data;
 		}

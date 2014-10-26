@@ -19,7 +19,7 @@
 	</#if>
 </#macro>
 <#macro item_choose i input index>
-	<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_status="${i.answerStatus}">
+	<div name="item_whole" class="box fl" item_type="${i.type}" item_id="${i.id}" item_status="${i.answerStatus}">
 		<#if i.parentContent??>
 		<div id="font14" class="fenxiti fl" fenxi_item_id="${i.pid}">
 			<i>材料题</i>
@@ -64,16 +64,16 @@
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
                     <!--<div class="f-r fr"><em class="jiucuo"></em><i><a href="#">纠错</a></i></div>-->
                     <#if i.isCollected>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.id}');">移除此收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
                     <#else>
-                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.id}');">收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
                     </#if>
                </div>
          </div>
          <@item_analysis i index/>
 </#macro>
 <#macro item_judge i index>
-	<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_status="${i.answerStatus}">
+	<div name="item_whole" class="box fl" item_type="${i.type}" item_id="${i.id}" item_status="${i.answerStatus}">
 		<#if i.parentContent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
@@ -128,9 +128,9 @@
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
                     <#if i.isCollected>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.id}');">移除此收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
                     <#else>
-                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.id}');">收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
                     </#if>
                     <!--收藏后<div class="f-r fl"><em class="shoucang"></em><i><a href="#">收藏</a></i></div>-->
                </div>
@@ -139,7 +139,7 @@
     </div>
 </#macro>
 <#macro item_qanda i index>
-	<div class="box fl">
+	<div name="item_whole" class="box fl">
        <div class="timu fl" >
            <i>${index}.</i>
            <em><span id="cailiao14">[${i.typeName}]<a></a></span>${i.content}</em>
@@ -172,6 +172,11 @@
               <div class="cankaobox fl">
                    <i>参考解析：</i>${i.analysis}
               </div>
+              </#if>
+              <#if i.remarks??>
+              	<div class="cankaobox fl">
+                   <i>收藏备注：</i>${i.remarks}
+              	</div>
               </#if>
               <div class="h10"></div>
          <div>
@@ -216,6 +221,11 @@
               <div class="cankaobox fl">
                    <i>参考解析：</i>${i.analysis}
               </div>
+              <#if i.remarks??>
+              	<div class="cankaobox fl">
+                   <i>收藏备注：</i>${i.remarks}
+              	</div>
+              </#if>
               <div class="h10"></div>
     </div>
 </#macro>

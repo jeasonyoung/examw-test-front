@@ -64,11 +64,11 @@
 			}
 		}
 		//<!-- 收藏或取消收藏 -->
-		collectOrCancel = function(obj,structureItemId,itemId){
+		collectOrCancel = function(obj,itemId,userAnswer){
 			$.ajax({
 				type:"POST",
 				url:'<@s.url "/library/item/collect"/>',
-				data:{"structureItemId":structureItemId,"itemId":itemId},
+				data:{"itemId":itemId},
 				dataType:'json',
 				success:function(data){
 					if(data.success){

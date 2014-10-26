@@ -3,3 +3,34 @@ ExamwCom  = ${ExamwCom}
 <div>matches: <#if text?matches("[A-Z]{1}[.][\\W\\w]*")>${text?substring(2)}<#else>not matched</#if><div>
 <#assign score = 0.0/>
 <div>${(score?string)?substring((score?string)?index_of(".")+1)}</div>
+
+<!--	添加笔记的代码 
+			<#if i??>
+              <div class="bookbox fl">
+                    <div class="book-l fl"><span>第${index}题笔记</span>（本题共${i.totalNoteNum?default(0)}条笔记）</div>
+                    <div class="sybook fr"><a href="javascript:void(0)" onclick="showNote('${i.id}','${index}','all')">查看所有笔记（${i.totalNoteNum?default(0)}条）</a></div>
+                    <div class="mybook fr"><a href="javascript:void(0)" onclick="showNote('${i.id}','${index}','mine')">查看我的笔记（${i.userNoteNum?default(0)}条）</a></div>
+                    <textarea name="" class="notebook" id="font14" s_item_id="${i.id}" item_id = "${i.id}"></textarea>
+                    <div class="sure"><a href="javascript:void(0)" onclick="addNote(this);">确认保存</a></div>
+              </div>
+              <div name="noteList" s_item_id="${i.id}" style="display:none">
+              	<div name="content">
+              		<div class="textbook fl">
+                    	<div class="txt">
+                         <div class="pic-bg"><a href="#" target="_blank" title=""></a></div>
+                         <div class="pic"><img src="<@s.url "/resources/front-default/image/pic2.jpg"/>" width="70" height="70"></div>
+                         <div class="f-right">
+                             <div class="vipname fl"><a href="#" target="_blank" title="王艳阳">王艳阳</a><span>1小时前</span></div>
+                             <div class="pinglun fl">2—3年</div>
+                             <div class="huifu"><a href="#" class="huifu">回复(0)</a></div>
+                             <div class="zan"><a href="#" class="zan">(0)</a></div>
+                         </div>
+                      </div>
+                    </div>
+               	</div>
+               <div class="h10"></div>
+                <div id="pager${index}" class="pager-plugin">
+               </div>
+         	</div>
+         	</#if>
+          -->

@@ -474,6 +474,7 @@ public abstract class BaseItemInfo<T extends BaseItemInfo<T>>  extends Paging im
 	private Integer answerStatus;	// 回答状态
 	private String parentContent; 	// 材料内容
 	private String recordId;		// 答题记录ID
+	private String remarks;			// 收藏备注
 	/**
 	 * 获取 是否被收藏
 	 * @return isCollected
@@ -569,6 +570,22 @@ public abstract class BaseItemInfo<T extends BaseItemInfo<T>>  extends Paging im
 	 */
 	public void setRecordId(String recordId) {
 		this.recordId = recordId;
+	}
+	/**
+	 * 获取 收藏备注
+	 * @return remarks
+	 * 
+	 */
+	public String getRemarks() {
+		return remarks;
+	}
+	/**
+	 * 设置 收藏备注
+	 * @param remarks
+	 * 
+	 */
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
 	}
 	
 }
