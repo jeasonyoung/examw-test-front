@@ -15,8 +15,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.model.DataGrid;
+import com.examw.model.Json;
 import com.examw.test.front.model.Constant;
 import com.examw.test.front.model.library.FrontPaperInfo;
 import com.examw.test.front.model.library.PaperInfo;
@@ -256,6 +258,7 @@ public class LibraryController {
 			model.addAttribute("PAPERLIST", this.paperService.findDailyPaperList(productId, calendar, this.getUserId(request)));
 			model.addAttribute("CURRENT_DATE",date);
 			model.addAttribute("TODAY", DateUtil.format(new Date()));
+			model.addAttribute("STATUS_DONE",Constant.STATUS_DONE);
 			model.addAttribute("PRODUCTID", productId);
 		}catch(Exception e){
 			e.printStackTrace();
@@ -263,6 +266,18 @@ public class LibraryController {
 		return "daily_practice";
 	}
 	
+	@RequestMapping(value = "/daily/{productId}/rest/num", method = RequestMethod.GET)
+	@ResponseBody
+	public Json dailyRestNumber(@PathVariable String productId,HttpServletRequest request){
+		try{
+			String userId = this.getUserId(request);
+			return this.paperService.findUndoneDailyPaperNumber(userId, productId);
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+					
+	}
 	/**
 	 * 获取模拟考场
 	 * @param model
@@ -338,4 +353,5 @@ public class LibraryController {
 	private String getUserId(HttpServletRequest request){
 		return ((User)(request.getSession().getAttribute("USER"))).getProductUserId();
 	}
+	
 }

@@ -19,7 +19,7 @@ import com.examw.support.CustomDateSerializer;
 public class UserPaperRecordInfo extends Paging {
 	private static final long serialVersionUID = 1L;
 	private String id,userId,paperId,productId,paperName,paperTypeName,subjectId;
-	private Integer status,terminalCode,paperType;
+	private Integer status,terminalCode,paperType,rightNum;
 	private Long usedTime;
 	private BigDecimal score;
 	private Date createTime,lastTime;
@@ -255,4 +255,21 @@ public class UserPaperRecordInfo extends Paging {
 	public String getSubjectId() {
 		return subjectId;
 	}
+	/**
+	 * 获取 做对的题目个数
+	 * @return rightNum
+	 * 做对的题目个数
+	 */
+	public Integer getRightNum() {
+		return rightNum;
+	}
+	/**
+	 * 设置 做对的题目个数
+	 * @param rightNum
+	 * 做对的题目个数
+	 */
+	public void setRightNum(Integer rightNum) {
+		this.rightNum = rightNum;
+	}
+	
 }

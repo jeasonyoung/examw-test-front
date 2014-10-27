@@ -14,7 +14,7 @@ public class SubjectInfo extends Paging{
 	private static final long serialVersionUID = 1L;
 	private String id,name;
 	private String examId,examName;
-	private String areaId,areaName;
+	private String[] areaId,areaName;
 	private String categoryId,categoryName;
 	private Integer code;
 	/**
@@ -95,11 +95,11 @@ public class SubjectInfo extends Paging{
 		this.examName = examName;
 	}
 	/**
-	 * 获取 地区ID
+	 * 获取地区ID
 	 * @return areaId
 	 * 地区ID
 	 */
-	public String getAreaId() {
+	public String[] getAreaId() {
 		return areaId;
 	}
 	/**
@@ -107,7 +107,7 @@ public class SubjectInfo extends Paging{
 	 * @param areaId
 	 * 地区ID
 	 */
-	public void setAreaId(String areaId) {
+	public void setAreaId(String[] areaId) {
 		this.areaId = areaId;
 	}
 	/**
@@ -115,7 +115,7 @@ public class SubjectInfo extends Paging{
 	 * @return areaName
 	 * 地区名称
 	 */
-	public String getAreaName() {
+	public String[] getAreaName() {
 		return areaName;
 	}
 	/**
@@ -123,7 +123,7 @@ public class SubjectInfo extends Paging{
 	 * @param areaName
 	 * 地区名称
 	 */
-	public void setAreaName(String areaName) {
+	public void setAreaName(String[] areaName) {
 		this.areaName = areaName;
 	}
 	/**

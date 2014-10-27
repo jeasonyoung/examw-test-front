@@ -39,11 +39,11 @@
                         	<#else>
                         	<li><a href="javascript:void(0)" onclick="choose('status','')">全部记录</a></li>
                         	<#if CURRENT_STATUS==STATUS_DONE>
-                            <li><a href="#">已完成</a></li>
+                            <li><a class="bg">已完成</a></li>
                             <li><a href="javascript:void(0)" onclick="choose('status','${STATUS_UNDONE}')">未完成</a></li>
                             <#else>
                             <li><a href="javascript:void(0)" onclick="choose('status','${STATUS_DONE}')">已完成</a></li>
-                            <li><a href="#">未完成</a></li>
+                            <li><a class="bg">未完成</a></li>
                             </#if>
                         	</#if>
                         </ul>
@@ -116,11 +116,11 @@
                                     	<label style="color: #f06000;">[${paper.paperTypeName}]</label>
                                     	${paper.paperName}
                                     </div>
-                                    <p>${paper.lastTime?string("yyyy-MM-dd")}</p>
+                                    <dl>${paper.lastTime?string("yyyy-MM-dd")}</dl>
                                     <#if paper.paperType == PAPER_TYPE_CHAPTER || paper.paperType == PAPER_TYPE_DAILY>
-                                    <p class="red">总共：${paper.score?floor}题</p><p class="red">已做：${paper.score}题</p>
+                                    <dl class="red">已做：${paper.score}题</dl><dl class="red">做对：${paper.rightNum?default(0)}题</dl>
                                     <#else>
-                                    <p class="red">用时：${(paper.usedTime/60)?ceiling}分钟</p><p class="red">得分：${paper.score?default(0)}分</p>
+                                    <dl class="red">用时：${(paper.usedTime/60)?ceiling}分钟</dl><dl class="red">得分：${paper.score?default(0)}分</dl>
                                     </#if>
                                 </ol>
                                 <#if paper.status == STATUS_DONE>
@@ -162,7 +162,7 @@ $(function() {
 	   total = Number("${TOTAL}");
 	   if(total > 0)
 		{
-		   total = Math.floor(total%5==0?total/5:(total/5+1));
+		   total = Math.floor(total%10==0?total/10:(total/10+1));
 		   $("#pager").pager({ pagenumber: ${PAGE}, pagecount: total, buttonClickCallback: PageClick });
 		}
  });

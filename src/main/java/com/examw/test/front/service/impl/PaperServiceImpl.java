@@ -65,6 +65,8 @@ public class PaperServiceImpl implements IPaperService{
 	private String api_user_collections_url;
 	//每日一练试卷列表
 	private String api_daily_papers_url;
+	//今日一练未做的个数
+	private String api_daily_papers_undone_number_url;
 	//web终端代码
 	private Integer web_terminal_code;
 	//数据缓存帮助类
@@ -151,7 +153,16 @@ public class PaperServiceImpl implements IPaperService{
 	public void setApi_user_collections_url(String api_user_collections_url) {
 		this.api_user_collections_url = api_user_collections_url;
 	}
-	
+	/**
+	 * 设置 
+	 * @param api_daily_papers_undone_number_url
+	 * 
+	 */
+	public void setApi_daily_papers_undone_number_url(
+			String api_daily_papers_undone_number_url) {
+		this.api_daily_papers_undone_number_url = api_daily_papers_undone_number_url;
+	}
+
 	/**
 	 * 设置 web终端代码
 	 * @param web_terminal_code
@@ -161,7 +172,6 @@ public class PaperServiceImpl implements IPaperService{
 		if(logger.isDebugEnabled()) logger.debug(String.format("注入web终端代码[%1$s]...",web_terminal_code));
 		this.web_terminal_code = web_terminal_code;
 	}
-
 	/**
 	 * 设置 缓存辅助类
 	 * @param cacheHelper
@@ -835,9 +845,11 @@ public class PaperServiceImpl implements IPaperService{
 		//如果是章节练习或者每日一练
 		if(paper.getType().equals(Constant.PAPER_TYPE_CHAPTER) || paper.getType().equals(Constant.PAPER_TYPE_DAILY)){
 			if(itemRecords.size() == paper.getTotal().intValue())
-			record.setStatus(Constant.STATUS_DONE);
-			//TODO	每日一练,章节练习 分数  已经做了多少题
-			record.setScore(new BigDecimal(itemRecords.size()));//+record.getScore().divide(BigDecimal.TEN).doubleValue()));
+				record.setStatus(Constant.STATUS_DONE);
+			else
+				record.setStatus(Constant.STATUS_UNDONE);
+			record.setRightNum(record.getScore().intValue());
+			record.setScore(new BigDecimal(itemRecords.size()));
 		}
 		//时间提交过去有问题
 		record.setCreateTime(null);
@@ -1008,7 +1020,7 @@ public class PaperServiceImpl implements IPaperService{
 				return false;
 			}
 		}
-		if(item.getType().equals(Constant.TYPE_MULTY) || item.getType().equals(Constant.TYPE_MULTY)) {
+		if(item.getType().equals(Constant.TYPE_MULTY) || item.getType().equals(Constant.TYPE_UNCERTAIN)) {
 			String[] arr = itemRecord.getAnswer().split(",");
 			String answer = item.getAnswer();
 			int total = 0;
@@ -1117,8 +1129,8 @@ public class PaperServiceImpl implements IPaperService{
 					//查询练习记录,附上用户记录信息
 					if(!flag) this.setUserRecordInfo(paper, records);
 					result.add(paper);
-					calendar.add(Calendar.DAY_OF_MONTH, 1);
 				}
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
 			}
 		}
 		return result;
@@ -1138,5 +1150,19 @@ public class PaperServiceImpl implements IPaperService{
 				this.cacheHelper.putCache(FrontProductInfo.class.getName(), this.getClass().getName()+"loadPaperList", new Object[]{productId}, list);
 		}
 		return list;
+	}
+	
+	@Override
+	public Json findUndoneDailyPaperNumber(String userId, String productId)
+			throws Exception {
+		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷列表...");
+		if(StringUtils.isEmpty(productId))
+		return null;
+		String url = String.format(this.api_daily_papers_undone_number_url,userId,productId);
+		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		if(!StringUtils.isEmpty(xml)){
+			return JSONUtil.JsonToObject(xml, Json.class);
+		}
+		return null;
 	}
 }

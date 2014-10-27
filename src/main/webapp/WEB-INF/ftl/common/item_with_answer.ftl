@@ -21,7 +21,7 @@
 </#macro>
 <#macro item_choose parent i input index>
 	<div name="item_whole" class="box fl" item_type="${i.type}" item_id="${i.id}" item_status="${i.answerStatus?default(0)}">
-		<#if i.parentContent??>
+		<#if MODEL != "multi" && i.parentContent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
 			<em>${i.parentContent}</em>
@@ -53,7 +53,7 @@
             </#if>
          </div>
          <div class="daanbox fl">
-               <div class="zhankai-bg" item_id="${i.id}" <#if index != 1>style="display:none"</#if>></div>
+               <div class="zhankai-bg" item_id="${i.id}" ></div>
                <div class="f-l fl"><i>参考答案：</i><@calculate_right_answer parent i/></div>
                <div class="f-l fl"><i>我的答案：</i><@calculate_user_answer parent i/></div>
                <div class="fr" id="font14">
@@ -72,7 +72,7 @@
 </#macro>
 <#macro item_judge parent i index>
 	<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_status="${i.answerStatus}">
-		<#if i.parentContent??>
+		<#if MODEL != "multi" && i.parentContent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
 			<em>${i.parentContent}</em>
@@ -90,7 +90,7 @@
        		</#if>
          </div>
          <div class="daanbox fl">
-               <div class="zhankai-bg" item_id="${(i.id)}" <#if index != 1>style="display:none"</#if>></div>
+               <div class="zhankai-bg" item_id="${(i.id)}" ></div>
                <div class="f-l fl"><i>参考答案：</i>
                			<em class="dui">
                			<#if i.answer == ANSWER_JUDGE_RIGTH>
@@ -134,6 +134,12 @@
 <!-- 问答题 -->
 <#macro item_qanda i index>
 	<div class="box fl">
+		<#if MODEL != "multi" && i.parentContent??>
+		<div id="font14" class="fenxiti fl">
+			<i>材料题</i>
+			<em>${i.parentContent}</em>
+		</div>
+		</#if>
        <div class="timu fl"></a>
            <i>${index}.</i>
            <em><span id="cailiao14">[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${i.pid}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>
@@ -153,7 +159,7 @@
                     </#if>
                </div>
          </div>
-         <div class="jiexi-box fl" name="jiexi" item_id="${(i.id)}" <#if index != 1>style="display:none"</#if>>
+         <div class="jiexi-box fl" name="jiexi" item_id="${(i.id)}" >
          	  <div class="cankaobox fl">
                    <i>我的答案：</i>${i.userAnswer}
               </div>
@@ -255,7 +261,7 @@
          </#if>
 </#macro>
 <#macro item_analysis i index>
-	<div class="jiexi-box fl" name="jiexi" item_id="${(i.id)}" <#if index != 1>style="display:none"</#if>>
+	<div class="jiexi-box fl" name="jiexi" item_id="${(i.id)}" >
               <div class="cankaobox fl">
                    <i>参考解析：</i>${i.analysis}
               </div>

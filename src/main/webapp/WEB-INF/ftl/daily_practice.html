@@ -33,7 +33,11 @@
                             		<a <#if paper.status != STATUS_DONE>href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.id}"/>"<#else>href="<@s.url "/library/paper/${PRODUCTID}/analysis/${paper.id}"/>"</#if> target="_blank" title="${paper.name}">${paper.name}</a></div>
                                 <p>共有 ${paper.userTotal}人参与练习</p>
                             </i>
-                            <#if paper.examStatus != STATUS_DONE>
+                            <#if !paper.examStatus??>
+                            <span></span>
+							<span></span>
+                            <span><div class="buy-botton"><div class="hei-botton"><a href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.id}"/>">开始做题</a></div></div></span>
+                            <#elseif paper.examStatus != STATUS_DONE>
                             <span>只完成${paper.userScore}/${paper.total}道</span>
                             <span>未完成</span>
                             <span><div class="buy-botton"><div class="hei-botton"><a href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.id}"/>">继续做题</a></div></div></span>

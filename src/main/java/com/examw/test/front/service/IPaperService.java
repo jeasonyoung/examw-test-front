@@ -126,4 +126,12 @@ public interface IPaperService {
 	 * @return
 	 */
 	List<FrontPaperInfo> findDailyPaperList(String productId,Calendar date,String userId)throws Exception;
+	/**
+	 * 未做的今日一练的信息
+	 * @param userId
+	 * @param productId
+	 * @return
+	 * @throws Exception
+	 */
+	Json findUndoneDailyPaperNumber(String userId,String productId)throws Exception;
 }
