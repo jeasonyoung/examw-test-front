@@ -41,6 +41,8 @@
 <script type="text/javascript">
 	$(function(){
 		//<!-- 查看材料 -->
+		var itemContent = '${ITEMCONTENT}';
+		var productId = '${PRODUCTID}'
 		showCommonTitle = function(id){
 			dialog({
 				id:'cailiaoDialog',
@@ -80,14 +82,14 @@
 			        okValue:"收藏",
 			        cacelValue:"取消",
 			        ok: function () {
-			        	var data = {"itemId":itemId,"userAnswer":userAnswer,"productId":productId,"paperId":paperId,"remarks":$('#favorText').val()}
+			        	var data = {"itemId":itemId,"userAnswer":userAnswer,"productId":productId,"remarks":$('#favorText').val(),id:itemContent}
 			            collector(d,obj,data);
 			        }
 			    });
 				d.showModal();
 				return;
 			}else{
-				var data = {"itemId":itemId,"userAnswer":userAnswer,"productId":productId,"paperId":paperId}
+				var data = {"itemId":itemId,"userAnswer":userAnswer,"productId":productId}
 				collector(null,obj,data)
 			}
 			
@@ -176,30 +178,6 @@
 			    quickClose: true// 点击空白处快速关闭
 			});
 			d.show(obj);
-		}
-		// 添加笔记
-		addNote = function(obj){
-			var textarea = $(obj).parent().parent().find("textarea");
-			if(!$.trim(textarea.val()) || textarea.val().length<6){
-				showTips(obj,"请输入笔记内容(至少5个字)!");
-				return;
-			}
-			$.ajax({
-				type:"POST",
-				url:"<@s.url "/library/item/addnote"/>",
-				data:{"content":textarea.val(),"structureItemId":textarea.attr("s_item_id"),"itemId":textarea.attr("item_id")},
-				dataType:"json",
-				success:function(data){
-					if(data.success){
-						var note = data.data;
-						var html = "<div class='textbook fl'><div class='txt'><div class='pic-bg'><a href='#' target='_blank' title=''></a></div><div class='pic'><img src='<@s.url '/resources/front-default/image/pic2.jpg'/>' width='70' height='70'></div><div class='f-right'><div class='vipname fl'><a href='#' target='_blank' title='note.username'>"+note.username+"</a><span>"+note.time+"</span></div><div class='pinglun fl'>"+note.content+"</div></div></div></div>"
-						var contentArea = $("div[name='noteList'][s_item_id='"+textarea.attr("s_item_id")+"']").find("div[name='content']");
-						contentArea.prepend(html);
-						$("div[name='noteList'][s_item_id='"+textarea.attr("s_item_id")+"']").show();
-						textarea.val("");
-					}
-				}			
-			});
 		}
 	});
 </script>

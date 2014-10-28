@@ -53,8 +53,16 @@
 			dataType:'json',
 			success:function(data){
 				if(data && data.success){
-					$("#dailyRestNum").html(data.data);
+					if(parseInt(data.data) > 0)
+						$("#dailyRestNum").html(data.data);
+					else
+						$("#dailyRestNum").hide();
+				}else{
+					$("#dailyRestNum").hide();
 				}
+			},
+			error:function(){
+				$("#dailyRestNum").hide();
 			}
 		});
 	});

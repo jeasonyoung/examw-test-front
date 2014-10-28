@@ -78,6 +78,8 @@
 	<bean id="errorItemService" class="com.examw.test.front.service.impl.ErrorItemServiceImpl">
 	    <!-- 错题集合数据远程地址 -->
 	    <property name="api_error_items_url" value="${api_item_errors_url}" />
+	    <!--  收藏服务类 -->
+	    <property name="collectionService" ref="collectionService"/>
 	    <!-- 数据缓存帮助类 -->
 	    <property name="cacheHelper" ref="cacheHelper"/>
 	</bean>

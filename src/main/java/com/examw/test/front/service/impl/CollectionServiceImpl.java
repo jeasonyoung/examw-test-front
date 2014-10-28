@@ -109,6 +109,14 @@ public class CollectionServiceImpl implements ICollectionService{
 			UserItemFavoriteInfo favor = new UserItemFavoriteInfo();
 			favor.setItemId(info.getItemId());
 			favor.setUserId(info.getUserId());
+			favor.setTerminalCode(this.web_terminal_code);
+			if(!StringUtils.isEmpty(info.getId())){	//从错题记录中收藏
+				StructureItemInfo item = JSONUtil.JsonToObject(info.getId(),StructureItemInfo.class);
+				favor.setItemContent(info.getId());
+				favor.setItemType(item.getType());
+				favor.setSubjectId(item.getSubjectId());
+				favor.setRemarks(info.getRemarks());
+			}
 			return HttpUtil.upload(url, favor);
 		}
 		PaperPreview paper = this.paperService.findPaperDetail(info.getPaperId());
@@ -242,6 +250,7 @@ public class CollectionServiceImpl implements ICollectionService{
 			if(info == null)continue;
 			StructureItemInfo data = new StructureItemInfo();
 			data = JSONUtil.JsonToObject(info.getItemContent(), StructureItemInfo.class);
+			data.setRemarks(info.getRemarks());
 			result.add(data);
 		}
 		return result;

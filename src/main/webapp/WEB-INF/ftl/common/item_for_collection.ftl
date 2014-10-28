@@ -221,6 +221,7 @@
               <div class="cankaobox fl">
                    <i>参考解析：</i>${i.analysis}
               </div>
+              <div class="h10"></div>
               <#if i.remarks??>
               	<div class="cankaobox fl">
                    <i>收藏备注：</i>${i.remarks}

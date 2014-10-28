@@ -510,6 +510,7 @@ public class PaperServiceImpl implements IPaperService{
 		info.setUsedTime(0L);
 		info.setTerminalCode(web_terminal_code);
 		info.setStatus(Constant.STATUS_UNDONE); //刚加入未完成
+		info.setScore(BigDecimal.ZERO);
 		return info;
 	}
 

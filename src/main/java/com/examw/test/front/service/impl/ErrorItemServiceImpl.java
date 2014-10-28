@@ -11,13 +11,15 @@ import java.util.TreeSet;
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.util.StringUtils;
 
 import com.examw.model.DataGrid;
 import com.examw.test.front.model.Constant;
 import com.examw.test.front.model.library.StructureItemInfo;
+import com.examw.test.front.model.record.Collection;
+import com.examw.test.front.model.record.UserItemFavoriteInfo;
 import com.examw.test.front.model.record.UserItemRecordInfo;
+import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.service.IErrorItemService;
 import com.examw.test.front.support.HttpUtil;
 import com.examw.test.front.support.JSONUtil;
@@ -30,12 +32,9 @@ import com.examw.test.front.support.MethodCacheHelper;
  */
 public class ErrorItemServiceImpl implements IErrorItemService {
 	private static final Logger logger = Logger.getLogger(ErrorItemServiceImpl.class);
+	private ICollectionService collectionService;
 	private String api_error_items_url;
 	private MethodCacheHelper cacheHelper;
-	private ObjectMapper mapper;
-	public ErrorItemServiceImpl() {
-		this.mapper = new ObjectMapper();
-	}
 	/**
 	 * 设置 获取错题集合数据接口
 	 * @param api_error_items_url
@@ -54,6 +53,22 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 		this.cacheHelper = cacheHelper;
 	}
 	
+	/**
+	 * 设置 收藏服务类
+	 * @param collectionService
+	 * 
+	 */
+	public void setCollectionService(ICollectionService collectionService) {
+		this.collectionService = collectionService;
+	}
+
+	/**
+	 * 加载错题集合
+	 * @param subjectId
+	 * @param userId
+	 * @return
+	 * @throws IOException
+	 */
 	@SuppressWarnings("unchecked")
 	public List<UserItemRecordInfo> loadErrorItemList(String subjectId,String userId) throws IOException {
 		if(logger.isDebugEnabled()) logger.debug(String.format("加载科目[%1$s]下所有错题...",subjectId));
@@ -70,6 +85,10 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 		}
 		return null;
 	}
+	/*
+	 * 查询错题记录
+	 * @see com.examw.test.front.service.IErrorItemService#dataGrid(java.lang.String, com.examw.test.front.model.library.StructureItemInfo, java.lang.String)
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public DataGrid<StructureItemInfo> dataGrid(String productId,StructureItemInfo info, String userId) throws Exception {
@@ -78,7 +97,12 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 		Integer rows = info.getRows()==null?10:info.getRows();
 		List<StructureItemInfo> list = (List<StructureItemInfo>) this.cacheHelper.getCache(StructureItemInfo.class.getName(), this.getClass().getName(), new Object[]{info.getSubjectId(),userId,productId});
 		if(list == null){
-			list = this.changeModel(this.loadErrorItemList(info.getSubjectId(),userId));
+			Collection favorInfo = new Collection();
+			favorInfo.setSubjectId(info.getSubjectId());
+			favorInfo.setUserId(info.getUserId());
+			favorInfo.setProductId(productId);
+			List<UserItemFavoriteInfo> favorList = this.collectionService.loadCollectionItems(favorInfo);
+			list = this.changeModel(this.loadErrorItemList(info.getSubjectId(),userId),favorList);
 			if(list!=null)
 				this.cacheHelper.putCache(StructureItemInfo.class.getName(), this.getClass().getName(), new Object[]{info.getSubjectId(),userId,productId}, list);
 		}
@@ -90,7 +114,6 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 			return datagrid;
 		}
 		for(StructureItemInfo item : list){
-			if(logger.isDebugEnabled()) logger.debug(this.mapper.writeValueAsString(item));
 			boolean flag = true;
 			if(flag && !StringUtils.isEmpty(info.getSubjectId()) && item.getSubjectId()!=null){
 				flag = (info.getSubjectId().contains(item.getSubjectId()));
@@ -108,29 +131,34 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 			{
 				datagrid.setRows(result);
 			}else
-				datagrid.setRows(result.subList((page-1)*rows, page*rows>total?total:page*rows));
+			{
+				List<StructureItemInfo> subList = (result.subList((page-1)*rows, page*rows>total?total:page*rows));
+				datagrid.setRows(subList);
+				
+			}
 		}
 		return datagrid;
 	}
-	//模型转化
-	private List<StructureItemInfo> changeModel(List<UserItemRecordInfo> errorItemList) throws JsonParseException, JsonMappingException, IOException {
+	//模型转化	isCollected(itemId, item, favors);
+	private List<StructureItemInfo> changeModel(List<UserItemRecordInfo> errorItemList,List<UserItemFavoriteInfo> favors) throws JsonParseException, JsonMappingException, IOException {
 		if(errorItemList == null || errorItemList.size() ==0)
 		return null;
 		 List<StructureItemInfo> result = new ArrayList<StructureItemInfo>();
 		 for(UserItemRecordInfo info:errorItemList){
 			 if(info == null)continue;
 			 StructureItemInfo data = new StructureItemInfo();
-			 data = this.mapper.readValue(info.getItemContent(), StructureItemInfo.class);
+			 data = JSONUtil.JsonToObject(info.getItemContent(), StructureItemInfo.class);
 			 if(!StringUtils.isEmpty(info.getAnswer()))
 			 {
 				 if(info.getItemId().contains("#")){
 					if(data.getType().equals(Constant.TYPE_SHARE_TITLE)){
-						 setShareTitleUserAnswer(data,info.getItemId(),info.getAnswer());
+						 setShareTitleUserAnswer(data,info.getItemId(),info.getAnswer(),favors);
 					}else if(data.getType().equals(Constant.TYPE_SHARE_ANSWER)){
-						setShareAnswerUserAnswer(data,info.getItemId(),info.getAnswer());
+						setShareAnswerUserAnswer(data,info.getItemId(),info.getAnswer(),favors);
 					}
 				 }else{
 					 data.setUserAnswer(info.getAnswer());
+					 isCollected(data.getId(), data, favors);
 				 }
 			 }
 			 result.add(data);
@@ -139,35 +167,44 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 	}
 	//设置共享题干题的用户答案
 	private void setShareTitleUserAnswer(StructureItemInfo data, String itemId,
-			String answer) {
+			String answer,List<UserItemFavoriteInfo> favors) {
 		Set<StructureItemInfo> children = data.getChildren();
 		for(StructureItemInfo child:children){
 			if((data.getId()+"#"+child.getId()).equals(itemId)){
 				child.setUserAnswer(answer);
+				isCollected(itemId, child, favors);
 				break;
 			}
 		}
 	}
 	//设置共享答案题的用户答案
 	private void setShareAnswerUserAnswer(StructureItemInfo data,
-			String itemId, String answer) {
+			String itemId, String answer,List<UserItemFavoriteInfo> favors) {
 		TreeSet<StructureItemInfo> set = new TreeSet<StructureItemInfo>();
 		set.addAll(data.getChildren());
 		Set<StructureItemInfo> children = set.last().getChildren();	//子题目
 		for(StructureItemInfo child:children){
 			if((data.getId()+"#"+child.getId()).equals(itemId)){
 				child.setUserAnswer(answer);
+				isCollected(itemId, child, favors);
 				break;
 			}
 		}
 	}
-	
+	/**
+	 * 加载题目的详细内容
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, Object> loadItemDetail(String productId,String subjectId, String userId,String itemId)throws Exception {
 		List<StructureItemInfo> list = (List<StructureItemInfo>) this.cacheHelper.getCache(StructureItemInfo.class.getName(), this.getClass().getName(), new Object[]{subjectId,userId,productId});
 		if(list == null){
-			list = this.changeModel(this.loadErrorItemList(subjectId,userId));
+			Collection favorInfo = new Collection();
+			favorInfo.setSubjectId(subjectId);
+			favorInfo.setUserId(userId);
+			favorInfo.setProductId(productId);
+			List<UserItemFavoriteInfo> favorList = this.collectionService.loadCollectionItems(favorInfo);
+			list = this.changeModel(this.loadErrorItemList(subjectId,userId),favorList);
 			if(list!=null)
 				this.cacheHelper.putCache(StructureItemInfo.class.getName(), this.getClass().getName(), new Object[]{subjectId,userId,productId}, list);
 		}
@@ -179,10 +216,12 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 			{
 				index = i;
 				data = info;
+				break;
 			}
 		}
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("ITEM", data);
+		map.put("ITEMCONTENT", JSONUtil.ObjectToJson(data));
 		if(index != 0)
 		{
 			map.put("LAST_ITEM_ID",list.get(index-1).getId());
@@ -191,5 +230,16 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 			map.put("NEXT_ITEM_ID", list.get(index+1).getId());
 		}
 		return map;
+	}
+	
+	//判断是否被收藏
+	private void isCollected(String itemId,StructureItemInfo item,List<UserItemFavoriteInfo> favors){
+		if(favors == null || favors.size() == 0) return ;
+		for(UserItemFavoriteInfo favor:favors){
+			if(itemId.equalsIgnoreCase(favor.getItemId())){
+				item.setIsCollected(true);
+				item.setRemarks(favor.getRemarks());
+			}
+		}
 	}
 }

@@ -1,7 +1,6 @@
 package com.examw.test.front.model.record;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 用户题目收藏
@@ -28,7 +27,6 @@ public class Collection implements Serializable {
 	public void setSubjectId(String subjectId) {
 		this.subjectId = subjectId;
 	}
-	private Date createTime;
 	/**
 	 * 获取 ID
 	 * @return id
@@ -77,22 +75,6 @@ public class Collection implements Serializable {
 	 */
 	public void setItemId(String itemId) {
 		this.itemId = itemId;
-	}
-	/**
-	 * 获取 创建时间
-	 * @return createTime
-	 * 创建时间
-	 */
-	public Date getCreateTime() {
-		return createTime;
-	}
-	/**
-	 * 设置 创建时间
-	 * @param createTime
-	 * 创建时间
-	 */
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
 	}
 	/**
 	 * 获取 用户答案

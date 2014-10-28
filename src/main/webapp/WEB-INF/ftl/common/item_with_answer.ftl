@@ -57,7 +57,7 @@
                <div class="f-l fl"><i>参考答案：</i><@calculate_right_answer parent i/></div>
                <div class="f-l fl"><i>我的答案：</i><@calculate_user_answer parent i/></div>
                <div class="fr" id="font14">
-                    <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
+                    <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')">收起解析</a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
                     <!--<div class="f-r fr"><em class="jiucuo"></em><i><a href="#">纠错</a></i></div>-->
                     <#if (i.isCollected)>
@@ -118,7 +118,7 @@
                			</#if>
                </div>
                <div class="fr" id="font14">
-                    <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
+                    <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')">收起解析</a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
                     <#if (i.isCollected)>
                     <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
@@ -149,7 +149,7 @@
        </div>
        <div class="daanbox fl">
                <div class="fr" id="font14">
-                    <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
+                    <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')">收起解析</a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
                     <!--<div class="f-r fr"><em class="jiucuo"></em><i><a href="#">纠错</a></i></div>-->
                     <#if (i.isCollected)>

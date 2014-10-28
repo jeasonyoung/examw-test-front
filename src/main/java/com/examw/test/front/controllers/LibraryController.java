@@ -98,7 +98,7 @@ public class LibraryController {
 	//题目列表
 	@RequestMapping(value = "/collection/{productId}/items/{subjectId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String collectionDetail(@PathVariable String productId,@PathVariable String subjectId,Model model,HttpServletRequest request){
-		if(logger.isDebugEnabled()) logger.debug("加载错题详细界面...");
+		if(logger.isDebugEnabled()) logger.debug("加载收藏试题详细界面...");
 		model.addAttribute("PRODUCTID", productId);
 		Collection info = new Collection();
 		info.setProductId(productId);
@@ -157,10 +157,12 @@ public class LibraryController {
 					subjectId = subjectId+s.getId()+",";
 				}
 			}
+			//带有缓存
 			Map<String,Object> map = this.errorItemService.loadItemDetail(productId,subjectId,userId,itemId);
 			model.addAttribute("LAST_ITEM_ID", map.get("LAST_ITEM_ID"));
 			model.addAttribute("NEXT_ITEM_ID",map.get("NEXT_ITEM_ID"));
 			model.addAttribute("ITEM",map.get("ITEM"));
+			model.addAttribute("ITEMCONTENT", map.get("ITEMCONTENT"));
 			//题型
 			ItemTypeUtil.loadItemType(model);
 			//是否显示答案

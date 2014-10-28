@@ -48,8 +48,8 @@
 .cont-r .timu em span{ width:auto; color:#f60; float:left; padding-right:8px; line-height:30px}
 .cont-r .timu em span a:link,.cont-r .timu em span a:visited,.cont-r .timu em span a:active{color:#f60}
 .cont-r .timu em span a:hover{ color:#cc0000}
-.fenxiti,.cont-r .timu table{ background-color:#dedede}
-.fenxiti,.cont-r .timu tr,td{ background-color:#FFF}
+.fenxiti table,.cont-r .timu table{ background-color:#dedede; text-align:center; margin:5px;}
+.fenxiti td,.cont-r .timu td{ background-color:#FFF}
 /*选择题答案*/
 .cont-r .xz-daan{ width:750px; background-position:240px -180px; height:auto !important; min-height:1px; height:1px; padding:20px 0px 20px 39px; position:relative}
 .cont-r .xz-daan .dui{ background-position:-350px 0; width:73px; height:52px; position:absolute; top:-25px; left:-10px}
