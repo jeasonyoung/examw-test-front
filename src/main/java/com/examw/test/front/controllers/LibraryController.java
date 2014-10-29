@@ -249,12 +249,12 @@ public class LibraryController {
 			Date dateParam = DateUtil.parse(date);
 			//解析错误就加载今天的数据
 			Calendar calendar = Calendar.getInstance();
-			if(dateParam != null){
+			if(dateParam == null){
 				calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-				date = DateUtil.format(dateParam);
+				date = DateUtil.format(calendar.getTime());
 			}else
 			{
-				calendar.setTime(new Date());
+				calendar.setTime(dateParam);
 				date = DateUtil.format(calendar.getTime());
 			}
 			model.addAttribute("PAPERLIST", this.paperService.findDailyPaperList(productId, calendar, this.getUserId(request)));

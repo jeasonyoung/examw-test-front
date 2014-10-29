@@ -82,7 +82,7 @@
             <#list PAPER.structures as structure>
             <#assign total = total + structure.total/> 
             <#assign xuhao = total-structure.total + 1 />
-            <div class="tx-box fl" structure_id="${structure.id}">${structure.title}</div>
+            <div class="tx-box fl" structure_id="${structure.id}">${structure.title} ${structure.description}</div>
             <#list structure.items?sort_by(["orderNo"]) as i>
             	<#if i.type != TYPE_SHARE_TITLE_VALUE && i.type != TYPE_SHARE_ANSWER_VALUE>
             		<@show_item father=null item=i index=(i_index+xuhao)/>

@@ -56,6 +56,7 @@
                <div class="zhankai-bg" item_id="${i.id}" ></div>
                <div class="f-l fl"><i>参考答案：</i><@calculate_right_answer parent i/></div>
                <div class="f-l fl"><i>我的答案：</i><@calculate_user_answer parent i/></div>
+               <#if i.userScore??><div class="f-l fl"><i>得分：</i><em class="weida">${i.userScore} 分</em></div></#if>
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')">收起解析</a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
@@ -117,6 +118,7 @@
                				</em>
                			</#if>
                </div>
+               <#if i.userScore??><div class="f-l fl"><i>得分：</i><em class="weida">${i.userScore} 分</em></div></#if>
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')">收起解析</a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
@@ -168,6 +170,7 @@
                    <i>参考答案：</i>${i.answer}
               </div>
               </#if>
+              <#if i.userScore??><div class="f-l fl"><i>得分：</i><em class="weida">${i.userScore} 分</em></div></#if>
               <#if i.analysis??>
               <div class="cankaobox fl">
                    <i>参考解析：</i>${i.analysis}

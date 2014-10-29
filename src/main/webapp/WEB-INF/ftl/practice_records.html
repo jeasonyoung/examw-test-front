@@ -169,7 +169,7 @@ $(function() {
  PageClick = function(pageclickednumber) {
      $("#pager").pager({ pagenumber: pageclickednumber, pagecount: total, buttonClickCallback: PageClick });
      //跳转
-     choose("page",pagenumber);
+     choose("page",pageclickednumber);
  }
  function choose(tag,value){
  	$("#form input[name='"+tag+"']").val(value);

@@ -308,6 +308,8 @@ public class PaperServiceImpl implements IPaperService{
 		paper.setPaperRecordId(info.getId());	//设置试卷考试记录ID
 		if(paper.getTime()!=null)
 			paper.setLeftTime(paper.getTime()*60 - info.getUsedTime());	//设置剩余考试时间
+		else
+			paper.setLeftTime(info.getUsedTime());
 		return paper;
 	}
 	/**
@@ -624,6 +626,7 @@ public class PaperServiceImpl implements IPaperService{
 		if(info == null){
 			throw new RuntimeException("没有考试记录");
 		}else if(info.getStatus().equals(Constant.STATUS_UNDONE)){
+			if(!(info.getPaperType().equals(Constant.PAPER_TYPE_DAILY)||info.getPaperType().equals(Constant.PAPER_TYPE_CHAPTER)) )
 			throw new RuntimeException("考试未完成");
 		}
 		PaperPreview paper = this.findPaperDetail(paperId);
@@ -638,6 +641,7 @@ public class PaperServiceImpl implements IPaperService{
 		if(info == null){
 			throw new RuntimeException("没有考试记录");
 		}else if(info.getStatus().equals(Constant.STATUS_UNDONE)){
+			if(!(info.getPaperType().equals(Constant.PAPER_TYPE_DAILY)||info.getPaperType().equals(Constant.PAPER_TYPE_CHAPTER)))
 			throw new RuntimeException("考试未完成");
 		}
 		PaperPreview paper = this.findPaperDetail(paperId);
@@ -955,7 +959,7 @@ public class PaperServiceImpl implements IPaperService{
 						if (item.getId()
 								.equals(itemRecord.getItemId())) {
 							// 判断对错
-							if(judgeItemIsRight(item, itemRecord, min, per))
+							judgeItemIsRight(item, itemRecord, min, per);
 							actualRuleTotal = actualRuleTotal.add(itemRecord
 									.getScore());
 							break;
@@ -967,9 +971,8 @@ public class PaperServiceImpl implements IPaperService{
 							for (StructureItemInfo child : children) {
 								if ((item.getId()+"#"+child.getId()).equals(itemRecord.getItemId())) {
 									// 判断对错
-									if(judgeItemIsRight(child, itemRecord, min, per))
-										actualRuleTotal = actualRuleTotal
-											.add(itemRecord.getScore());
+									judgeItemIsRight(child, itemRecord, min, per);
+									actualRuleTotal = actualRuleTotal.add(itemRecord.getScore());
 									break;
 								}
 							}
@@ -980,9 +983,8 @@ public class PaperServiceImpl implements IPaperService{
 							for(StructureItemInfo i:children){
 								if((item.getId()+"#"+i.getId()).equalsIgnoreCase(itemRecord.getItemId())){
 									//判断对错
-									if(judgeItemIsRight(i, itemRecord, min, per))
-										actualRuleTotal = actualRuleTotal
-											.add(itemRecord.getScore());
+									judgeItemIsRight(i, itemRecord, min, per);
+									actualRuleTotal = actualRuleTotal.add(itemRecord.getScore());
 									break;
 								}
 							}
@@ -1122,16 +1124,17 @@ public class PaperServiceImpl implements IPaperService{
 		for(FrontPaperInfo paper:list){
 			if(paper == null) continue;
 			Date paperDate = format.parse(paper.getCreateTime());
-			if(logger.isDebugEnabled()) logger.debug("试卷的日期:"+DateUtil.format(paperDate)+"  选取的日期:"+DateUtil.format(calendar.getTime()));
-			if(paperDate.compareTo(calendar.getTime())==-1){
-				calendar.add(Calendar.DAY_OF_MONTH, -1);
-				if(paperDate.compareTo(calendar.getTime())==1)
+			if(logger.isDebugEnabled()) logger.debug("试卷的日期:"+format.format(paperDate)+"  选取的日期:"+DateUtil.format(calendar.getTime())+" 比较的结果:"+paperDate.compareTo(calendar.getTime()));
+			if(paperDate.compareTo(calendar.getTime())==1){
+				calendar.add(Calendar.DAY_OF_MONTH, 1);
+				if(logger.isDebugEnabled()) logger.debug("试卷的日期:"+format.format(paperDate)+"  选取的日期:"+DateUtil.format(calendar.getTime())+" 比较的结果:"+paperDate.compareTo(calendar.getTime()));
+				if(paperDate.compareTo(calendar.getTime())==-1)
 				{
 					//查询练习记录,附上用户记录信息
 					if(!flag) this.setUserRecordInfo(paper, records);
 					result.add(paper);
 				}
-				calendar.add(Calendar.DAY_OF_MONTH, 1);
+				calendar.add(Calendar.DAY_OF_MONTH, -1);
 			}
 		}
 		return result;

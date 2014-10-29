@@ -63,5 +63,6 @@ public class SimpleTest {
 		System.out.println(DateUtil.parse("2014-10-24").compareTo(calendar.getTime()));
 		BigDecimal score = new BigDecimal(1);
 		System.out.println(score.divide(BigDecimal.TEN).doubleValue());
+		System.out.println(new BigDecimal(1).compareTo(BigDecimal.ZERO));
 	}
 }

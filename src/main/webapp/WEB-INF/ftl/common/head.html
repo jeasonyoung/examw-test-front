@@ -45,11 +45,12 @@
 </div>
 </#if>
 </div>
+<#if product_id?? && product_id !="">
 <script type="text/javascript">
 	$(function(){
 		$.ajax({
 			type:"GET",
-			url:'<@s.url "/library/daily/${PRODUCTID}/rest/num"/>',
+			url:'<@s.url "/library/daily/${product_id}/rest/num"/>',
 			dataType:'json',
 			success:function(data){
 				if(data && data.success){
@@ -67,3 +68,4 @@
 		});
 	});
 </script>
+</#if>
