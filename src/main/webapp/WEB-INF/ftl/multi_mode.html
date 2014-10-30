@@ -461,6 +461,7 @@ $(function(){
 		}
 		//提交
 		function submit(data){
+			 dialog({}).showModal();
 			 $.ajax({
 				 type:"POST",
 	             url:'<@s.url "/library/paper/submit"/>',
@@ -498,7 +499,11 @@ $(function(){
 	//点击顶部其他链接需要提醒保存答案
 	$("#top_head").find("a").click(function(){
 		var url = $(this).attr("href");
+		<#if PAPER.score??>
 		answerNexttime(url);
+		<#else>
+		submitAnswer(1);
+		</#if>
 		return false;
 	});
 });

@@ -1042,10 +1042,11 @@ public class PaperServiceImpl implements IPaperService{
 				itemRecord.setScore(per); // 得标准分
 				itemRecord.setStatus(ItemRecord.STATUS_RIGHT); // 答对
 				return true;
-			} else {
+			} else { 
 				itemRecord.setScore((min == null || min
 						.compareTo(BigDecimal.ZERO) == -1) ? BigDecimal.ZERO
 								: min.multiply(new BigDecimal(total))); // 得0分或者负分
+				if(itemRecord.getScore().compareTo(per)==1) itemRecord.setScore(per); //得分不能超过该题总分
 				itemRecord.setStatus(ItemRecord.STATUS_LESS); // 少选
 				return false;
 			}

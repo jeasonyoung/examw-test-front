@@ -31,7 +31,7 @@
                             <i>
                             	<div class="title">
                             		<a <#if paper.status != STATUS_DONE>href="<@s.url "/library/paper/${PRODUCTID}/do/multi/${paper.id}"/>"<#else>href="<@s.url "/library/paper/${PRODUCTID}/analysis/${paper.id}"/>"</#if> target="_blank" title="${paper.name}">${paper.name}</a></div>
-                                <p>共有 ${paper.userTotal}人参与练习</p>
+                                <p>共 ${paper.total} 题</p><p>共有 ${paper.userTotal}人参与练习</p>
                             </i>
                             <#if !paper.examStatus??>
                             <span></span>
