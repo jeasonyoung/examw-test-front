@@ -244,8 +244,10 @@
 	<#else>
 		<#if i.answerStatus == STATUS_RIGHT>
 			<em class="dui">
-		<#else>
+		<#elseif i.answerStatus == STATUS_WRONG>
 			<em class="cuo">
+		<#else>
+			<em class="shao">
 		</#if>
      	<#if parent??>	<!-- 共享答案题  -->
 	 	<#list parent.children?sort_by(["orderNo"]) as option>
@@ -279,7 +281,7 @@
        			<div class="list">
           			<ul>
 		</#if>
-		<li item_status="${item.answerStatus}"><a <#if item.answerStatus == STATUS_RIGHT>class="dui"<#else>class="cuo"</#if> href="javascript:void(0)" onclick="focusTo(this,${item_index+1})" item_id="${item.id}" s_item_id="${item.id}">${item_index+1}</a></li>
+		<li item_status="${item.answerStatus}"><a <#if item.answerStatus == STATUS_RIGHT>class="dui"<#elseif item.answerStatus == STATUS_WRONG>class="cuo"<#else>class="shao"</#if> href="javascript:void(0)" onclick="focusTo(this,${item_index+1})" item_id="${item.id}" s_item_id="${item.id}">${item_index+1}</a></li>
 		<#if item_index != 0 && (item_index+1)%5==0>
 			 	</ul>
         	</div>

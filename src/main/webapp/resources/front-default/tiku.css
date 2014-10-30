@@ -79,6 +79,7 @@
 .datika .ka-box .list li a:hover{width:30px; height:26px; float:left; background:#f60; border:#f60 solid 1px;-moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; color:#fff}
 .daanbox .f-l .dui,.datika .dui{background:#4ca50e!important}
 .daanbox .f-l .cuo,.datika .cuo{background:#f00!important}
+.daanbox .f-l .shao,.datika .shao{background:#f90!important}
 .daanbox .f-l .yida,.datika .yida{background:#ccc!important}
 /*正确答案*/
 .defen{font: 56px/56px "Georgia";font-style:italic;color: #f00; height:66px; letter-spacing:3px; background-position:-430px 54px}
