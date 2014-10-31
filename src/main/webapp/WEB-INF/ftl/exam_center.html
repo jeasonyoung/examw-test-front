@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="gb2312">
-<title>考试系统题库</title>
+<title>考试系统题库-${PRODUCT.name}</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <div class="f-r fl">
-                	<div class="botton"><div class="hei-botton"><a href="<@s.url "/products"/>?examId=${PRODUCT.examId}"</a>>返回产品中心</a></div></div>
+                	<div class="botton"><div class="hei-botton"><a href="<@s.url "/product"/>?examId=${PRODUCT.examId}"</a>>返回产品中心</a></div></div>
                 </div>
             </div>
             <div class="hbg"></div>
@@ -78,7 +78,7 @@
             <div class="tj-botton hong-botton"><a href="<@s.url "/library/chapter/list/${PRODUCT.id}"/>">快速做题</a></div>
         </div>
     </div>
-    <div class="tongji-out yinying mr-no" onMouseOver="this.className='tongji-over yinying mr-no'" onMouseOut="this.className='tongji-out yinying mr-no'" onclick='location="<@s.url "/library/daily/${PRODUCT.id}"/>"'>
+    <div class="tongji-out yinying mr-no" onMouseOver="this.className='tongji-over yinying mr-no'" onMouseOut="this.className='tongji-out yinying mr-no'" onclick='location="<@s.url "/library/daily/${PRODUCT.id}/0"/>"'>
     	<div class="tongji-content fl">
         	<div class="tj-top fl"><em class="meiri"></em></div>
             <div class="tj-name fl">每日一练</div>

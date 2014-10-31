@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="gb2312">
-<title>题型介绍 考试系统题库</title>
+<title>题型介绍 考试系统题库 - ${PAPER.name}</title>
 <#include "common/loadPageJS.ftl" />
 </head>
 <body>
@@ -29,12 +29,13 @@
                   			-->
                   			</li>
                             <li>年份：${PAPER.year?c} 年</li>
-                            <li>类型：${PAPER.typeName}试卷</li>
-                            <li>合格分数：${PAPER.score*0.6} 分</li>
+                            <li>类型：${PAPER.typeName}</li>
                             <li>总分: ${PAPER.score} 分</li>
-                            <li>阅卷收费：自动阅卷</li>
                             <li>作答：${PAPER.time} 分钟</li>
-                            <li>来源：${PAPER.sourceName?default("网络")}</li>
+                            <#if PAPER.sourceName?? || PAPER.sourceName!="">
+                            <li>来源：${PAPER.sourceName}</li>
+                            <li></li>
+                            </#if>
                             <!-- <li>参与人数：0人</li> -->
                   		</ul>
                   	</div>
@@ -53,7 +54,7 @@
                             <div class="title">
                                 <i>
                                     <div class="title"><dd>${rule.typeName}</dd></div>
-                                    <p>${rule_index+1}、${rule.title} ${rule.description}</p>
+                                    <p>${rule.title} ${rule.description}</p>
                                 </i>
                             </div>
                         </li>

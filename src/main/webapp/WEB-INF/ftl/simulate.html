@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-<title>模拟考场 考试系统题库</title>
+<title>模拟考场 考试系统题库  ${SESSIONPRODUCT.name}</title>
 <#include "common/loadPageJS.ftl" />
 <!-- 分页工具  -->
 <link href="<@s.url "/resources/front-default/pager.css"/>" rel="stylesheet" type="text/css">
@@ -201,7 +201,7 @@
         PageClick = function(pageclickednumber) {
             $("#pager").pager({ pagenumber: pageclickednumber, pagecount: total, buttonClickCallback: PageClick });
             //跳转
-            choose("page",pagenumber);
+            choose("page",pageclickednumber);
         }
         function choose(tag,value){
         	$("#form input[name='"+tag+"']").val(value);
