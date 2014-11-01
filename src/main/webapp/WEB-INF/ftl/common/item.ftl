@@ -92,7 +92,7 @@
 </#macro>
 <!-- 共享题干 -->
 <#macro item_share_title i index>
-	<div class="fenxiti fl" fenxi_item_id = "${i.id}"><i>${i.typeName}</i><em>${i.content}</em></div>
+	<div class="fenxiti fl" fenxi_item_id = "${i.id}"><i>${i.typeName}</i><em><#if i.content?matches("\\s*[(][一二三四五六七八九十]{1}[)][\\W\\w]*")>${(i.content?trim)?substring(3)}<#else>${i.content}</#if></em></div>
 		<#list i.children?sort_by(["orderNo"]) as child>
         	<@show_item i child index+child_index/>
         </#list>
