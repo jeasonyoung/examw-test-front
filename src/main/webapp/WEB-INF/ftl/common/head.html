@@ -1,5 +1,12 @@
 <#assign product_id = "${PRODUCTID?default(PRODUCT.id)}"/>
 <#assign product_name = "${SESSIONPRODUCT.name}"/>
+<div class="kefu" title="意见反馈">
+  <ul>
+    <span class="right_bar"></span>
+    <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=613468352&site=qq&menu=yes" alt="点击这里进行意见反馈" title="点击这里进行意见反馈" class="right_qq"></a>
+    <span class="right_phone">4000-525-585</span>
+  </ul>
+</div>
 <div id="top_head">
 <div class="top fl">
 	<div class="main">
@@ -45,9 +52,9 @@
 </div>
 </#if>
 </div>
-<#if product_id?? && product_id !="">
 <script type="text/javascript">
 	$(function(){
+		<#if product_id?? && product_id !="">
 		$.ajax({
 			type:"GET",
 			url:'<@s.url "/library/daily/${product_id}/rest/num"/>',
@@ -66,6 +73,11 @@
 				$("#dailyRestNum").hide();
 			}
 		});
+		</#if>
+		$(".kefu").hover(function(){
+			$(this).animate({width:'160px'});
+		},function(){
+			$(this).animate({width:'40px'});
+		});
 	});
 </script>
-</#if>

@@ -134,3 +134,9 @@ a:hover,a:active{color:#cc0000; text-decoration:none}
 .wBox_overlayBG {background-color: #FFF; z-index: 99;}
 #wBox #wBox_loading{width:32px;height:32px;margin:0 auto;}
 #TB_overlayBG { z-index:99; position: absolute; filter: alpha(opacity=50); background-color: #666; WIDTH: 100%; display: none; height: 100%; top: 0px; left: 0px; opacity: 0.5; -moz-opacity: 0.5}
+/*客服*/
+.kefu{ width:40px; height:200px; background:url(image/kefu.png) no-repeat; position:fixed; right:0px; top:200px;}
+.kefu ul{ display:block; width:160px; height:200px; float:left; position:relative;}
+.kefu ul .right_bar{ position:absolute;width:40px; height:200px; left:0; top:0; display:block;}
+.kefu ul .right_qq{ position:absolute; width:120px; height:85px; right:0; top:0; display:block;}
+.kefu ul .right_phone{ position:absolute;font: bold 24px/2 microsoft yahei;color: #d00; width:120px; height:105px;padding-bottom:5px;right:0; bottom:0; display:block; text-align:center; font-size:16px; font-family:'Microsoft Yahei'; text-decoration:none;}
