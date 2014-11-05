@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.model.DataGrid;
 import com.examw.model.Json;
+import com.examw.test.front.model.library.ItemErrorRecorveryInfo;
 import com.examw.test.front.model.record.Collection;
 import com.examw.test.front.model.record.NoteInfo;
 import com.examw.test.front.model.user.User;
 import com.examw.test.front.service.ICollectionService;
+import com.examw.test.front.service.IItemErrorRecorveryService;
 import com.examw.test.front.service.INoteService;
 
 /**
@@ -28,6 +30,8 @@ public class ItemController {
 	private static final Logger logger = Logger.getLogger(PaperController.class);
 	@Resource
 	private INoteService noteService;
+	@Resource
+	private IItemErrorRecorveryService itemErrorRecorveryService;
 	@Resource
 	private ICollectionService collectionService;
 	
@@ -45,6 +49,30 @@ public class ItemController {
 			if(logger.isDebugEnabled()) logger.debug("收藏或取消收藏失败...");
 		}
 		return null;
+	}
+	/**
+	 * 纠错提交
+	 * @param info
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value ="errorrecorvery", method = {RequestMethod.GET,RequestMethod.POST})
+	@ResponseBody
+	public Json errorRecorveryAdd(ItemErrorRecorveryInfo info,HttpSession session){
+		if(logger.isDebugEnabled()) logger.debug("收藏或取消收藏...");
+		if(info == null) return null;
+		String userId = this.getUserId(session);
+		Json result = new Json();
+		try{
+			info.setUserId(userId);
+			this.itemErrorRecorveryService.add(info);
+			result.setSuccess(true);
+		}catch(Exception e){
+			e.printStackTrace();
+			result.setSuccess(false);
+			if(logger.isDebugEnabled()) logger.debug("收藏或取消收藏失败...");
+		}
+		return result;
 	}
 	
 	@RequestMapping(value ="notes", method = {RequestMethod.GET,RequestMethod.POST})

@@ -228,56 +228,7 @@ $(function(){
 			$("#answerCard li[item_status='1']").css("visibility","hidden");
 		}
 	}
-	//<!-- 分页 -->
-	var pageClick = [];
-	showNote = function(itemId,itemIndex,model){
-		var index = pageClick.length;
-		$.ajax({
-			type:"POST",
-			url:'<@s.url "/library/item/notes"/>',
-			data:{"itemId":itemId,"page":1,"rows":3,"model":model},
-			dataType:"json",
-			success:function(data){
-				if(data.total == 0) return;
-				var arr = data.rows;
-				var total = data.total%3==0?(data.total/3):(data.total/3+1);
-				var contentArea = $("div[name='noteList'][s_item_id='"+itemId+"']").find("div[name='content']");
-				contentArea.html("");
-				$.each(arr,function(i){
-					var note = arr[i];
-					var html = "<div class='textbook fl'><div class='txt'><div class='pic-bg'><a href='#' target='_blank' title=''></a></div><div class='pic'><img src='<@s.url '/resources/front-default/image/pic2.jpg'/>' width='70' height='70'></div><div class='f-right'><div class='vipname fl'><a href='#' target='_blank' title='note.username'>"+note.username+"</a><span>"+note.time+"</span></div><div class='pinglun fl'>"+note.content+"</div></div></div></div>"
-					contentArea.append(html);
-				});
-				if(data.total<=3){
-					$("#pager"+itemIndex).html("");
-				}else{
-					pageClick[index] = function(pageclickednumber){
-						$("#pager"+itemIndex).pager({ pagenumber: pageclickednumber, pagecount: total, buttonClickCallback: pageClick[index] });
-						$.ajax({
-							type:"POST",
-							url:"<@s.url "/library/item/notes"/>",
-							data:{"itemId":itemId,"page":pageclickednumber,"rows":3,"model":model},
-							dataType:"json",
-							success:function(data){
-								if(data.total == 0) return;
-								var arr = data.rows;
-								var total = data.total%3==0?(data.total/3):(data.total/3+1);
-								var contentArea = $("div[name='noteList'][s_item_id='"+itemId+"']").find("div[name='content']");
-								contentArea.html("");
-								$.each(arr,function(i){
-									var note = arr[i];
-									var html = "<div class='textbook fl'><div class='txt'><div class='pic-bg'><a href='#' target='_blank' title=''></a></div><div class='pic'><img src='<@s.url '/resources/front-default/image/pic2.jpg'/>' width='70' height='70'></div><div class='f-right'><div class='vipname fl'><a href='#' target='_blank' title='note.username'>"+note.username+"</a><span>"+note.time+"</span></div><div class='pinglun fl'>"+note.content+"</div></div></div></div>"
-									contentArea.append(html);
-								});
-							}
-						});
-					}
-					$("#pager"+itemIndex).pager({ pagenumber: 1, pagecount: total, buttonClickCallback: pageClick[index]});
-				}
-			}
-		});	//获取数据
-		$("div[name='noteList'][s_item_id='"+itemId+"']").show();
-	}
+	
 	//<!-- 收藏或取消收藏 -->
 	collectOrCancel = function(obj,itemId,userAnswer){
 		var pid = $(obj).attr("pid");
@@ -290,7 +241,7 @@ $(function(){
 				drag: true,
 		        content: "<div class='cont-r' style='width: 438px;'><div class='xz-daan fl' style='width: 438px;padding:0 0'><div>收藏备注</div><textarea id='favorText' class='wenben' rows='' cols='' name='' style='width: 438px; height: 104px;'></textarea></div><div>",
 		        okValue:"收藏",
-		        cacelValue:"取消",
+		        cancelValue:"取消",
 		        ok: function () {
 		        	var data = {"itemId":itemId,"userAnswer":userAnswer,"productId":productId,"paperId":paperId,"remarks":$('#favorText').val()}
 		            collector(d,obj,data);
@@ -337,28 +288,59 @@ $(function(){
 		});
 		d.show(obj);
 	}
-	// 添加笔记
-	addNote = function(obj){
-		var textarea = $(obj).parent().parent().find("textarea");
-		if(!$.trim(textarea.val()) || textarea.val().length<6){
-			showTips(obj,"请输入笔记内容(至少5个字)!");
-			return;
+	function showTipsTimeOut(msg){
+		var d = dialog({
+			content:msg
+		});
+		d.show();
+		setTimeout(function () {
+            d.close().remove();
+        }, 2000);
+	}
+	//纠错
+	errorRecorvery = function(obj,itemId){
+		var pid = $(obj).attr("pid");
+		var index = $(obj).attr("index");
+		var content = "";
+		if(pid){
+			itemId = pid;
+			content = "这个题目的第"+(parseInt(index)+1)+"小题    ";
 		}
+		var d = dialog({
+			id:'errorRecorveryDialog',
+			title: '题目纠错',
+			drag: true,
+	        content: "<div class='cont-r' style='width: 538px;'><div class='pop-error '><div>为方便我们排查错误，请您详细描述本题错误，例如：</div><div class='option'><label><input type='radio' class='radioz' value='1' checked='checked' name='question-error-type'><span>含有错别字</span></label><label><input type='radio' class='radioz' value='2' name='question-error-type'><span>答案不正确</span></label><label><input type='radio' class='radioz' value='3' name='question-error-type'><span>解析不正确</span></label><label><input type='radio' class='radioz' value='4' name='question-error-type'><span>题目不完整</span></label><label><input type='radio' class='radioz' value='5' name='question-error-type'><span>图片不存在</span></label><label><input type='radio' class='radioz' value='6' name='question-error-type'><span>其他错误</span></label></div></div><div class='xz-daan fl' style='width: 538px;padding:0 0'><div>&nbsp;</div><textarea id='errorText' class='wenben' rows='' cols='' name='' style='width: 538px; height: 104px;'></textarea></div><div>",
+	        okValue:"提交错误",
+	        cancelValue:"取消",
+	        ok: function () {
+	        	var data = {"itemId":itemId,"errorType":$("input[name='question-error-type']:checked").val(),"content":content+$('#errorText').val()}
+	        	submitError(d,data);
+	        }
+	    });
+		d.showModal();
+		return;
+	}
+	function submitError(d,value)
+	{
 		$.ajax({
 			type:"POST",
-			url:"<@s.url "/library/item/addnote"/>",
-			data:{"content":textarea.val(),"itemId":textarea.attr("item_id")},
-			dataType:"json",
+			url:'<@s.url "/library/item/errorrecorvery"/>',
+			data:value,
+			dataType:'json',
 			success:function(data){
 				if(data.success){
-					var note = data.data;
-					var html = "<div class='textbook fl'><div class='txt'><div class='pic-bg'><a href='#' target='_blank' title=''></a></div><div class='pic'><img src='<@s.url '/resources/front-default/image/pic2.jpg'/>' width='70' height='70'></div><div class='f-right'><div class='vipname fl'><a href='#' target='_blank' title='note.username'>"+note.username+"</a><span>"+note.time+"</span></div><div class='pinglun fl'>"+note.content+"</div></div></div></div>"
-					var contentArea = $("div[name='noteList'][s_item_id='"+textarea.attr("s_item_id")+"']").find("div[name='content']");
-					contentArea.prepend(html);
-					$("div[name='noteList'][s_item_id='"+textarea.attr("s_item_id")+"']").show();
-					textarea.val("");
+					if(d) d.close().remove();
+					showTipsTimeOut("反馈成功,感谢提交");
+				}else{
+					if(d) d.close().remove();
+					showTipsTimeOut("反馈成功,感谢提交");
 				}
-			}			
+			},
+			error:function(){
+				if(d) d.close().remove();
+				showTipsTimeOut("反馈成功,感谢提交");
+			}
 		});
 	}
 });

@@ -6,6 +6,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.UUID;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
@@ -64,5 +65,6 @@ public class SimpleTest {
 		BigDecimal score = new BigDecimal(1);
 		System.out.println(score.divide(BigDecimal.TEN).doubleValue());
 		System.out.println(new BigDecimal(1).compareTo(BigDecimal.ZERO));
+		System.out.println(UUID.randomUUID().toString());
 	}
 }

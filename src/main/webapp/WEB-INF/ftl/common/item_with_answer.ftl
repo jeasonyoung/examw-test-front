@@ -29,7 +29,7 @@
 		</#if>
        <div class="timu fl" ><a name="1" id="1"></a>
            <i>${index}.</i>
-              <em><span>[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${i.pid}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>
+              <em><span>[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${parent?default(i.pid)}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>
        </div>
        <div class="xz-daan fl" >
        		<#if i.answerStatus == STATUS_RIGHT>
@@ -59,12 +59,12 @@
                <#if i.userScore??><div class="f-l fl"><i>得分：</i><em class="weida">${i.userScore} 分</em></div></#if>
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')">收起解析</a></i><em class="jiexi-h"></em></div>
-                    <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
-                    <!--<div class="f-r fr"><em class="jiucuo"></em><i><a href="#">纠错</a></i></div>-->
+                    <#--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
+                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="javascript:void(0)" onclick="errorRecorvery(this,'${i.id}')" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> index="${index-xuhao}">纠错</a></i></div>
                     <#if (i.isCollected)>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
                     <#else>
-                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
                     </#if>
                </div>
          </div>
@@ -81,7 +81,7 @@
 		</#if>
         <div class="timu fl" ><a name="10" id="10"></a>
             <i>${index}.</i>
-            <em><span>[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${i.pid}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>
+            <em><span>[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${parent?default(i.pid)}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>
         </div>
         <div class="xz-daan fl">
        		<#if i.answerStatus == STATUS_RIGHT>
@@ -121,13 +121,14 @@
                <#if i.userScore??><div class="f-l fl"><i>得分：</i><em class="weida">${i.userScore} 分</em></div></#if>
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')">收起解析</a></i><em class="jiexi-h"></em></div>
-                    <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
+                    <#--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
+                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="javascript:void(0)" onclick="errorRecorvery(this,'${i.id}')" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> index="${index-xuhao}">纠错</a></i></div>
                     <#if (i.isCollected)>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
                     <#else>
-                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
                     </#if>
-                    <!--收藏后<div class="f-r fl"><em class="shoucang"></em><i><a href="#">收藏</a></i></div>-->
+                    <#--收藏后<div class="f-r fl"><em class="shoucang"></em><i><a href="#">收藏</a></i></div>-->
                </div>
          </div>
          <@item_analysis i index/>
@@ -144,7 +145,7 @@
 		</#if>
        <div class="timu fl"></a>
            <i>${index}.</i>
-           <em><span id="cailiao14">[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${i.pid}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>
+           <em><span id="cailiao14">[${i.typeName}]</span><#if i.pid??><span onclick="showCommonTitle('${parent?default(i.pid)}')" style="cursor:pointer">[查看材料]</span></#if>${i.content}</em>
        </div>
        <div class="xz-daan fl">
             <textarea readonly="readonly" name="" cols="" rows="" class="wenben">${i.userAnswer}</textarea>
@@ -152,12 +153,12 @@
        <div class="daanbox fl">
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')">收起解析</a></i><em class="jiexi-h"></em></div>
-                    <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
-                    <!--<div class="f-r fr"><em class="jiucuo"></em><i><a href="#">纠错</a></i></div>-->
+                    <#--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
+                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="javascript:void(0)" onclick="errorRecorvery(this,'${i.id}')" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> index="${index-xuhao}">纠错</a></i></div>
                     <#if (i.isCollected)>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
                     <#else>
-                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
                     </#if>
                </div>
          </div>

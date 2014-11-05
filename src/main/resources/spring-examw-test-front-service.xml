@@ -83,6 +83,13 @@
 	    <!-- 数据缓存帮助类 -->
 	    <property name="cacheHelper" ref="cacheHelper"/>
 	</bean>
+	<!-- 纠错 -->
+	<bean id="itemErrorRecorveryService" class="com.examw.test.front.service.impl.ItemErrorRecorveryServiceImpl">
+	    <!-- 提交数据远程地址 -->
+	    <property name="api_errorrecorvery_url" value="${api_errorrecorvery_url}" />
+	     <!-- web终端代码 -->
+	    <property name="web_terminal_code" value="${web_terminal_code}"/>
+	</bean>
 	<!-- 用户 -->
 	<bean id="userService" class="com.examw.test.front.service.impl.UserServiceImpl">
 	    <!-- 用户后端ID获取远程地址 -->
