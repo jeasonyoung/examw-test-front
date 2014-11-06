@@ -185,6 +185,8 @@ public class CollectionServiceImpl implements ICollectionService{
 					if(item.getId().equalsIgnoreCase(childItemId)){
 						item.setSubjectId(info.getSubjectId());
 						item.setParentContent(content);
+						item.setPid(info.getId()); //重置一下pid[仅用于收藏]
+						item.setChildren(set); //选项
 						UserItemFavoriteInfo result = this.changeModel(item, null,c);
 						result.setItemId(info.getId()+"#"+item.getId());
 						return result;
@@ -211,7 +213,7 @@ public class CollectionServiceImpl implements ICollectionService{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<UserItemFavoriteInfo> loadCollectionItems(Collection info)
+	public List<UserItemFavoriteInfo> findCollectionItems(Collection info)
 			throws IOException {
 		if(logger.isDebugEnabled()) logger.debug("收藏的试题集合...");
 		if(StringUtils.isEmpty(info.getUserId())) 
@@ -230,10 +232,10 @@ public class CollectionServiceImpl implements ICollectionService{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<StructureItemInfo> loadCollectionItemList(Collection info) throws Exception {
+	public List<StructureItemInfo> findCollectionItemList(Collection info) throws Exception {
 		List<UserItemFavoriteInfo> list = (List<UserItemFavoriteInfo>) this.cacheHelper.getCache(StructureItemInfo.class.getName(), this.getClass()+".loadCollectionItemList", new String[]{info.getUserId(),info.getProductId(),info.getSubjectId()});
 		if(list==null){
-			list = this.loadCollectionItems(info);
+			list = this.findCollectionItems(info);
 			if(list!=null){
 				this.cacheHelper.putCache(StructureItemInfo.class.getName(), this.getClass()+".loadCollectionItemList", new String[]{info.getUserId(),info.getProductId(),info.getSubjectId()}, list);
 			}
@@ -261,7 +263,7 @@ public class CollectionServiceImpl implements ICollectionService{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<FrontSubjectInfo> loadCollectionSubjects(String productId,
+	public List<FrontSubjectInfo> findCollectionSubjects(String productId,
 			String userId) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("收藏的试题科目列表...");
 		String url = String.format(this.api_collection_subject_list_url,productId,userId);

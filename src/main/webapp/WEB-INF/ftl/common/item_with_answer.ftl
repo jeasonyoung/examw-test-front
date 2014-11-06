@@ -60,7 +60,7 @@
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')">收起解析</a></i><em class="jiexi-h"></em></div>
                     <#--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
-                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="javascript:void(0)" onclick="errorRecorvery(this,'${i.id}')" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> index="${index-xuhao}">纠错</a></i></div>
+                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="javascript:void(0)" onclick="errorRecorvery(this,'${i.id}')" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> content="${i.content}">纠错</a></i></div>
                     <#if (i.isCollected)>
                     <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
                     <#else>
@@ -122,7 +122,7 @@
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')">收起解析</a></i><em class="jiexi-h"></em></div>
                     <#--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
-                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="javascript:void(0)" onclick="errorRecorvery(this,'${i.id}')" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> index="${index-xuhao}">纠错</a></i></div>
+                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="javascript:void(0)" onclick="errorRecorvery(this,'${i.id}')" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> content="${i.content}">纠错</a></i></div>
                     <#if (i.isCollected)>
                     <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
                     <#else>
@@ -154,7 +154,7 @@
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')">收起解析</a></i><em class="jiexi-h"></em></div>
                     <#--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
-                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="javascript:void(0)" onclick="errorRecorvery(this,'${i.id}')" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> index="${index-xuhao}">纠错</a></i></div>
+                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="javascript:void(0)" onclick="errorRecorvery(this,'${i.id}')" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> content="${i.content}">纠错</a></i></div>
                     <#if (i.isCollected)>
                     <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"<#elseif i.pid??>pid="${i.pid}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
                     <#else>
@@ -178,7 +178,7 @@
               </div>
               </#if>
               <div class="h10"></div>
-         <div>
+         </div>
     </div>
 </#macro>
 <!-- 共享题干题  -->
@@ -215,7 +215,7 @@
 	</#list>
 </#macro>
 <#macro show_share_answer_item items parent index>
-	<#list items.children as i>
+	<#list items.children?sort_by(["orderNo"]) as i>
 		<@show_item parent i index+i_index/>
 	</#list>
 </#macro>

@@ -74,7 +74,7 @@ public class LibraryController {
 			}
 			model.addAttribute("TOTALERROR",this.errorItemService.dataGrid(productId, info, userId).getTotal());
 			//计算收藏个数
-			model.addAttribute("SUBJECTLIST", this.collectionService.loadCollectionSubjects(productId, userId));
+			model.addAttribute("SUBJECTLIST", this.collectionService.findCollectionSubjects(productId, userId));
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载product异常...");
@@ -89,7 +89,7 @@ public class LibraryController {
 		model.addAttribute("PRODUCTID", productId);
 		try{
 			String userId = this.getUserId(request);
-			model.addAttribute("SUBJECTLIST", this.collectionService.loadCollectionSubjects(productId, userId));
+			model.addAttribute("SUBJECTLIST", this.collectionService.findCollectionSubjects(productId, userId));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -105,7 +105,7 @@ public class LibraryController {
 		info.setUserId(this.getUserId(request));
 		info.setSubjectId(subjectId);
 		try{
-			model.addAttribute("ITEMLIST",this.collectionService.loadCollectionItemList(info));
+			model.addAttribute("ITEMLIST",this.collectionService.findCollectionItemList(info));
 			//题型
 			ItemTypeUtil.loadItemType(model);
 		}catch(Exception e){

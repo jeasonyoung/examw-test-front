@@ -101,7 +101,7 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 			favorInfo.setSubjectId(info.getSubjectId());
 			favorInfo.setUserId(info.getUserId());
 			favorInfo.setProductId(productId);
-			List<UserItemFavoriteInfo> favorList = this.collectionService.loadCollectionItems(favorInfo);
+			List<UserItemFavoriteInfo> favorList = this.collectionService.findCollectionItems(favorInfo);
 			list = this.changeModel(this.loadErrorItemList(info.getSubjectId(),userId),favorList);
 			if(list!=null)
 				this.cacheHelper.putCache(StructureItemInfo.class.getName(), this.getClass().getName(), new Object[]{info.getSubjectId(),userId,productId}, list);
@@ -203,7 +203,7 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 			favorInfo.setSubjectId(subjectId);
 			favorInfo.setUserId(userId);
 			favorInfo.setProductId(productId);
-			List<UserItemFavoriteInfo> favorList = this.collectionService.loadCollectionItems(favorInfo);
+			List<UserItemFavoriteInfo> favorList = this.collectionService.findCollectionItems(favorInfo);
 			list = this.changeModel(this.loadErrorItemList(subjectId,userId),favorList);
 			if(list!=null)
 				this.cacheHelper.putCache(StructureItemInfo.class.getName(), this.getClass().getName(), new Object[]{subjectId,userId,productId}, list);

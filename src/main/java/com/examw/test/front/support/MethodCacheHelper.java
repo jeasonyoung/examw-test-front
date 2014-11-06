@@ -8,7 +8,7 @@ import net.sf.ehcache.Element;
 import org.apache.log4j.Logger;
 
 /**
- * 
+ * 缓存帮助类
  * @author fengwei.
  * @since 2014年9月27日 下午3:34:22.
  */

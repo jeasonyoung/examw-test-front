@@ -1009,6 +1009,11 @@ public class PaperServiceImpl implements IPaperService{
 			itemRecord.setStatus(ItemRecord.STATUS_NULL); // 没有作答
 			return false;
 		}
+		if(item.getAnswer() == null){	//没有正确答案(题目有问题)
+			itemRecord.setScore(min == null ? BigDecimal.ZERO : min); // 得0分或者负分
+			itemRecord.setStatus(ItemRecord.STATUS_WRONG); // 算答错
+			return false;
+		}
 		if(item.getType().equals(Constant.TYPE_SINGLE) || item.getType().equals(Constant.TYPE_JUDGE)) {
 			if (item.getAnswer().equals(itemRecord.getAnswer())) // 答对
 			{

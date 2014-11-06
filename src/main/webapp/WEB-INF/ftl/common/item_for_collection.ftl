@@ -62,15 +62,16 @@
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
-                    <!--<div class="f-r fr"><em class="jiucuo"></em><i><a href="#">纠错</a></i></div>-->
-                    <#if i.isCollected>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
+                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="javascript:void(0)" onclick="errorRecorvery(this,'${i.id}')" <#if i.pid??>pid="${i.pid}" content="${i.content}"</#if>>纠错</a></i></div>
+                    <#if i.isCollected || model=="COLLECTOR">
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');" <#if i.pid??>pid="${i.pid}"</#if>>移除此收藏</a></i></div>
                     <#else>
-                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');" <#if i.pid??>pid="${i.pid}"</#if>>收藏</a></i></div>
                     </#if>
                </div>
          </div>
          <@item_analysis i index/>
+	</div>
 </#macro>
 <#macro item_judge i index>
 	<div name="item_whole" class="box fl" item_type="${i.type}" item_id="${i.id}" item_status="${i.answerStatus}">
@@ -127,16 +128,19 @@
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
-                    <#if i.isCollected>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
+                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="javascript:void(0)" onclick="errorRecorvery(this,'${i.id}')" <#if i.pid??>pid="${i.pid}" content="${i.content}"</#if>>纠错</a></i></div>
+                    <#if i.isCollected || model=="COLLECTOR">
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');" <#if i.pid??>pid="${i.pid}"</#if>>移除此收藏</a></i></div>
                     <#else>
-                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');" <#if i.pid??>pid="${i.pid}"</#if>>收藏</a></i></div>
                     </#if>
                     <!--收藏后<div class="f-r fl"><em class="shoucang"></em><i><a href="#">收藏</a></i></div>-->
                </div>
+			</div>
          </div>
          <@item_analysis i index/>
     </div>
+</div>
 </#macro>
 <#macro item_qanda i index>
 	<div name="item_whole" class="box fl">
@@ -151,11 +155,11 @@
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
                     <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
-                    <!--<div class="f-r fr"><em class="jiucuo"></em><i><a href="#">纠错</a></i></div>-->
-                    <#if (i.isCollected)>
-                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
+                    <div class="f-r fr"><em class="jiucuo"></em><i><a href="javascript:void(0)" onclick="errorRecorvery(this,'${i.id}')" <#if i.pid??>pid="${i.pid}" content="${i.content}"</#if>>纠错</a></i></div>
+                    <#if (i.isCollected) || model=="COLLECTOR">
+                    <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if i.pid??>pid="${i.pid}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
                     <#else>
-                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" <#if parent??>pid="${parent.id}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
+                    <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" <#if i.pid??>pid="${i.pid}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">收藏</a></i></div>
                     </#if>
                </div>
          </div>
@@ -179,7 +183,7 @@
               	</div>
               </#if>
               <div class="h10"></div>
-         <div>
+         </div>
     </div>
 </#macro>
 <#macro item_share_title i index>

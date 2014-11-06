@@ -30,14 +30,14 @@ public interface ICollectionService {
 	 * @return
 	 * @throws IOException
 	 */
-	List<UserItemFavoriteInfo> loadCollectionItems(Collection info) throws IOException;
+	List<UserItemFavoriteInfo> findCollectionItems(Collection info) throws IOException;
 	/**
 	 * 加载被收藏的考试题目的集合
 	 * @param info
 	 * @return
 	 * @throws Exception
 	 */
-	List<StructureItemInfo> loadCollectionItemList(Collection info) throws Exception;
+	List<StructureItemInfo> findCollectionItemList(Collection info) throws Exception;
 	/**
 	 * 加载某产品下带收藏数量的科目的集合
 	 * @param productId
@@ -45,5 +45,5 @@ public interface ICollectionService {
 	 * @return
 	 * @throws Exception
 	 */
-	List<FrontSubjectInfo> loadCollectionSubjects(String productId,String userId)throws Exception;
+	List<FrontSubjectInfo> findCollectionSubjects(String productId,String userId)throws Exception;
 }

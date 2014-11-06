@@ -300,11 +300,11 @@ $(function(){
 	//纠错
 	errorRecorvery = function(obj,itemId){
 		var pid = $(obj).attr("pid");
-		var index = $(obj).attr("index");
+		var index = $(obj).attr("content");
 		var content = "";
 		if(pid){
 			itemId = pid;
-			content = "这个题目的第"+(parseInt(index)+1)+"小题    ";
+			content = "这个大题的题目为["+index+"]的小题    ";
 		}
 		var d = dialog({
 			id:'errorRecorveryDialog',

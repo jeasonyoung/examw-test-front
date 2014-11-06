@@ -212,7 +212,7 @@ $(function(){
 		var answers = [];
 		$.each(choosen,function(i){
 			if($(choosen[i]).attr("option_value")==undefined){
-				answers.push($(choosen[i]).attr("option_id"));
+				answers.push($(choosen[i]).attr("option_id").split('#')[0]);
 			}else
 				answers.push($(choosen[i]).attr("option_value"));//判断题答案
 		});

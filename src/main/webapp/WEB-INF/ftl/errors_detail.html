@@ -68,7 +68,6 @@
 			}
 		}
 		//<!-- 收藏或取消收藏 -->
-		//<!-- 收藏或取消收藏 -->
 		collectOrCancel = function(obj,itemId,userAnswer){
 			var pid = $(obj).attr("pid");
 			if(pid) itemId = pid+"#"+itemId;
@@ -178,6 +177,63 @@
 			    quickClose: true// 点击空白处快速关闭
 			});
 			d.show(obj);
+		}
+		//定时关闭提示
+		function showTipsTimeOut(msg){
+			var d = dialog({
+				content:msg
+			});
+			d.show();
+			setTimeout(function () {
+	            d.close().remove();
+	        }, 2000);
+		}
+		//纠错
+		errorRecorvery = function(obj,itemId){
+			var pid = $(obj).attr("pid");
+			var index = $(obj).attr("content");
+			var content = "";
+			if(pid){
+				itemId = pid;
+				content = "这个大题的题目为[ "+index+" ]的小题    ";
+			}
+			var d = dialog({
+				id:'errorRecorveryDialog',
+				title: '题目纠错',
+				drag: true,
+		        content: "<div class='cont-r' style='width: 538px;'><div class='pop-error '><div>为方便我们排查错误，请您详细描述本题错误，例如：</div><div class='option'><label><input type='radio' class='radioz' value='1' checked='checked' name='question-error-type'><span>含有错别字</span></label><label><input type='radio' class='radioz' value='2' name='question-error-type'><span>答案不正确</span></label><label><input type='radio' class='radioz' value='3' name='question-error-type'><span>解析不正确</span></label><label><input type='radio' class='radioz' value='4' name='question-error-type'><span>题目不完整</span></label><label><input type='radio' class='radioz' value='5' name='question-error-type'><span>图片不存在</span></label><label><input type='radio' class='radioz' value='6' name='question-error-type'><span>其他错误</span></label></div></div><div class='xz-daan fl' style='width: 538px;padding:0 0'><div>&nbsp;</div><textarea id='errorText' class='wenben' rows='' cols='' name='' style='width: 538px; height: 104px;'></textarea></div><div>",
+		        okValue:"提交错误",
+		        cancelValue:"取消",
+		        ok: function () {
+		        	var data = {"itemId":itemId,"errorType":$("input[name='question-error-type']:checked").val(),"content":content+$('#errorText').val()}
+		        	submitError(d,data);
+		        }
+		    });
+			d.showModal();
+			return;
+		}
+		//提交纠错信息
+		function submitError(d,value)
+		{
+			$.ajax({
+				type:"POST",
+				url:'<@s.url "/library/item/errorrecorvery"/>',
+				data:value,
+				dataType:'json',
+				success:function(data){
+					if(data.success){
+						if(d) d.close().remove();
+						showTipsTimeOut("反馈成功,感谢提交");
+					}else{
+						if(d) d.close().remove();
+						showTipsTimeOut("反馈成功,感谢提交");
+					}
+				},
+				error:function(){
+					if(d) d.close().remove();
+					showTipsTimeOut("反馈成功,感谢提交");
+				}
+			});
 		}
 	});
 </script>

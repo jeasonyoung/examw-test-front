@@ -127,12 +127,12 @@
 <#macro item_share_answer_content i>
 	<#list i.children?sort_by(["orderNo"]) as child>
 		<#if child_index != (i.children?size - 1)>
-			<@option_flag child_index/>. ${child.content}<br/>
+			<@option_flag child_index/>. <#if child.content?matches("[A-Z]{1}[.][\\W\\w]*")>${child.content?substring(2)}<#else>${child.content}</#if><br/>
 		</#if>
 	</#list>
 </#macro>
 <#macro show_share_answer_item items parent index>
-	<#list items.children as i>
+	<#list items.children?sort_by(["orderNo"]) as i>
 		<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_index="${index+i_index}">
 		<!--<#if i.parentContent??>
 		<div id="font14" class="fenxiti fl">
@@ -149,7 +149,7 @@
                 <ul>
                 <#list parent.children?sort_by(["orderNo"]) as option>
                 <#if option_index != (parent.children?size-1)>
-                <li item_index="${index+i_index}" <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}" s_item_id="${i.id}" pid="${parent.id}" option_type="${input}" actual="true"><@option_flag option_index/></li>
+                <li item_index="${index+i_index}" <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}#${i.id}" s_item_id="${i.id}" pid="${parent.id}" <#if i.type == TYPE_SINGLE_VALUE>option_type="radio"<#else>option_type="checkbox"</#if> actual="true"><@option_flag option_index/></li>
                 </#if>
                 </#list>
                 </ul>

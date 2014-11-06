@@ -62,6 +62,7 @@ public class UserController {
 	    //删除session中的值
 	    request.getSession().removeAttribute("USER");
 	    request.getSession().removeAttribute("PRODUCTNAME");
+	    //清除缓存??
 		return "redirect:http://test.examw.com/user/Login/CheckUser.asp?CheckType=Logout";
 	}
 	
