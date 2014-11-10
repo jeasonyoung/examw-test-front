@@ -17,6 +17,7 @@ public class SubjectInfo extends Paging{
 	private String[] areaId,areaName;
 	private String categoryId,categoryName;
 	private Integer code;
+	private String pid,fullName;
 	/**
 	 * 获取科目ID。
 	 * @return 科目ID。
@@ -176,5 +177,36 @@ public class SubjectInfo extends Paging{
 	public void setItemCount(Integer itemCount) {
 		this.itemCount = itemCount;
 	}
-	
+	/**
+	 * 获取 父ID
+	 * @return pid
+	 * 父ID
+	 */
+	public String getPid() {
+		return pid;
+	}
+	/**
+	 * 设置 父ID
+	 * @param pid
+	 * 父ID
+	 */
+	public void setPid(String pid) {
+		this.pid = pid;
+	}
+	/**
+	 * 获取 科目全称
+	 * @return fullName
+	 * 科目全称
+	 */
+	public String getFullName() {
+		return fullName;
+	}
+	/**
+	 * 设置 科目全称
+	 * @param fullName
+	 * 科目全称
+	 */
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
+	}
 }
