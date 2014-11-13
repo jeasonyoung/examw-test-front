@@ -2,6 +2,7 @@ package com.examw.test.front.model.library;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -12,10 +13,12 @@ import java.util.Set;
  */
 public class StructureInfo implements Serializable,Comparable<StructureInfo> {
 	private static final long serialVersionUID = 1L;
-	private String id,title,description,typeName;
+	private String pid,id,title,description,typeName;
 	private Integer type,total,orderNo;
-	private BigDecimal score,min;
+	private BigDecimal score,min,ratio;
 	private Set<StructureItemInfo> items;
+	private List<StructureInfo> children;
+	private String subjectId;
 	/**
 	 * 获取结构ID。
 	 * @return 结构ID。
@@ -165,6 +168,71 @@ public class StructureInfo implements Serializable,Comparable<StructureInfo> {
 	 */
 	public void setItems(Set<StructureItemInfo> items) {
 		this.items = items;
+	}
+	
+	/**
+	 * 获取 父ID
+	 * @return pid
+	 * 父ID
+	 */
+	public String getPid() {
+		return pid;
+	}
+	/**
+	 * 设置 父ID
+	 * @param pid
+	 * 父ID
+	 */
+	public void setPid(String pid) {
+		this.pid = pid;
+	}
+	/**
+	 * 获取 所占分数比例
+	 * @return ratio
+	 * 
+	 */
+	public BigDecimal getRatio() {
+		return ratio;
+	}
+	/**
+	 * 设置 所占分数比例
+	 * @param ratio
+	 * 所占分数比例
+	 */
+	public void setRatio(BigDecimal ratio) {
+		this.ratio = ratio;
+	}
+	/**
+	 * 获取 子结构
+	 * @return children
+	 * 子结构
+	 */
+	public List<StructureInfo> getChildren() {
+		return children;
+	}
+	/**
+	 * 设置 子结构
+	 * @param children
+	 * 子结构
+	 */
+	public void setChildren(List<StructureInfo> children) {
+		this.children = children;
+	}
+	/**
+	 * 获取 科目ID
+	 * @return subjectId
+	 * 科目ID
+	 */
+	public String getSubjectId() {
+		return subjectId;
+	}
+	/**
+	 * 设置 科目ID
+	 * @param subjectId
+	 * 科目ID
+	 */
+	public void setSubjectId(String subjectId) {
+		this.subjectId = subjectId;
 	}
 	/*
 	 * 重载排序比较.
