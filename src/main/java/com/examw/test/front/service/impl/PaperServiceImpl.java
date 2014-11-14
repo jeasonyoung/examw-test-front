@@ -946,22 +946,41 @@ public class PaperServiceImpl implements IPaperService{
 			return null;
 		BigDecimal paperTotalScore = BigDecimal.ZERO; // 试卷总分
 		for (StructureInfo s : structures) {
-			Set<StructureItemInfo> items = s.getItems();
-			if (items == null || items.size() == 0)
-				continue;
 			// 评分规则
-			BigDecimal min = s.getMin(); // 最低得分
-			BigDecimal per = s.getScore(); // 每题得分
-			BigDecimal actualRuleTotal = BigDecimal.ZERO;
+			BigDecimal actualRuleTotal = this.calculateStructrueScore(s, itemRecordList);
+			if (actualRuleTotal.compareTo(BigDecimal.ZERO) == -1) {
+				actualRuleTotal = BigDecimal.ZERO;
+			}
+			paperTotalScore = paperTotalScore.add(actualRuleTotal); // 试卷总分
+		}
+		record.setScore(paperTotalScore);
+		return paper;
+	}
+	
+	private BigDecimal calculateStructrueScore(StructureInfo structure,Set<UserItemRecordInfo> itemRecordList)
+	{
+		BigDecimal actualRuleTotal = BigDecimal.ZERO;
+		BigDecimal ratio = structure.getRatio(); //所占比例
+		if(structure.getChildren()!=null && structure.getChildren().size()>0)
+		{
+			for(StructureInfo s : structure.getChildren())
+			{
+				actualRuleTotal = actualRuleTotal.add(this.calculateStructrueScore(s, itemRecordList));
+			}
+		}else
+		{
+			Set<StructureItemInfo> items = structure.getItems();
+			if (items == null || items.size() == 0)
+				return actualRuleTotal;
+			BigDecimal min = structure.getMin(); // 最低得分
+			BigDecimal per = structure.getScore(); // 每题得分
 			for (StructureItemInfo item : items) { // 结构题目
 				for (UserItemRecordInfo itemRecord : itemRecordList) {
 					if (!itemRecord.getItemId().contains("#")) { // 不包含#,是单题
-						if (item.getId()
-								.equals(itemRecord.getItemId())) {
+						if (item.getId().equals(itemRecord.getItemId())) {
 							// 判断对错
 							judgeItemIsRight(item, itemRecord, min, per);
-							actualRuleTotal = actualRuleTotal.add(itemRecord
-									.getScore());
+							actualRuleTotal = actualRuleTotal.add(itemRecord.getScore());
 							break;
 						}
 					} else { // 复合题
@@ -992,13 +1011,8 @@ public class PaperServiceImpl implements IPaperService{
 					}
 				}
 			}
-			if (actualRuleTotal.compareTo(BigDecimal.ZERO) == -1) {
-				actualRuleTotal = BigDecimal.ZERO;
-			}
-			paperTotalScore = paperTotalScore.add(actualRuleTotal); // 试卷总分
 		}
-		record.setScore(paperTotalScore);
-		return paper;
+		return actualRuleTotal.multiply(ratio);
 	}
 	/*
 	* 判断题目是对是错

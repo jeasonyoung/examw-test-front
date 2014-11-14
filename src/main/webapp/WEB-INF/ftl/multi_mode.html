@@ -16,6 +16,7 @@
 <#assign MODEL = "multi" />
 <#assign current_page="simulate"/>
 <#include "common/item.ftl"/>
+<#include "common/structure.ftl"/>
 <#include "common/head.html" />
 <div class="main">
 	<div class="h30"></div>
@@ -78,20 +79,11 @@
                     </div>
                 </div>
             </div><a name="danxiang" id="danxiang"></a>
+            <#if PAPER.structures?? && (PAPER.structures?size>0)>
             <#list PAPER.structures as structure>
-            <div <#if structure_index != 0></#if> >
-            <#assign total = total + structure.total/> 
-            <#assign xuhao = total-structure.total + 1 />
-            <div class="tx-box fl" structure_id="${structure.id}">${structure.title} ${structure.description}</div>
-            <#list structure.items?sort_by(["orderNo"]) as i>
-            	<#if i.type != TYPE_SHARE_TITLE_VALUE && i.type != TYPE_SHARE_ANSWER_VALUE>
-            		<@show_item p=null item=i index=(i_index + xuhao) />
-            	<#else>
-            		<@show_item p=null item=i index=xuhao />
-            	</#if>
-            </#list>
-            </div>
-            </#list>
+    			<@show_structure structure/>
+			</#list>
+			</#if>
             <div class="datika fl" id="answerCard" style="width:830px;">
             	<div class="ka fl" id="font14">展开答题卡</div>
                 <div class="ka-ge fl"></div>
