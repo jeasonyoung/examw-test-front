@@ -4,15 +4,15 @@
 <!-- 计算序号对应的ABCD -->
 <#macro option_flag index>${answerflag[index]}</#macro>
 
-<#macro show_item p item index>
+<#macro show_item father item index>
 	<#if item.type == TYPE_SINGLE_VALUE>
-		<@item_choose parent=p i=item input="radio" index=index/>
+		<@item_choose parent=father i=item input="radio" index=index/>
 	<#elseif item.type == TYPE_MULTY_VALUE || item.type == TYPE_UNCERTAIN_VALUE>
-		<@item_choose parent=p i=item input="checkbox" index=index/>
+		<@item_choose parent=father i=item input="checkbox" index=index/>
 	<#elseif item.type == TYPE_JUDGE_VALUE>
-		<@item_judge parent=p i=item index=index/>
+		<@item_judge parent=father i=item index=index/>
 	<#elseif item.type == TYPE_QANDA_VALUE>
-		<@item_qanda parent=p i=item index=index/>
+		<@item_qanda parent=father i=item index=index/>
 	<#elseif item.type == TYPE_SHARE_TITLE_VALUE>
 		<@item_share_title i=item index=index/>
 	<#elseif item.type == TYPE_SHARE_ANSWER_VALUE>

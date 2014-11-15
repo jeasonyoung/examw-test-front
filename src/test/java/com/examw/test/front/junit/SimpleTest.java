@@ -62,9 +62,10 @@ public class SimpleTest {
 		calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)-7, 0, 0, 0);
 		System.out.println(calendar.getTime());
 		System.out.println(DateUtil.parse("2014-10-24").compareTo(calendar.getTime()));
-		BigDecimal score = new BigDecimal(1);
+		BigDecimal score = new BigDecimal(100);
 		System.out.println(score.divide(BigDecimal.TEN).doubleValue());
 		System.out.println(new BigDecimal(1).compareTo(BigDecimal.ZERO));
 		System.out.println(UUID.randomUUID().toString());
+		System.out.println(score.equals(BigDecimal.TEN.multiply(BigDecimal.TEN)));
 	}
 }

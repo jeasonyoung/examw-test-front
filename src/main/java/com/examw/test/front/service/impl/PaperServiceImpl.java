@@ -7,7 +7,6 @@ import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -378,7 +377,21 @@ public class PaperServiceImpl implements IPaperService{
 		if(info.getItems() == null || info.getItems().size() ==0 ) return;
 		itemRecords.addAll(info.getItems());
 		for(StructureInfo s:structures){
-			Set<StructureItemInfo> items = s.getItems();
+			this.setUserAnswer(s, itemRecords, favors);
+		}
+	}
+	//设置用户答案
+	private void setUserAnswer(StructureInfo info,TreeSet<UserItemRecordInfo> itemRecords,List<UserItemFavoriteInfo> favors)
+	{
+		if(info.getChildren()!=null && info.getChildren().size()>0)
+		{
+			for(StructureInfo child:info.getChildren())
+			{
+				this.setUserAnswer(child, itemRecords, favors);
+			}
+		}else
+		{
+			Set<StructureItemInfo> items = info.getItems();
 			for(StructureItemInfo item:items){
 				setUserAnswer(item,itemRecords,favors);
 			}
@@ -455,9 +468,23 @@ public class PaperServiceImpl implements IPaperService{
 		if(logger.isDebugEnabled()) logger.debug("再做一次,清除用户的答案...");
 		List<StructureInfo> structures = paper.getStructures();
 		for(StructureInfo s:structures){
-			Set<StructureItemInfo> items = s.getItems();
+			this.clearUserAnswer(s);
+		}
+	}
+	//清除用户的答案
+	private void clearUserAnswer(StructureInfo info)
+	{
+		if(info.getChildren()!=null && info.getChildren().size()>0)
+		{
+			for(StructureInfo child:info.getChildren())
+			{
+				this.clearUserAnswer(child);
+			}
+		}else
+		{
+			Set<StructureItemInfo> items = info.getItems();
 			for(StructureItemInfo item:items){
-				clearUserAnswer(item);
+				this.clearUserAnswer(item);
 			}
 		}
 	}
@@ -527,30 +554,41 @@ public class PaperServiceImpl implements IPaperService{
 		List<StructureInfo> structures = paper.getStructures();
 		if(structures == null || structures.size()==0) return result;
 		for(StructureInfo s:structures){
-			TreeSet<StructureItemInfo> items = new TreeSet<StructureItemInfo>(
-					new Comparator<StructureItemInfo>() {
-						@Override
-						public int compare(StructureItemInfo o1,
-								StructureItemInfo o2) {
-							return o1.getOrderNo() - o2.getOrderNo();
-						}
-					});
-			items.addAll(s.getItems());
-			if(items == null || items.size()==0) continue;
-			for(StructureItemInfo item : items){
-				if(item.getType().equals(Constant.TYPE_SHARE_TITLE)){
-					result.addAll(getShareTitleSortedChildrenList(item)); 
-				}
-				else if(item.getType().equals(Constant.TYPE_SHARE_ANSWER)){
-					result.addAll(getShareAnswerSortedChildrenList(item));
-				}
-				else{
-					result.add(item);
-				}
-			}
+			if(s == null) continue;
+			this.getStructureItems(result, s, false);
 		}
 		return result;
 	};
+	private void getStructureItems(List<StructureItemInfo> result,StructureInfo info,boolean isBig)
+	{
+		if(info.getChildren()!=null && info.getChildren().size()>0)
+		{
+			for(StructureInfo child:info.getChildren())
+			{
+				this.getStructureItems(result, child,isBig);
+			}
+		}else{
+			TreeSet<StructureItemInfo> items = new TreeSet<StructureItemInfo>();
+			if(info.getItems() == null || info.getItems().size()==0) return;
+			items.addAll(info.getItems());
+			for(StructureItemInfo item : items){
+				if(isBig)
+				{
+					result.add(item);
+				}else{
+					if(item.getType().equals(Constant.TYPE_SHARE_TITLE)){
+						result.addAll(getShareTitleSortedChildrenList(item)); 
+					}
+					else if(item.getType().equals(Constant.TYPE_SHARE_ANSWER)){
+						result.addAll(getShareAnswerSortedChildrenList(item));
+					}
+					else{
+						result.add(item);
+					}
+				}
+			}
+		}
+	}
 	/*
 	 * 获取共享题干题按序子题集合
 	 */
@@ -591,19 +629,8 @@ public class PaperServiceImpl implements IPaperService{
 		List<StructureInfo> structures = paper.getStructures();
 		if(structures == null || structures.size()==0) return result;
 		for(StructureInfo s:structures){
-			TreeSet<StructureItemInfo> items = new TreeSet<StructureItemInfo>(
-					new Comparator<StructureItemInfo>() {
-						@Override
-						public int compare(StructureItemInfo o1,
-								StructureItemInfo o2) {
-							return o1.getOrderNo() - o2.getOrderNo();
-						}
-					});
-			items.addAll(s.getItems());
-			if(items == null || items.size()==0) continue;
-			for(StructureItemInfo item : items){
-				result.add(item);
-			}
+			if(s == null) continue;
+			this.getStructureItems(result, s, true);
 		}
 		return result;
 	}
@@ -861,18 +888,40 @@ public class PaperServiceImpl implements IPaperService{
 		record.setLastTime(null);
 		return HttpUtil.upload(api_user_paper_record_add_url, record);
 	}
+	//根据ID获取试题信息
 	private StructureItemInfo getStructureItemInfo(PaperPreview paper,String itemId){
 		List<StructureInfo> structures = paper.getStructures();
 		for(StructureInfo s:structures){
-			Set<StructureItemInfo> items = s.getItems();
+			StructureItemInfo result = this.findStructureItemInfo(s, itemId);
+			if(result == null) continue;
+			else return result;
+		}
+		return null;
+	}
+	
+	private StructureItemInfo findStructureItemInfo(StructureInfo info,String itemId)
+	{
+		if(info.getChildren()!=null && info.getChildren().size()>0)
+		{
+			for(StructureInfo child : info.getChildren())
+			{
+				StructureItemInfo result = this.findStructureItemInfo(child, itemId);
+				if(result == null) continue;
+				else return result;
+			}
+			return null;
+		}else{
+			Set<StructureItemInfo> items = info.getItems();
+			if(items == null || items.size()==0) return null;
 			for(StructureItemInfo item:items){
 				if(item.getId().equalsIgnoreCase(itemId)){
 					return item;
 				}
 			}
+			return null;
 		}
-		return null;
 	}
+	
 	private UserItemRecordInfo changeModel(StructureItemInfo info,String childItemId){
 		if(info == null) return null;
 		if(childItemId == null)
@@ -944,10 +993,20 @@ public class PaperServiceImpl implements IPaperService{
 		List<StructureInfo> structures = paper.getStructures();
 		if (structures == null || structures.size() == 0)
 			return null;
-		BigDecimal paperTotalScore = BigDecimal.ZERO; // 试卷总分
+		BigDecimal paperTotalScore = BigDecimal.ZERO; // 试卷得总分
+		BigDecimal paperScore = paper.getScore(); //试卷总分
 		for (StructureInfo s : structures) {
 			// 评分规则
 			BigDecimal actualRuleTotal = this.calculateStructrueScore(s, itemRecordList);
+			//得分比例[只有顶级大题才有比例]
+			BigDecimal ratio = (s.getRatio()==null||s.getRatio().equals(BigDecimal.ZERO)||s.getRatio().equals(BigDecimal.TEN.multiply(BigDecimal.TEN)))?BigDecimal.ONE:(s.getRatio().divide(BigDecimal.TEN).divide(BigDecimal.TEN)); //所占比例
+			if(!ratio.equals(BigDecimal.ONE)&&!actualRuleTotal.equals(BigDecimal.ONE))
+			{
+				if(!BigDecimal.ZERO.equals(s.getScore()))
+					actualRuleTotal = actualRuleTotal.multiply(ratio).multiply(paperScore).divide(new BigDecimal(s.getTotal())).divide(s.getScore());
+				else
+					actualRuleTotal = actualRuleTotal.multiply(ratio).multiply(paperScore).divide(new BigDecimal(s.getTotal()));
+			}
 			if (actualRuleTotal.compareTo(BigDecimal.ZERO) == -1) {
 				actualRuleTotal = BigDecimal.ZERO;
 			}
@@ -960,7 +1019,6 @@ public class PaperServiceImpl implements IPaperService{
 	private BigDecimal calculateStructrueScore(StructureInfo structure,Set<UserItemRecordInfo> itemRecordList)
 	{
 		BigDecimal actualRuleTotal = BigDecimal.ZERO;
-		BigDecimal ratio = structure.getRatio(); //所占比例
 		if(structure.getChildren()!=null && structure.getChildren().size()>0)
 		{
 			for(StructureInfo s : structure.getChildren())
@@ -1012,7 +1070,7 @@ public class PaperServiceImpl implements IPaperService{
 				}
 			}
 		}
-		return actualRuleTotal.multiply(ratio);
+		return actualRuleTotal;
 	}
 	/*
 	* 判断题目是对是错
