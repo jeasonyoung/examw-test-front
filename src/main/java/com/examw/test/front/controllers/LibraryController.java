@@ -44,16 +44,26 @@ import com.examw.test.front.support.PaperTypeUtil;
 @RequestMapping("/library")
 public class LibraryController {
 	private static final Logger logger = Logger.getLogger(LibraryController.class);
+	//产品服务接口
 	@Resource
 	private IProductService productService;
+	//试卷服务接口
 	@Resource
 	private IPaperService paperService;
+	//错题服务接口
 	@Resource
 	private IErrorItemService errorItemService;
+	//收藏服务接口
 	@Resource
 	private ICollectionService collectionService;
 	
-	//产品题库中心
+	/**
+	 * 产品题库中心
+	 * @param productId		产品ID
+	 * @param request
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String library(@PathVariable String productId,HttpServletRequest request,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载题库界面...");
@@ -82,7 +92,13 @@ public class LibraryController {
 		return "exam_center";
 	}
 	
-	//收藏列表
+	/**
+	 * 收藏界面
+	 * @param productId		产品ID
+	 * @param model
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "/collection/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String collection(@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载收藏界面...");
@@ -95,7 +111,14 @@ public class LibraryController {
 		}
 		return "collections_list";
 	}
-	//题目列表
+	/**
+	 * 收藏试题的列表
+	 * @param productId		产品ID
+	 * @param subjectId		科目ID
+	 * @param model
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "/collection/{productId}/items/{subjectId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String collectionDetail(@PathVariable String productId,@PathVariable String subjectId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载收藏试题详细界面...");
@@ -113,7 +136,15 @@ public class LibraryController {
 		}
 		return "collections_detail";
 	}
-	//错题列表
+	
+	/**
+	 * 错题列表
+	 * @param productId		产品ID
+	 * @param info			查询信息
+	 * @param model
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "/error/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String error(@PathVariable String productId,StructureItemInfo info,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载错题界面...");
@@ -143,7 +174,15 @@ public class LibraryController {
 		}
 		return "error_records";
 	}
-	//错题详细
+	/**
+	 * 错题详细
+	 * @param productId 	产品ID
+	 * @param itemId		题目ID
+	 * @param flag			是否加载答案
+	 * @param model			
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "/error/{productId}/item/{itemId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String errorDetail(@PathVariable String productId,@PathVariable String itemId,String flag,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载错题详细界面...");
@@ -157,7 +196,7 @@ public class LibraryController {
 					subjectId = subjectId+s.getId()+",";
 				}
 			}
-			//带有缓存
+			//带有缓存的
 			Map<String,Object> map = this.errorItemService.loadItemDetail(productId,subjectId,userId,itemId);
 			model.addAttribute("LAST_ITEM_ID", map.get("LAST_ITEM_ID"));
 			model.addAttribute("NEXT_ITEM_ID",map.get("NEXT_ITEM_ID"));
@@ -173,7 +212,14 @@ public class LibraryController {
 		return "errors_detail";
 	}
 	
-	//模拟考场界面[试卷列表]
+	/**
+	 * 模拟考场界面[试卷列表]
+	 * @param productId		产品ID
+	 * @param info			查询信息
+	 * @param model
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "/simulate/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String simulate(@PathVariable String productId,PaperInfo info,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考试界面[试卷列表]...");
@@ -215,8 +261,14 @@ public class LibraryController {
 		}
 		return "simulate";
 	}
-	//上一次考试
-	@RequestMapping(value = "last-exam/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
+	/**
+	 * 上一次考试
+	 * @param productId		产品ID
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/last-exam/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String lastExam(@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载错题界面...");
 		String userId = this.getUserId(request);
@@ -267,7 +319,12 @@ public class LibraryController {
 		}
 		return "daily_practice";
 	}
-	
+	/**
+	 * 查询每日一练剩余未做个数
+	 * @param productId
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "/daily/{productId}/rest/num", method = RequestMethod.GET)
 	@ResponseBody
 	public Json dailyRestNumber(@PathVariable String productId,HttpServletRequest request){
@@ -279,26 +336,6 @@ public class LibraryController {
 			return null;
 		}
 					
-	}
-	/**
-	 * 获取模拟考场
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping(value = "/simulate", method = RequestMethod.GET)
-	public String simulate(Model model){
-		return "simulate";
-	}
-	
-	/**
-	 * 获取章节练习
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping(value = "/chapter/{productId}", method = RequestMethod.GET)
-	public String chapter(@PathVariable String productId,Model model){
-		model.addAttribute("PRODUCTID",productId);
-		return "chapter_list";
 	}
 	
 	/**

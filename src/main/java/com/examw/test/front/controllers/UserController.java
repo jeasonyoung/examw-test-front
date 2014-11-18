@@ -25,10 +25,17 @@ import com.examw.test.front.support.TaoBaoMD5;
 @Controller
 public class UserController {
 	private static final Logger logger = Logger.getLogger(UserController.class);
+	//用户服务接口
 	@Resource
 	private IUserService userService;
 	
-	//获取用户信息
+	/**
+	 * 获取用户信息	保存至session与cookie中
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value="/getUserInfo" , method={RequestMethod.GET,RequestMethod.POST})
 	public String getUserInfo(HttpServletRequest request,HttpServletResponse response,Model model)
 	{
@@ -54,7 +61,12 @@ public class UserController {
 		}
 		return null;
 	}
-	
+	/**
+	 * 用户退出,清除缓存
+	 * @param request
+	 * @param response
+	 * @return
+	 */
 	@RequestMapping(value="/logout" , method={RequestMethod.GET,RequestMethod.POST})
 	public String logout(HttpServletRequest request,HttpServletResponse response){
 		//删除cookie
@@ -65,7 +77,13 @@ public class UserController {
 	    //清除缓存??
 		return "redirect:http://test.examw.com/user/Login/CheckUser.asp?CheckType=Logout";
 	}
-	
+	/**
+	 * 一个测试接口
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value="/testCookie", method={RequestMethod.GET,RequestMethod.POST})
 	public String testCookie(HttpServletRequest request,HttpServletResponse response,Model model)
 	{

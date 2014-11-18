@@ -20,15 +20,38 @@
                                 <ul>
                                     <!-- <li class="bg"><em>中级经济师</em><i class="shang"></i></li>
                                     <li><a href="#"><em>初级经济师</em><i class="xia"></i><i class="cheng"></i></a></li>鼠标移动上去去掉<i class="cheng"></i> -->
+                                    <#assign TOTAL = 0/>
                                     <#list SUBJECTLIST as s>
-                                    <#if s.id == CURRENT_SUBJECT_ID>
-                                    	<li class="bg">${s.name}</li>
+                                    	<#if s.children?? && (s.children?size>0)>
+                                    		<#assign TOTAL = TOTAL + (s.children?size) />
+                                    	</#if>
+                                    	<#if s.id == CURRENT_SUBJECT_ID>
+                                    		<li class="bg" id="s.id">${s.name}</li>
                                     	<#else>
-                                    	<li><a href="?productId=${PRODUCTID}&subjectId=${s.id}">${s.name}</a></li>
-                                    </#if>
+                                    		<li><a href="?productId=${PRODUCTID}&subjectId=${s.id}">${s.name}</a></li>
+                                    	</#if>
                                     </#list>
                                 </ul>
                             </div>
+                            <#if (TOTAL>0)>
+                            	<div class="erji fl">
+                                	<div class="list">
+                                		<#list SUBJECTLIST as s>
+                                			<#if s.children?? && (s.children?size>0)>
+                                			<ul pid="s.id" <#if s.id != CURRENT_SUBJECT_ID>style="display:none"</#if>>
+                                				<#list s.children as child>
+                                				<#if s.id == CURRENT_CHILD_SUBJECT_ID>
+                                					<li class="bg" id="child.id">${child.name}</li>
+                                				<#else>
+                                					<li><a href="?subSubjectId=${child.id}&subjectId=${s.id}">${child.name}</a></li>
+                                				</#if>
+                                				</#list>
+                                			</ul>
+                                			</#if>
+                                		</#list>
+                                	</div>
+                                </div>
+                            </#if>
                             <!-- <div class="erji fl">
                                 <div class="list">
                                     <ul>

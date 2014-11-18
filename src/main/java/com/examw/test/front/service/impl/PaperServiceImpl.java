@@ -898,7 +898,7 @@ public class PaperServiceImpl implements IPaperService{
 		}
 		return null;
 	}
-	
+	//获取试卷结构试题
 	private StructureItemInfo findStructureItemInfo(StructureInfo info,String itemId)
 	{
 		if(info.getChildren()!=null && info.getChildren().size()>0)
@@ -921,7 +921,12 @@ public class PaperServiceImpl implements IPaperService{
 			return null;
 		}
 	}
-	
+	/**
+	 * 模型转换
+	 * @param info
+	 * @param childItemId
+	 * @return
+	 */
 	private UserItemRecordInfo changeModel(StructureItemInfo info,String childItemId){
 		if(info == null) return null;
 		if(childItemId == null)
@@ -1015,7 +1020,12 @@ public class PaperServiceImpl implements IPaperService{
 		record.setScore(paperTotalScore);
 		return paper;
 	}
-	
+	/**
+	 * 计算大题分数
+	 * @param structure			大题
+	 * @param itemRecordList	试题考试记录
+	 * @return
+	 */
 	private BigDecimal calculateStructrueScore(StructureInfo structure,Set<UserItemRecordInfo> itemRecordList)
 	{
 		BigDecimal actualRuleTotal = BigDecimal.ZERO;
@@ -1185,7 +1195,9 @@ public class PaperServiceImpl implements IPaperService{
 		}
 		return datagrid;
 	}
-	
+	/**
+	 * 查询每日一练试卷列表 带用户信息
+	 */
 	@Override
 	public List<FrontPaperInfo> findDailyPaperList(String productId,Calendar calendar,String userId)
 			throws Exception {
@@ -1217,7 +1229,9 @@ public class PaperServiceImpl implements IPaperService{
 		}
 		return result;
 	}
-	
+	/**
+	 * 查询每日一练的试卷列表(纯试卷不带用户信息)[加入到缓存中]
+	 */
 	@SuppressWarnings("unchecked")
 	private List<FrontPaperInfo> findDailyPaperList(String productId) throws Exception{
 		String today = DateUtil.format(new Date());
@@ -1233,7 +1247,10 @@ public class PaperServiceImpl implements IPaperService{
 		}
 		return list;
 	}
-	
+	/*
+	 * 查询当天未做的每日一练数量
+	 * @see com.examw.test.front.service.IPaperService#findUndoneDailyPaperNumber(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public Json findUndoneDailyPaperNumber(String userId, String productId)
 			throws Exception {

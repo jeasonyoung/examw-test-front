@@ -1,6 +1,6 @@
 <#assign answerflag=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]/>
-<#assign xuhao = 0/>	<!-- 计算序号 -->
-<#assign total = 0/>	<!-- 总数 -->
+<#assign xuhao = 0/>	<#-- 计算序号 -->
+<#assign total = 0/>	<#-- 总数 -->
 <#macro option_flag index>${answerflag[index]}</#macro>
 
 <#macro show_item father item index>
@@ -172,7 +172,7 @@
               </div>
               </#if>
               <#if i.userScore??><div class="f-l fl"><i>得分：</i><em class="weida">${i.userScore} 分</em></div></#if>
-              <#if i.analysis??>
+              <#if i.analysis?? && i.analysis != "">
               <div class="cankaobox fl">
                    <i>参考解析：</i>${i.analysis}
               </div>
@@ -219,10 +219,10 @@
 		<@show_item parent i index+i_index/>
 	</#list>
 </#macro>
-<!-- 计算正确答案 -->
+<#-- 计算正确答案 -->
 <#macro calculate_right_answer parent i>
 	 <em class="dui">
-	 <#if parent??>	<!-- 共享答案题  -->
+	 <#if parent??>	<#-- 共享答案题  -->
 	 	<#list parent.children?sort_by(["orderNo"]) as option>
         	<#if i.answer?index_of(option.id)!=-1>
           		<@option_flag option_index/> 
@@ -238,7 +238,7 @@
      </em>
 </#macro>
 
-<!-- 计算我的答案 -->
+<#-- 计算我的答案 -->
 <#macro calculate_user_answer parent i>
      <#if !i.userAnswer?? || i.userAnswer == "">
 		<em class="weida">未作答</em>
@@ -274,7 +274,7 @@
               <div class="h10"></div>
     </div>
 </#macro>
-<!-- 答题卡 -->
+<#-- 答题卡 -->
 <#macro answer_card items>
 	<#list items as item>
 		<#if item_index == 0>

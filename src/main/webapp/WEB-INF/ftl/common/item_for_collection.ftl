@@ -1,5 +1,5 @@
 <#assign answerflag=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]/>
-<#assign xuhao = 0/>	<!-- 计算序号 -->
+<#assign xuhao = 0/>	<#-- 计算序号 -->
 <#macro option_flag index>
 	${answerflag[index]}
 </#macro>
@@ -61,7 +61,7 @@
                </div>
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
-                    <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
+                    <#--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
                     <div class="f-r fr"><em class="jiucuo"></em><i><a href="javascript:void(0)" onclick="errorRecorvery(this,'${i.id}')" <#if i.pid??>pid="${i.pid}" content="${i.content}"</#if>>纠错</a></i></div>
                     <#if i.isCollected || model=="COLLECTOR">
                     <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');" <#if i.pid??>pid="${i.pid}"</#if>>移除此收藏</a></i></div>
@@ -127,14 +127,14 @@
                <div>
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
-                    <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
+                    <#--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
                     <div class="f-r fr"><em class="jiucuo"></em><i><a href="javascript:void(0)" onclick="errorRecorvery(this,'${i.id}')" <#if i.pid??>pid="${i.pid}" content="${i.content}"</#if>>纠错</a></i></div>
                     <#if i.isCollected || model=="COLLECTOR">
                     <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');" <#if i.pid??>pid="${i.pid}"</#if>>移除此收藏</a></i></div>
                     <#else>
                     <div class="f-r fr"><em class="shoucang"></em><i><a href="javascript:void(0)" onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');" <#if i.pid??>pid="${i.pid}"</#if>>收藏</a></i></div>
                     </#if>
-                    <!--收藏后<div class="f-r fl"><em class="shoucang"></em><i><a href="#">收藏</a></i></div>-->
+                    <#--收藏后<div class="f-r fl"><em class="shoucang"></em><i><a href="#">收藏</a></i></div>-->
                </div>
 			</div>
          </div>
@@ -154,7 +154,7 @@
        <div class="daanbox fl">
                <div class="fr" id="font14">
                     <div class="f-r fr"><i><a href="javascript:void(0)" onclick="toggleAnalysis(this,'${i.id}')"><#if index != 1>展开解析<#else>收起解析</#if></a></i><em class="jiexi-h"></em></div>
-                    <!--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
+                    <#--解析展开<div class="f-r fl"><i><a href="#">展开解析</a></i><em class="jiexi"></em></div>-->
                     <div class="f-r fr"><em class="jiucuo"></em><i><a href="javascript:void(0)" onclick="errorRecorvery(this,'${i.id}')" <#if i.pid??>pid="${i.pid}" content="${i.content}"</#if>>纠错</a></i></div>
                     <#if (i.isCollected) || model=="COLLECTOR">
                     <div class="f-r fr"><em class="shoucang-h"></em><i><a href="javascript:void(0)" <#if i.pid??>pid="${i.pid}"</#if> onclick="collectOrCancel(this,'${i.id}','${i.userAnswer}');">移除此收藏</a></i></div>
@@ -193,7 +193,7 @@
         </#list>
         <#assign xuhao = xuhao + i.children?size />
 </#macro>
-<!-- 计算正确答案 -->
+<#-- 计算正确答案 -->
 <#macro calculate_right_answer i>
      <#list i.children?sort_by(["orderNo"]) as option>
          <#if i.answer?index_of(option.id)!=-1>
@@ -202,7 +202,7 @@
      </#list>
 </#macro>
 
-<!-- 计算我的答案 -->
+<#-- 计算我的答案 -->
 <#macro calculate_user_answer i>
      	<#if !i.userAnswer?? || i.userAnswer == "">
 			<em class="weida">未作答</em>

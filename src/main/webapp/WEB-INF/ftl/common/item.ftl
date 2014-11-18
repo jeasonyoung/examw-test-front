@@ -1,7 +1,7 @@
 <#assign answerflag=["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]/>
-<#assign xuhao = 0/>	<!-- 计算序号 -->
-<#assign total = 0/>	<!-- 总数 -->
-<!-- 计算序号对应的ABCD -->
+<#assign xuhao = 0/>	<#-- 计算序号 -->
+<#assign total = 0/>	<#-- 总数 -->
+<#-- 计算序号对应的ABCD -->
 <#macro option_flag index>${answerflag[index]}</#macro>
 
 <#macro show_item father item index>
@@ -20,10 +20,10 @@
 	<#else>
 	</#if>
 </#macro>
-<!-- 选择题 -->
+<#-- 选择题 -->
 <#macro item_choose parent i input index>
 	<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_index="${index}">
-		<!--
+		<#--
 		<#if parent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
@@ -53,10 +53,10 @@
          </div>
     </div>
 </#macro>
-<!-- 判断题 -->
+<#-- 判断题 -->
 <#macro item_judge parent i index>
 	<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_index="${index}">
-		<!--
+		<#--
 		<#if parent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
@@ -78,7 +78,7 @@
          </div>
     </div>
 </#macro>
-<!-- 问答题   -->
+<#-- 问答题   -->
 <#macro item_qanda parent i index>
 	<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_index="${index}">
        <div class="timu fl">
@@ -90,7 +90,7 @@
        </div>
     </div>
 </#macro>
-<!-- 共享题干 -->
+<#-- 共享题干 -->
 <#macro item_share_title i index>
 	<div class="fenxiti fl" fenxi_item_id = "${i.id}"><i>${i.typeName}</i><em><#if i.content?matches("\\s*[(][一二三四五六七八九十]{1}[)][\\W\\w]*")>${(i.content?trim)?substring(3)}<#else>${i.content}</#if></em></div>
 		<#list i.children?sort_by(["orderNo"]) as child>
@@ -102,7 +102,7 @@
         <#assign xuhao = xuhao + i.children?size - 1 />
         </#if>
 </#macro>
-<!-- 共享答案 -->
+<#-- 共享答案 -->
 <#macro item_share_answer i index>
 	<div class="fenxiti fl" fenxi_item_id = "${i.id}">
 		<i>${i.typeName}</i>
@@ -134,7 +134,7 @@
 <#macro show_share_answer_item items parent index>
 	<#list items.children?sort_by(["orderNo"]) as i>
 		<div class="box fl" item_type="${i.type}" item_id="${i.id}" item_index="${index+i_index}">
-		<!--<#if i.parentContent??>
+		<#--<#if i.parentContent??>
 		<div id="font14" class="fenxiti fl">
 			<i>材料题</i>
 			<em><@item_share_answer_content parent/></em>
@@ -158,7 +158,7 @@
     </div>
 	</#list>
 </#macro>
-<!-- 计算正确答案 -->
+<#-- 计算正确答案 -->
 <#macro calculate_right_answer i>
 	 <#list i.children as option>
        <#if i.answer?index_of(option.id)!=-1>
@@ -167,7 +167,7 @@
      </#list>
 </#macro>
 
-<!-- 答题卡 -->
+<#-- 答题卡 -->
 <#macro answer_card items>
 	<#list items as item>
 		<#if item_index == 0>

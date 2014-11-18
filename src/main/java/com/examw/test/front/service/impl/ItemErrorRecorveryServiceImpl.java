@@ -8,7 +8,7 @@ import com.examw.test.front.service.IItemErrorRecorveryService;
 import com.examw.test.front.support.HttpUtil;
 
 /**
- * 
+ * 试题纠错服务接口实现类
  * @author fengwei.
  * @since 2014年11月5日 下午5:09:09.
  */

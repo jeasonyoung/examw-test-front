@@ -9,15 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.examw.model.DataGrid;
 import com.examw.model.Json;
 import com.examw.test.front.model.library.ItemErrorRecorveryInfo;
 import com.examw.test.front.model.record.Collection;
-import com.examw.test.front.model.record.NoteInfo;
 import com.examw.test.front.model.user.User;
 import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.service.IItemErrorRecorveryService;
-import com.examw.test.front.service.INoteService;
 
 /**
  * 试题相关控制器
@@ -28,10 +25,10 @@ import com.examw.test.front.service.INoteService;
 @RequestMapping("/library/item")
 public class ItemController {
 	private static final Logger logger = Logger.getLogger(PaperController.class);
-	@Resource
-	private INoteService noteService;
+	//错题服务接口
 	@Resource
 	private IItemErrorRecorveryService itemErrorRecorveryService;
+	//收藏服务接口
 	@Resource
 	private ICollectionService collectionService;
 	
@@ -75,43 +72,42 @@ public class ItemController {
 		return result;
 	}
 	
-	@RequestMapping(value ="notes", method = {RequestMethod.GET,RequestMethod.POST})
-	@ResponseBody
-	public DataGrid<NoteInfo> findNotes(NoteInfo info,String model){
-		if(logger.isDebugEnabled()) logger.debug("查询笔记数据...");
-		String userId = getUserId(null);
-		try{
-			if("all".equals(model))
-				return this.noteService.findNotes(info);
-			else{
-				info.setUserId(userId);
-				return this.noteService.findNotes(info);
-			}
-				
-		}catch(Exception e){
-			e.printStackTrace();
-			if(logger.isDebugEnabled()) logger.debug("查询笔记数据...");
-		}
-		return null;
-	}
-	
-	@RequestMapping(value ="addnote", method = {RequestMethod.GET,RequestMethod.POST})
-	@ResponseBody
-	public Json addNote(NoteInfo info){
-		if(logger.isDebugEnabled()) logger.debug("添加笔记数据...");
-		String userId = getUserId(null);
-		try{
-			info.setUserId(userId);
-			info.setUsername("username");
-			return this.noteService.addNote(info);
-		}catch(Exception e){
-			e.printStackTrace();
-			if(logger.isDebugEnabled()) logger.debug("添加笔记数据...");
-		}
-		return null;
-	}
-	
 	private String getUserId(HttpSession session){
 		return ((User)(session.getAttribute("USER"))).getProductUserId();
 	}
+//	@RequestMapping(value ="notes", method = {RequestMethod.GET,RequestMethod.POST})
+//	@ResponseBody
+//	public DataGrid<NoteInfo> findNotes(NoteInfo info,String model){
+//		if(logger.isDebugEnabled()) logger.debug("查询笔记数据...");
+//		String userId = getUserId(null);
+//		try{
+//			if("all".equals(model))
+//				return this.noteService.findNotes(info);
+//			else{
+//				info.setUserId(userId);
+//				return this.noteService.findNotes(info);
+//			}
+//				
+//		}catch(Exception e){
+//			e.printStackTrace();
+//			if(logger.isDebugEnabled()) logger.debug("查询笔记数据...");
+//		}
+//		return null;
+//	}
+//	
+//	@RequestMapping(value ="addnote", method = {RequestMethod.GET,RequestMethod.POST})
+//	@ResponseBody
+//	public Json addNote(NoteInfo info){
+//		if(logger.isDebugEnabled()) logger.debug("添加笔记数据...");
+//		String userId = getUserId(null);
+//		try{
+//			info.setUserId(userId);
+//			info.setUsername("username");
+//			return this.noteService.addNote(info);
+//		}catch(Exception e){
+//			e.printStackTrace();
+//			if(logger.isDebugEnabled()) logger.debug("添加笔记数据...");
+//		}
+//		return null;
+//	}
 }

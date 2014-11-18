@@ -25,30 +25,44 @@ import com.examw.test.front.service.IProductService;
 @RequestMapping("/library/chapter")
 public class ChapterController {
 	private static final Logger logger = Logger.getLogger(ChapterController.class);
-	
+	//章节服务接口
 	@Resource
 	private IChapterService chapterService;
+	//产品服务接口
 	@Resource
 	private IProductService productService;
 	/**
-	 * 章节联系界面
-	 * @param examId
-	 * @param subjectId
+	 * 章节练习界面
+	 * @param productId		产品ID
+	 * @param subjectId		科目ID
+	 * @param subSubjectId	子科目ID
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/list/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
-	public String chapters(@PathVariable String productId,String subjectId,Model model){
+	public String chapters(@PathVariable String productId,String subjectId,String subSubjectId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载章节练习...");
 		try{
 			List<SubjectInfo> list = this.productService.loadProductSubjects(productId);
 			model.addAttribute("PRODUCTID", productId);
 			model.addAttribute("SUBJECTLIST", list);
 			if(StringUtils.isEmpty(subjectId)){
-				subjectId = list.get(0).getId();
+				if(list!=null && list.size()>0)
+					subjectId = list.get(0).getId();
+			}
+			if(StringUtils.isEmpty(subSubjectId)){
+				if(list!=null && list.size()>0)
+				{
+					SubjectInfo info = list.get(0);
+					if(info.getChildren()!=null && info.getChildren().size()>0)
+					{
+						subSubjectId = info.getChildren().get(0).getId();
+					}
+				}
 			}
 			model.addAttribute("CHAPTERLIST", this.chapterService.loadChapterInfo(subjectId));
 			model.addAttribute("CURRENT_SUBJECT_ID", subjectId);
+			model.addAttribute("CURRENT_CHILD_SUBJECT_ID", subSubjectId);
 		}catch(Exception e){
 			e.printStackTrace();
 			if(logger.isDebugEnabled()) logger.debug("加载章节信息异常...");
@@ -57,8 +71,8 @@ public class ChapterController {
 	}
 	/**
 	 * 章节详情
-	 * @param pid
-	 * @param id
+	 * @param pid	章节父ID
+	 * @param id	章节子ID
 	 * @param model
 	 * @return
 	 */

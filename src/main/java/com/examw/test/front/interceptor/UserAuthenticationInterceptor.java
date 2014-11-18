@@ -65,7 +65,7 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	}
 
 	/**
-	 * 设置 
+	 * 设置 md5加密字符串
 	 * @param md5Str
 	 * 
 	 */

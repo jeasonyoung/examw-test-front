@@ -28,6 +28,7 @@ import com.examw.test.front.support.ItemTypeUtil;
 @RequestMapping("/library/paper")
 public class PaperController {
 	private static final Logger logger = Logger.getLogger(PaperController.class);
+	//试卷服务接口
 	@Resource
 	private IPaperService paperService;
 	/**
@@ -58,9 +59,8 @@ public class PaperController {
 	@RequestMapping(value ="/{productId}/do/multi/{paperId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String paperDetail(@PathVariable String paperId,@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情...");
-		//TODO 模拟一个用户ID
-		String userId = getUserId(request);
-		//TODO 判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
+		String userId = this.getUserId(request);
+		//判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
 		try{
 			PaperPreview info = this.paperService.findPaperDetail(paperId,userId,productId);
 			model.addAttribute("PAPER", info);
@@ -86,9 +86,9 @@ public class PaperController {
 	@RequestMapping(value ="/{productId}/do/single/{paperId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String paperDetailSigleModel(@PathVariable String paperId,@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情...");
-		//TODO 模拟一个用户ID
-		String userId = getUserId(request);
-		//TODO 判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
+		//模拟一个用户ID
+		String userId = this.getUserId(request);
+		//判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
 		try{
 			PaperPreview info = this.paperService.findPaperDetail(paperId,userId,productId);
 			model.addAttribute("PAPER", info);
@@ -107,7 +107,12 @@ public class PaperController {
 		return "single_mode";
 	}
 	
-	//保存答案 [下次再做]
+	/**
+	 * 保存答案 [下次再做]
+	 * @param info			试卷提交信息
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value ="/submit", method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
 	public Json sumbitForNextTime(PaperSubmitInfo info,HttpServletRequest request){
@@ -123,11 +128,18 @@ public class PaperController {
 		}
 		return null;
 	}
-	//获取试卷的解析
+	/**
+	 * 获取试卷的解析
+	 * @param paperId		试卷ID
+	 * @param productId		产品ID
+	 * @param model
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value ="/{productId}/analysis/{paperId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String paperAnalysis(@PathVariable String paperId,@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题解析详情...");
-		//TODO 模拟一个用户ID
+		//模拟一个用户ID
 		String userId = this.getUserId(request);
 		try{
 			PaperPreview info = this.paperService.findPaperAnalysis(paperId,userId,productId);
@@ -152,7 +164,15 @@ public class PaperController {
 		return "multi_mode_showanswer";
 	}
 	
-	//获取试卷的解析 [根据试卷记录的ID查找记录]
+	/**
+	 * 获取试卷的解析 [根据试卷记录的ID查找记录]
+	 * @param paperId			试卷ID
+	 * @param recordId			考试记录ID
+	 * @param productId			产品ID
+	 * @param model
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value ="/{productId}/analysis/{paperId}/{recordId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String paperRecordAnalysis(@PathVariable String paperId,@PathVariable String recordId,@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷试题解析详情...");

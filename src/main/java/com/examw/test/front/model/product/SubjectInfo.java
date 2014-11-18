@@ -1,5 +1,7 @@
 package com.examw.test.front.model.product;
 
+import java.util.List;
+
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import com.examw.model.Paging;
@@ -18,6 +20,7 @@ public class SubjectInfo extends Paging{
 	private String categoryId,categoryName;
 	private Integer code;
 	private String pid,fullName;
+	private List<SubjectInfo> children;
 	/**
 	 * 获取科目ID。
 	 * @return 科目ID。
@@ -209,4 +212,21 @@ public class SubjectInfo extends Paging{
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
 	}
+	/**
+	 * 获取 子科目
+	 * @return children
+	 * 子科目
+	 */
+	public List<SubjectInfo> getChildren() {
+		return children;
+	}
+	/**
+	 * 设置 子科目
+	 * @param children
+	 * 子科目
+	 */
+	public void setChildren(List<SubjectInfo> children) {
+		this.children = children;
+	}
+	
 }

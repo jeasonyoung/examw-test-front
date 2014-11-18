@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.examw.test.front.model.product.FrontCategoryInfo;
 import com.examw.test.front.service.ICategoryService;
-import com.examw.test.front.service.IUserService;
 
 /**
  * 题库首页
@@ -23,10 +22,9 @@ import com.examw.test.front.service.IUserService;
 @Controller
 public class IndexController{
 	private static final Logger logger = Logger.getLogger(IndexController.class);
+	//课程分类服务接口
 	@Resource
 	private ICategoryService categoryService;
-	@Resource
-	private IUserService userService;
 	/**
 	 * 获取首页。
 	 * @param model

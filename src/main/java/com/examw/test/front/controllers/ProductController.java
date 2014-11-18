@@ -19,6 +19,7 @@ import com.examw.test.front.service.IProductService;
 @RequestMapping("/product")
 public class ProductController {	
 	private static final Logger logger = Logger.getLogger(IndexController.class);
+	//产品服务接口
 	@Resource
 	private IProductService productService;
 	/**
