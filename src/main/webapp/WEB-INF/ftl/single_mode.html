@@ -337,6 +337,20 @@ $(function(){
 	        content: "<div class='cont-r'><div class='fenxiti fl' style='border:0px'>"+$("div[fenxi_item_id='"+id+"']").html()+"</div></div>"
 	    }).show();
 	}
+	//<!-- 保存临时答案 -->
+	function saveChooseAnswer(s_item_id,answers){
+		if(window.tempChooseAnswer == "" || window.tempChooseAnswer.indexOf(s_item_id+"=")==-1){
+			window.tempChooseAnswer = window.tempChooseAnswer + s_item_id+"="+answers+"&";
+		}else{
+			var front = window.tempChooseAnswer.substring(0,window.tempChooseAnswer.indexOf(s_item_id+"="));
+			var temp = window.tempChooseAnswer.substring(window.tempChooseAnswer.indexOf(s_item_id+"="),window.tempChooseAnswer.length);
+			var after = temp.substring(temp.indexOf("&")+1,temp.length);
+			if($.trim(answers)=="")
+				window.tempChooseAnswer = front + after;
+			else
+				window.tempChooseAnswer = front + s_item_id +"="+answers+"&"+after;
+		}
+	}
 	//<!-- 下次做提交  -->
 	answerNexttime = function(){
 			var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":0,"prodouctId":productId,"textAnswers":getTextAreaValue()};

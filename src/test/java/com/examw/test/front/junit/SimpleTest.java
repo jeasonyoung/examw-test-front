@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.UUID;
@@ -14,6 +16,7 @@ import org.junit.Test;
 import com.examw.model.Json;
 import com.examw.test.front.support.DateUtil;
 import com.examw.test.front.support.TaoBaoMD5;
+import com.examw.utils.MD5Util;
 
 /**
  * 
@@ -32,9 +35,10 @@ public class SimpleTest {
 //		String xml2 = HttpUtil.httpRequest(url2, "GET", null, "utf-8");
 //		System.out.println(xml2);
 //		System.out.println(URLEncoder.encode(xml2,"GBK"));
-//		//String Md5Key = "4q3i07f12u5i8R1nU";
-//		String source = "fw121fw42$462144$2$0$%C6%D5%CD%A8%BB%E1%D4%B1$10$$$";
-//		System.out.println(MD5Util.MD5(source));
+//		String Md5Key = "4q3i07f12u5i8R1nU";
+		String source = "nima";
+		System.out.println(MD5Util.MD5(source));
+		System.out.println(this.md5(source));
 //		Integer count = 1;
 //		add(count);
 //		System.out.println(count);
@@ -67,5 +71,28 @@ public class SimpleTest {
 		System.out.println(new BigDecimal(1).compareTo(BigDecimal.ZERO));
 		System.out.println(UUID.randomUUID().toString());
 		System.out.println(score.equals(BigDecimal.TEN.multiply(BigDecimal.TEN)));
+	}
+	private String md5(String source)
+	{
+		try {
+			//采用MD5算法加密
+			MessageDigest md5Code =
+				MessageDigest.getInstance("md5");
+			byte[] byteArray=md5Code.digest(source.getBytes());
+			//采用Base64算法将加密后的byte[]转换成string
+	        StringBuffer md5StrBuff = new StringBuffer();  
+	  
+	        for (int i = 0; i < byteArray.length; i++) {              
+	            if (Integer.toHexString(0xFF & byteArray[i]).length() == 1)  
+	                md5StrBuff.append("0").append(Integer.toHexString(0xFF & byteArray[i]));  
+	            else  
+	                md5StrBuff.append(Integer.toHexString(0xFF & byteArray[i]));  
+	        }  
+	  
+	        return md5StrBuff.toString();  
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
