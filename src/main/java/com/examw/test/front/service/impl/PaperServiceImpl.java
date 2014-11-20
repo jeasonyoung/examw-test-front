@@ -3,6 +3,7 @@ package com.examw.test.front.service.impl;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1005,12 +1006,12 @@ public class PaperServiceImpl implements IPaperService{
 			BigDecimal actualRuleTotal = this.calculateStructrueScore(s, itemRecordList);
 			//得分比例[只有顶级大题才有比例]
 			BigDecimal ratio = (s.getRatio()==null||s.getRatio().equals(BigDecimal.ZERO)||s.getRatio().equals(BigDecimal.TEN.multiply(BigDecimal.TEN)))?BigDecimal.ONE:(s.getRatio().divide(BigDecimal.TEN).divide(BigDecimal.TEN)); //所占比例
-			if(!ratio.equals(BigDecimal.ONE)&&!actualRuleTotal.equals(BigDecimal.ONE))
+			if(!ratio.equals(BigDecimal.ONE)&&!actualRuleTotal.equals(BigDecimal.ZERO))
 			{
-				if(!BigDecimal.ZERO.equals(s.getScore()))
-					actualRuleTotal = actualRuleTotal.multiply(ratio).multiply(paperScore).divide(new BigDecimal(s.getTotal())).divide(s.getScore());
+				if(s.getScore()!=null && !BigDecimal.ZERO.equals(s.getScore()))
+					actualRuleTotal = actualRuleTotal.multiply(ratio).multiply(paperScore).divide(new BigDecimal(s.getTotal()).multiply(s.getScore()),2,RoundingMode.HALF_UP);
 				else
-					actualRuleTotal = actualRuleTotal.multiply(ratio).multiply(paperScore).divide(new BigDecimal(s.getTotal()));
+					actualRuleTotal = actualRuleTotal.multiply(ratio).multiply(paperScore).divide(new BigDecimal(s.getTotal()),2,RoundingMode.HALF_UP);
 			}
 			if (actualRuleTotal.compareTo(BigDecimal.ZERO) == -1) {
 				actualRuleTotal = BigDecimal.ZERO;

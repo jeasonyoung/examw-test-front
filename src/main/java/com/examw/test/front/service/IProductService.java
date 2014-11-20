@@ -20,7 +20,7 @@ public interface IProductService{
 	 * @return
 	 * @throws IOException
 	 */
-	List<FrontProductInfo> loadProducts(String examId) throws IOException;
+	List<FrontProductInfo> loadProducts(String examId,String categoryId) throws IOException;
 	/**
 	 * 根据ID加载产品信息
 	 * @param id

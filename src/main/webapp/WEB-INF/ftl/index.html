@@ -48,7 +48,14 @@
                 			<#else>
                 			<ul name="category_children" id="${c.id}" style="display:none">
                 		</#if>
-                		<@createCategory c/>
+                		<#if c.children?? && (c.children?size>0)>
+						<#list c.children as child>
+							<@createCategory child/>
+						</#list>
+						</#if>
+						<#if c.exams??>
+						<@createExams null c.exams/>
+						</#if>
                     	</ul>
                     </#list>
                     <!-- 已选择 -->
@@ -63,7 +70,7 @@
     </div>
     </form>
 </div>
-<#macro createExams exams>
+<#macro createExams category exams>
 	<#if exams?? && (exams?size>0)>
 		<#list exams as exam>
 			<#if exam??>
@@ -71,6 +78,9 @@
                 <div class="pic"><img src="<@s.url "/resources/front-default/image/class.png"/>" width="66" height="74"></div>
                 <em>${exam.name}</em>
                 <input name="examId" value="${exam.id}" type="hidden" disabled="disabled"/>
+                <#if category??>
+                <input name="categoryId" value="${category.id}" type="hidden" disabled="disabled"/>
+                </#if>
               </li>
            </#if>
         </#list>
@@ -83,7 +93,7 @@
 		</#list>
 	</#if>
 	<#if cate.exams??>
-	<@createExams cate.exams/>
+	<@createExams cate cate.exams/>
 	</#if>
 </#macro>
 <div class="h30"></div>
@@ -156,7 +166,7 @@
  		});
  		//
  		$("#button").click(function(){
- 			var input = $("input:enabled");
+ 			var input = $("input[name='examId']:enabled");
  			if(input.length == 0 )
  			{
  				alert("请先选择考试");

@@ -54,7 +54,17 @@ public class UserController {
 				response.setHeader("P3P","CP='IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT'");
 				response.setHeader("Set-Cookie","Examwww="+URLEncoder.encode(users, "utf-8")+"#"+key);
 			}
-			return "redirect:/";
+			String lastPage = "/";
+			Cookie[] cookies = request.getCookies();
+		    if(cookies!=null){
+		    	for(Cookie c:cookies){
+		    		if("LastPage".equals(c.getName())){
+		    			lastPage = c.getValue();
+		    			break;
+		    		}
+		    	}
+		    }
+			return "redirect:"+lastPage;
 		}catch(Exception e){
 			e.printStackTrace();
 			

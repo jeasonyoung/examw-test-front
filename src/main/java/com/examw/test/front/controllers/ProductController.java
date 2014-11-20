@@ -29,11 +29,12 @@ public class ProductController {
 	 * @return
 	 */
 	@RequestMapping(value = {"","/"}, method = {RequestMethod.GET,RequestMethod.POST})
-	public String products(String examId,Model model){
+	public String products(String examId,String categoryId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载产品列表页面...");
 		try{
 			model.addAttribute("EXAMID", examId);
-			model.addAttribute("PRODUCTLIST",this.productService.loadProducts(examId));
+			model.addAttribute("CATEGORYID", categoryId);
+			model.addAttribute("PRODUCTLIST",this.productService.loadProducts(examId,categoryId));
 		}catch(Exception e){
 			e.printStackTrace();
 		}

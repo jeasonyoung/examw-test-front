@@ -9,8 +9,10 @@
 	</bean>
 	<!-- 产品 -->
 	<bean id="productService" class="com.examw.test.front.service.impl.ProductServiceImpl">
-	    <!-- 产品集合数据远程地址  -->
-	    <property name="api_product_list_url" value="${api_products_url}" />
+	    <!-- 产品集合数据远程地址[根据exam分]  -->
+	    <property name="api_product_list_url" value="${api_products_exam_url}" />
+	    <!-- 产品集合数据远程地址[根据category分]  -->
+	    <property name="api_product_list_url_category" value="${api_products_category_url}" />
 	    <!-- 产品详情数据远程地址  -->
 	    <property name="api_product_detail_url" value="${api_product_url}" />
 	    <!-- 产品科目数据远程地址  -->

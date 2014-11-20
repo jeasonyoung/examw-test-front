@@ -150,6 +150,10 @@ public class UserAuthenticationInterceptor extends HandlerInterceptorAdapter {
 	    }
 	    //4、非法请求 即这些请求需要登录后才能访问  
 	    //重定向到登录页面  
+	    //记录上一次的地址
+	    Cookie cookie = new Cookie("LastPage",request.getRequestURI().substring(request.getContextPath().length()));
+	    cookie.setPath("/");
+	    response.addCookie(cookie);
 	    response.sendRedirect(remoteRedirectUrl);
 	    return false; 
 	}

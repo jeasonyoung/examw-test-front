@@ -2,6 +2,7 @@ package com.examw.test.front.junit;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
@@ -71,6 +72,12 @@ public class SimpleTest {
 		System.out.println(new BigDecimal(1).compareTo(BigDecimal.ZERO));
 		System.out.println(UUID.randomUUID().toString());
 		System.out.println(score.equals(BigDecimal.TEN.multiply(BigDecimal.TEN)));
+		BigDecimal actualRuleTotal = new BigDecimal(0);
+		BigDecimal ratio = BigDecimal.ONE;
+		BigDecimal paperScore = BigDecimal.TEN.multiply(BigDecimal.TEN);
+		actualRuleTotal = actualRuleTotal.multiply(ratio).multiply(paperScore).divide(new BigDecimal(3).multiply(BigDecimal.ONE),2,RoundingMode.HALF_UP);
+		System.out.println(actualRuleTotal);
+		System.out.println(BigDecimal.ZERO.equals(new BigDecimal(0.00)));
 	}
 	private String md5(String source)
 	{

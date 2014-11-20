@@ -21,6 +21,7 @@ import com.examw.test.front.support.JSONUtil;
 public class ProductServiceImpl implements IProductService{
 	private static final Logger logger = Logger.getLogger(ProductServiceImpl.class);
 	private String api_product_list_url;
+	private String api_product_list_url_category;
 	private String api_product_detail_url;
 	private String api_product_subjects_url;
 	private String api_product_areas_url;
@@ -32,7 +33,16 @@ public class ProductServiceImpl implements IProductService{
 	public void setApi_product_list_url(String api_product_list_url) {
 		this.api_product_list_url = api_product_list_url;
 	}
-	
+	/**
+	 * 设置 据接口请求地址
+	 * @param api_product_list_url_category
+	 * 
+	 */
+	public void setApi_product_list_url_category(
+			String api_product_list_url_category) {
+		this.api_product_list_url_category = api_product_list_url_category;
+	}
+
 	/**
 	 * 设置 产品详情请求地址
 	 * @param api_product_detail_url
@@ -67,11 +77,15 @@ public class ProductServiceImpl implements IProductService{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<FrontProductInfo> loadProducts(String examId) throws IOException {
+	public List<FrontProductInfo> loadProducts(String examId,String categoryId) throws IOException {
 		if(logger.isDebugEnabled()) logger.debug("加载产品列表信息...");
-		if(StringUtils.isEmpty(examId))
+		if(StringUtils.isEmpty(examId) && StringUtils.isEmpty(categoryId))
 		return null;
-		String url = String.format(this.api_product_list_url, examId);
+		String url = null;
+		if(StringUtils.isEmpty(categoryId))
+			url = String.format(this.api_product_list_url, examId);
+		else
+			url = String.format(this.api_product_list_url_category, categoryId);
 		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml,List.class,FrontProductInfo.class);
