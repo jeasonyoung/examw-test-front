@@ -71,7 +71,7 @@
 						<value>/resources*</value>
 						<value>/getUserInfo</value>
 						<value>/logout</value>
-						<!-- <value>/</value>  -->
+						<value>/</value>
 					</list>
 				</property>
 			</bean>

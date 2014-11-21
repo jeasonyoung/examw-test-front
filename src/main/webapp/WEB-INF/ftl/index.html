@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-<title>考试类选择页 考试系统题库</title>
+<title>中华考试网题库系统</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
@@ -167,6 +167,7 @@
  		//
  		$("#button").click(function(){
  			var input = $("input[name='examId']:enabled");
+ 			var categoryInput = $("input[name='categoryId']:enabled");
  			if(input.length == 0 )
  			{
  				alert("请先选择考试");
@@ -177,7 +178,11 @@
  				ids.push($(input[i]).val());
  			});
  			$.cookie("exams",ids.join(","));
- 			$("#form").submit();
+ 			if(categoryInput.length>0)
+ 			{
+ 				location = "<@s.url '/product/all/' />"+categoryInput.val()+"?examId="+input.val();
+ 			}else
+ 				location = "<@s.url '/product/' />"+input.val();
  		});
  	});
  </script>

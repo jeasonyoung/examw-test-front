@@ -82,7 +82,7 @@ public class ProductServiceImpl implements IProductService{
 		if(StringUtils.isEmpty(examId) && StringUtils.isEmpty(categoryId))
 		return null;
 		String url = null;
-		if(StringUtils.isEmpty(categoryId))
+		if(!StringUtils.isEmpty(examId))
 			url = String.format(this.api_product_list_url, examId);
 		else
 			url = String.format(this.api_product_list_url_category, categoryId);

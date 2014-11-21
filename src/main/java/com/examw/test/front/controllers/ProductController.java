@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -28,13 +29,24 @@ public class ProductController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping(value = {"","/"}, method = {RequestMethod.GET,RequestMethod.POST})
-	public String products(String examId,String categoryId,Model model){
+	@RequestMapping(value = "/all/{categoryId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String productsAll(@PathVariable String categoryId,String examId,Model model){
+		if(logger.isDebugEnabled()) logger.debug("加载产品列表页面...");
+		try{
+			model.addAttribute("CATEGORYID", categoryId);
+			model.addAttribute("EXAMID", examId);
+			model.addAttribute("PRODUCTLIST",this.productService.loadProducts(examId,categoryId));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return "products";
+	}
+	@RequestMapping(value = "/{examId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String products(@PathVariable String examId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载产品列表页面...");
 		try{
 			model.addAttribute("EXAMID", examId);
-			model.addAttribute("CATEGORYID", categoryId);
-			model.addAttribute("PRODUCTLIST",this.productService.loadProducts(examId,categoryId));
+			model.addAttribute("PRODUCTLIST",this.productService.loadProducts(examId,null));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
