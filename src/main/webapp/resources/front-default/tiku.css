@@ -187,8 +187,15 @@
 .chapter-list li a:hover{ color:#f00}
 .chapter-list .title{width:100%; float:left; display:block; overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .chapter-list .title em{ width:61%; line-height:54px; float:left; text-align:left; color:#252525; cursor:pointer; font-family:"宋体"}
-.kong{ margin-left:6%}
-.chapter-list .title i{ width:55%; line-height:54px; float:left; text-align:left; color:#252525; font-family:"宋体"}
+.kong{ margin-left:4%}
+.kong2{ margin-left:6%}
+.kong3{ margin-left:8%}
+.kong4{ margin-left:10%}
+.chapter-list .title i{line-height:54px; float:left; text-align:left; color:#252525; font-family:"宋体"}
+.i1{width:57%;}
+.i2{width:55%;}
+.i3{width:53%;}
+.i4{width:51%;}
 .chapter-list .title .none{ width:50px; height:50px; float:left}
 .chapter-list .title .jia{ width:50px; height:50px; float:left; background-position:-20px 0}
 .chapter-list .title .jian{ width:50px; height:50px; float:left; background-position:-60px 0}

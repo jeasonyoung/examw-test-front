@@ -14,7 +14,7 @@
     	<div class="width998 yinying">
         	<div class="zhishi">
             	<ul>
-            		<#list CHAPTER.children as child>
+            		<#list CHAPTER.children?sort_by(["orderNo"]) as child>
                 	<li <#if child.id == KNOWLEDGE.syllabusId>class="zsover"<#else>class="zsout"</#if> onMouseOver="this.className='zsover'" onMouseOut="this.className='zsout'">
                 		&middot;<a href="<@s.url "/library/chapter/detail?pid=${CHAPTER.id}&id=${child.id}"/>">${child.title}</a>
                 	</li>
@@ -25,9 +25,13 @@
         <div class="h20"></div>
     	<div class="width998 yinying">
             <div class="shiti fl">
-            	<div class="tishi fl">所属章节：${CHAPTER.fullTitle}</div>
+            	<#if KNOWLEDGE??>
+            	<div class="tishi fl">所属章节：${KNOWLEDGE.topSyllabusName}</div>
                 <div class="jie-name">${KNOWLEDGE.syllabusName}</div>
-              	<div class="jie-content">${KNOWLEDGE.content}</div>
+              	<div class="jie-content">${KNOWLEDGE.description}</div>
+              	<#else>
+              	<div class="tishi fl">暂无章节详情,小编们正在拼命添加中...</div>
+              	</#if>
             </div>
         </div>
   	</div>

@@ -7,6 +7,7 @@
 <body>
 <#assign current_page="chapter"/>
 <#include "common/head.html" />
+<#include "common/chapter.ftl" />
 <div class="main">
 	<div class="h30"></div>
 	<div class="content fl">
@@ -90,58 +91,7 @@
                             <span class="f-bold">错题</span>
                         </div>
                     </li>
-                    <#list CHAPTERLIST as father>
-						<li class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
-                        	<div class="title">
-                        		<div id="${father.id}" name="father" >
-                        		<#if father.children??>
-                        			<#if father_index == 0>
-                        			<div class="jian"></div>
-                        			<#else>
-                        			<div class="jia"></div>
-                        			</#if>
-                        		<#else>
-                        		<div class="jian"></div>	
-                        		</#if>
-                           	 	<em>${father.title}</em>
-                           	 	</div>
-                            	<span>5 / 203</span>
-                            	<span class="red">3</span>
-                            	<span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
-                        	</div>
-                    	</li>
-                    	<#if father.children??>
-                    		<#list father.children as sun>
-                    		<li <#if father_index != 0>style="display:none;overflow:hidden;"</#if> name="child" pid="${father.id}" sid="${sun.id}" class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
-                        		<div class="title">
-                        			<div id="${sun.id}" name="father" >
-                        			<#if sun.children??>
-                        				<div class="jia kong"></div>
-                        			<#else>
-                        				<div class="jian kong"></div>	
-                        			</#if>
-                            			<i>${sun.title}</i></div>
-                            				<span>0 / 53</span>
-                            				<span>0</span>
-                            				<span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
-                        		</div>
-                    		</li>
-                    		<#if sun.children??>
-                    			<#list sun.children as grandsun>
-                    			<li class="chapter-out" tpid="${father.id}" pid="${sun.id}" style="display:none;overflow:hidden;" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
-                        			<div class="title">
-                        				<div class="jian kong bg-no"></div>
-                            			<i>&middot; <a href="<@s.url "/library/chapter/detail/${sun.id}/${grandsun.id}"/>" target="_blank" title="${grandsun.title}">${grandsun.title}</a></i>
-                            			<span></span>
-                            			<span></span>
-                            			<span><div class="buy-botton"><div class="hei-botton"><a href="<@s.url "/library/chapter/detail/${sun.id}/${grandsun.id}"/>" target="_blank">查看知识点</a></div></div></span>
-                        			</div>
-                    			</li>
-                    			</#list>
-                    		</#if>
-                    		</#list>
-                    	</#if>                	
-                    </#list>
+                    <@show_chapter CHAPTERLIST />
                 </ul>
             </div>
         </div>

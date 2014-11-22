@@ -16,7 +16,8 @@ public class SyllabusInfo extends Paging implements Comparable<SyllabusInfo> {
 	private static final long serialVersionUID = 1L;
 	private String pid,id,title,fullTitle,subjectId,subjectName,examId,examName;
 	private Set<SyllabusInfo> children;
-	private Integer code;
+	private Integer status, orderNo;
+	private Integer year;
 	/**
 	 * 获取上级大纲ID。
 	 * @return 上级大纲ID。
@@ -61,21 +62,6 @@ public class SyllabusInfo extends Paging implements Comparable<SyllabusInfo> {
 	 */
 	public void setId(String id) {
 		this.id = id;
-	}
-	/**
-	 * 获取大纲代码。
-	 * @return 大纲代码。
-	 */
-	public Integer getCode() {
-		return code;
-	}
-	/**
-	 * 设置大纲代码。
-	 * @param code
-	 * 大纲代码。
-	 */
-	public void setCode(Integer code) {
-		this.code = code;
 	}
 	/**
 	 * 获取大纲标题。
@@ -167,6 +153,55 @@ public class SyllabusInfo extends Paging implements Comparable<SyllabusInfo> {
 	public void setExamName(String examName) {
 		this.examName = examName;
 	}
+	
+	/**
+	 * 获取 状态值
+	 * @return status
+	 * 状态值
+	 */
+	public Integer getStatus() {
+		return status;
+	}
+	/**
+	 * 设置 状态值
+	 * @param status
+	 * 状态值
+	 */
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	/**
+	 * 获取 排序号
+	 * @return orderNo
+	 * 排序号
+	 */
+	public Integer getOrderNo() {
+		return orderNo;
+	}
+	/**
+	 * 设置 排序号
+	 * @param orderNo
+	 * 排序号
+	 */
+	public void setOrderNo(Integer orderNo) {
+		this.orderNo = orderNo;
+	}
+	/**
+	 * 获取 年份
+	 * @return year
+	 * 年份
+	 */
+	public Integer getYear() {
+		return year;
+	}
+	/**
+	 * 设置 年份
+	 * @param year
+	 * 年份
+	 */
+	public void setYear(Integer year) {
+		this.year = year;
+	}
 	/*
 	 * 排序比较。
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
@@ -174,7 +209,7 @@ public class SyllabusInfo extends Paging implements Comparable<SyllabusInfo> {
 	@Override
 	public int compareTo(SyllabusInfo o) {
 		if(this == o) return 0;
-		int index = this.getCode() - o.getCode();
+		int index = this.getOrderNo() - o.getOrderNo();
 		if(index == 0){
 			index = this.getTitle().compareToIgnoreCase(o.getTitle());
 			if(index == 0){
