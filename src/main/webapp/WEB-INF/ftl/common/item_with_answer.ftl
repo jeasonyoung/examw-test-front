@@ -164,7 +164,7 @@
          </div>
          <div class="jiexi-box fl" name="jiexi" item_id="${(i.id)}" >
          	  <div class="cankaobox fl">
-                   <i>我的答案：</i>${i.userAnswer}
+                   <i>我的答案：</i><#if i.userAnswer??>${i.userAnswer}<#else>未作答</#if>
               </div>
               <#if i.answer??>
               <div class="cankaobox fl">

@@ -860,6 +860,7 @@ public class PaperServiceImpl implements IPaperService{
 				if(itemRecord!=null){
 					itemRecord.setId(UUID.randomUUID().toString());
 					itemRecord.setLastTime(new Date());
+					itemRecord.setScore(BigDecimal.ZERO); //设置分数为0[问答题没办法判分]	
 					if (arr.length > 1) { // 没有答案
 						itemRecord.setAnswer(URLDecoder.decode(arr[1], "utf-8"));
 					}
@@ -1005,10 +1006,10 @@ public class PaperServiceImpl implements IPaperService{
 			// 评分规则
 			BigDecimal actualRuleTotal = this.calculateStructrueScore(s, itemRecordList);
 			//得分比例[只有顶级大题才有比例]
-			BigDecimal ratio = (s.getRatio()==null||s.getRatio().equals(BigDecimal.ZERO)||s.getRatio().equals(BigDecimal.TEN.multiply(BigDecimal.TEN)))?BigDecimal.ONE:(s.getRatio().divide(BigDecimal.TEN).divide(BigDecimal.TEN)); //所占比例
-			if(!ratio.equals(BigDecimal.ONE)&&!actualRuleTotal.equals(BigDecimal.ZERO))
+			BigDecimal ratio = (s.getRatio()==null||s.getRatio().compareTo(BigDecimal.ZERO)==0||s.getRatio().compareTo(BigDecimal.TEN.multiply(BigDecimal.TEN))==0)?BigDecimal.ONE:(s.getRatio().divide(BigDecimal.TEN.multiply(BigDecimal.TEN),2,RoundingMode.HALF_UP)); //所占比例
+			if(ratio.compareTo(BigDecimal.ONE)!=0 && actualRuleTotal.compareTo(BigDecimal.ZERO)>0)
 			{
-				if(s.getScore()!=null && !BigDecimal.ZERO.equals(s.getScore()))
+				if(s.getScore()!=null && BigDecimal.ZERO.compareTo(s.getScore())!=0)
 					actualRuleTotal = actualRuleTotal.multiply(ratio).multiply(paperScore).divide(new BigDecimal(s.getTotal()).multiply(s.getScore()),2,RoundingMode.HALF_UP);
 				else
 					actualRuleTotal = actualRuleTotal.multiply(ratio).multiply(paperScore).divide(new BigDecimal(s.getTotal()),2,RoundingMode.HALF_UP);
@@ -1043,6 +1044,8 @@ public class PaperServiceImpl implements IPaperService{
 				return actualRuleTotal;
 			BigDecimal min = structure.getMin(); // 最低得分
 			BigDecimal per = structure.getScore(); // 每题得分
+			min = (min == null ? BigDecimal.ZERO : min);
+			per = (per == null ? BigDecimal.ZERO : per);
 			for (StructureItemInfo item : items) { // 结构题目
 				for (UserItemRecordInfo itemRecord : itemRecordList) {
 					if (!itemRecord.getItemId().contains("#")) { // 不包含#,是单题
@@ -1087,16 +1090,19 @@ public class PaperServiceImpl implements IPaperService{
 	* 判断题目是对是错
 	*/
 	private boolean judgeItemIsRight(StructureItemInfo item,UserItemRecordInfo itemRecord, BigDecimal min, BigDecimal per) {
+		//用户没有作答
 		if (StringUtils.isEmpty(itemRecord.getAnswer())) {
-			itemRecord.setScore(min == null ? BigDecimal.ZERO : min); // 得0分或者负分
+			itemRecord.setScore(min); // 得0分或者负分
 			itemRecord.setStatus(ItemRecord.STATUS_NULL); // 没有作答
 			return false;
 		}
-		if(item.getAnswer() == null){	//没有正确答案(题目有问题)
-			itemRecord.setScore(min == null ? BigDecimal.ZERO : min); // 得0分或者负分
+		//题目没有答案
+		if(StringUtils.isEmpty(item.getAnswer())){	//没有正确答案(题目有问题)
+			itemRecord.setScore(min); // 得0分或者负分
 			itemRecord.setStatus(ItemRecord.STATUS_WRONG); // 算答错
 			return false;
 		}
+		//单选题或判断题
 		if(item.getType().equals(Constant.TYPE_SINGLE) || item.getType().equals(Constant.TYPE_JUDGE)) {
 			if (item.getAnswer().equals(itemRecord.getAnswer())) // 答对
 			{
@@ -1104,22 +1110,19 @@ public class PaperServiceImpl implements IPaperService{
 				itemRecord.setStatus(ItemRecord.STATUS_RIGHT); // 答对
 				return true;
 			} else {
-				itemRecord.setScore((min == null || min
-						.compareTo(BigDecimal.ZERO) == 1) ? BigDecimal.ZERO
-								: min); // 得0分或者负分
+				itemRecord.setScore((min.compareTo(BigDecimal.ZERO) == 1) ? BigDecimal.ZERO	: min); // 得0分或者负分
 				itemRecord.setStatus(ItemRecord.STATUS_WRONG); // 答错
 				return false;
 			}
 		}
+		//多选或不定项
 		if(item.getType().equals(Constant.TYPE_MULTY) || item.getType().equals(Constant.TYPE_UNCERTAIN)) {
 			String[] arr = itemRecord.getAnswer().split(",");
 			String answer = item.getAnswer();
 			int total = 0;
 			for (String a : arr) {
 				if (answer.indexOf(a) == -1) { // 包含有错误答案
-					itemRecord.setScore((min == null || min
-							.compareTo(BigDecimal.ZERO) == 1) ? BigDecimal.ZERO
-									: min); // 得0分或者负分
+					itemRecord.setScore((min.compareTo(BigDecimal.ZERO) == 1) ? BigDecimal.ZERO : min); // 得0分或者负分
 					itemRecord.setStatus(ItemRecord.STATUS_WRONG); // 答错
 					return false;
 				} else {
@@ -1131,9 +1134,7 @@ public class PaperServiceImpl implements IPaperService{
 				itemRecord.setStatus(ItemRecord.STATUS_RIGHT); // 答对
 				return true;
 			} else { 
-				itemRecord.setScore((min == null || min
-						.compareTo(BigDecimal.ZERO) == -1) ? BigDecimal.ZERO
-								: min.multiply(new BigDecimal(total))); // 得0分或者负分
+				itemRecord.setScore((min.compareTo(BigDecimal.ZERO) == -1) ? BigDecimal.ZERO : min.multiply(new BigDecimal(total))); // 得0分或者负分
 				if(itemRecord.getScore().compareTo(per)==1) itemRecord.setScore(per); //得分不能超过该题总分
 				itemRecord.setStatus(ItemRecord.STATUS_LESS); // 少选
 				return false;
