@@ -1,6 +1,5 @@
 package com.examw.test.front.service.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,7 +20,7 @@ import com.examw.test.front.model.record.UserItemFavoriteInfo;
 import com.examw.test.front.model.record.UserItemRecordInfo;
 import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.service.IErrorItemService;
-import com.examw.test.front.support.HttpUtil;
+import com.examw.test.front.service.IRemoteService;
 import com.examw.test.front.support.JSONUtil;
 import com.examw.test.front.support.MethodCacheHelper;
 
@@ -35,6 +34,15 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 	private ICollectionService collectionService;
 	private String api_error_items_url;
 	private MethodCacheHelper cacheHelper;
+	private IRemoteService remoteService;
+	/**
+	 * 设置 远程服务
+	 * @param remoteService
+	 * 
+	 */
+	public void setRemoteService(IRemoteService remoteService) {
+		this.remoteService = remoteService;
+	}
 	/**
 	 * 设置 获取错题集合数据接口
 	 * @param api_error_items_url
@@ -67,10 +75,10 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 	 * @param subjectId
 	 * @param userId
 	 * @return
-	 * @throws IOException
+	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<UserItemRecordInfo> loadErrorItemList(String subjectId,String userId) throws IOException {
+	public List<UserItemRecordInfo> loadErrorItemList(String subjectId,String userId) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug(String.format("加载科目[%1$s]下所有错题...",subjectId));
 		if(StringUtils.isEmpty(userId))
 		return null;
@@ -79,7 +87,7 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 		if(!StringUtils.isEmpty(subjectId)){
 			data = "subjectId="+subjectId;
 		}
-		String xml = HttpUtil.httpRequest(url,"GET",data,"utf-8");
+		String xml = remoteService.httpRequest(url,"GET",data,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml, List.class, UserItemRecordInfo.class);
 		}
@@ -140,7 +148,7 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 		return datagrid;
 	}
 	//模型转化	isCollected(itemId, item, favors);
-	private List<StructureItemInfo> changeModel(List<UserItemRecordInfo> errorItemList,List<UserItemFavoriteInfo> favors) throws JsonParseException, JsonMappingException, IOException {
+	private List<StructureItemInfo> changeModel(List<UserItemRecordInfo> errorItemList,List<UserItemFavoriteInfo> favors) throws JsonParseException, JsonMappingException, Exception {
 		if(errorItemList == null || errorItemList.size() ==0)
 		return null;
 		 List<StructureItemInfo> result = new ArrayList<StructureItemInfo>();

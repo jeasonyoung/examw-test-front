@@ -6,8 +6,8 @@ import org.springframework.util.StringUtils;
 import com.examw.model.Json;
 import com.examw.test.front.model.user.FrontUserInfo;
 import com.examw.test.front.model.user.User;
+import com.examw.test.front.service.IRemoteService;
 import com.examw.test.front.service.IUserService;
-import com.examw.test.front.support.HttpUtil;
 
 /**
  * 用户服务接口实现类
@@ -18,6 +18,15 @@ public class UserServiceImpl implements IUserService{
 	private static final Logger logger = Logger.getLogger(UserServiceImpl.class);
 	private String api_user_verify_url;
 	private String md5Key;
+	private IRemoteService remoteService;
+	/**
+	 * 设置 远程服务
+	 * @param remoteService
+	 * 
+	 */
+	public void setRemoteService(IRemoteService remoteService) {
+		this.remoteService = remoteService;
+	}
 	
 	/**
 	 * 设置 用户验证地址
@@ -72,7 +81,7 @@ public class UserServiceImpl implements IUserService{
 	 */
 	private String getProductUserId(final String code,final String name)throws Exception{
 		if(logger.isDebugEnabled()) logger.debug(String.format("获取用户[%1$s][%2$s]的后端产品用户ID",code,name));
-		Json json = HttpUtil.upload(api_user_verify_url, new FrontUserInfo(){
+		Json json = remoteService.upload(api_user_verify_url, new FrontUserInfo(){
 			private static final long serialVersionUID = 1L;
 			@Override
 			public String getCode() {return code;}

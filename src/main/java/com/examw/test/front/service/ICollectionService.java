@@ -30,7 +30,7 @@ public interface ICollectionService {
 	 * @return
 	 * @throws IOException
 	 */
-	List<UserItemFavoriteInfo> findCollectionItems(Collection info) throws IOException;
+	List<UserItemFavoriteInfo> findCollectionItems(Collection info) throws Exception;
 	/**
 	 * 加载被收藏的考试题目的集合
 	 * @param info

@@ -1,6 +1,5 @@
 package com.examw.test.front.service.impl;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -10,7 +9,7 @@ import com.examw.test.front.model.product.AreaInfo;
 import com.examw.test.front.model.product.FrontProductInfo;
 import com.examw.test.front.model.product.SubjectInfo;
 import com.examw.test.front.service.IProductService;
-import com.examw.test.front.support.HttpUtil;
+import com.examw.test.front.service.IRemoteService;
 import com.examw.test.front.support.JSONUtil;
 
 /**
@@ -25,6 +24,15 @@ public class ProductServiceImpl implements IProductService{
 	private String api_product_detail_url;
 	private String api_product_subjects_url;
 	private String api_product_areas_url;
+	private IRemoteService remoteService;
+	/**
+	 * 设置 远程服务
+	 * @param remoteService
+	 * 
+	 */
+	public void setRemoteService(IRemoteService remoteService) {
+		this.remoteService = remoteService;
+	}
 	/**
 	 * 设置 数据接口请求地址
 	 * @param api_url
@@ -77,7 +85,7 @@ public class ProductServiceImpl implements IProductService{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<FrontProductInfo> loadProducts(String examId,String categoryId) throws IOException {
+	public List<FrontProductInfo> loadProducts(String examId,String categoryId) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("加载产品列表信息...");
 		if(StringUtils.isEmpty(examId) && StringUtils.isEmpty(categoryId))
 		return null;
@@ -86,7 +94,7 @@ public class ProductServiceImpl implements IProductService{
 			url = String.format(this.api_product_list_url, examId);
 		else
 			url = String.format(this.api_product_list_url_category, categoryId);
-		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml,List.class,FrontProductInfo.class);
 		}
@@ -97,12 +105,12 @@ public class ProductServiceImpl implements IProductService{
 	 * @see com.examw.test.front.service.IProductService#loadProduct(java.lang.String)
 	 */
 	@Override
-	public FrontProductInfo loadProduct(String id) throws IOException {
+	public FrontProductInfo loadProduct(String id) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("加载选中产品信息....");
 		if(StringUtils.isEmpty(id))
 		return null;
 		String url = String.format(this.api_product_detail_url,id);
-		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToObject(xml,FrontProductInfo.class);
 		}
@@ -115,12 +123,12 @@ public class ProductServiceImpl implements IProductService{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<SubjectInfo> loadProductSubjects(String productId)
-			throws IOException {
+			throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("加载产品包含的科目信息....");
 		if(StringUtils.isEmpty(productId))
 		return null;
 		String url = String.format(this.api_product_subjects_url,productId);
-		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml,List.class,SubjectInfo.class);
 		}
@@ -132,12 +140,12 @@ public class ProductServiceImpl implements IProductService{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<AreaInfo> loadProductAreas(String productId) throws IOException {
+	public List<AreaInfo> loadProductAreas(String productId) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("加载产品的地区信息....");
 		if(StringUtils.isEmpty(productId))
 		return null;
 		String url = String.format(this.api_product_areas_url,productId);
-		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml,List.class,AreaInfo.class);
 		}

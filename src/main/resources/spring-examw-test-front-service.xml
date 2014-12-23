@@ -2,10 +2,18 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 	<!-- service -->
+	<!-- 远程服务类 -->
+	<bean id="remoteService" class="com.examw.test.front.service.impl.DefaultClientServiceImpl">
+	    <!-- 注入校验用户  -->
+	    <constructor-arg value="${digest_username}" index="0"/> 
+	    <constructor-arg value="${digest_password}" index="1"/> 
+	</bean>
 	<!-- 分类 -->
 	<bean id="categoryService" class="com.examw.test.front.service.impl.CategoryServiceImpl">
 	    <!-- 考试分类数据远程地址  -->
 	    <property name="api_url" value="${api_category_url}" />
+	    <!-- 远程服务类 -->
+	    <property name="remoteService" ref="remoteService"/>
 	</bean>
 	<!-- 产品 -->
 	<bean id="productService" class="com.examw.test.front.service.impl.ProductServiceImpl">
@@ -19,6 +27,8 @@
 	    <property name="api_product_subjects_url" value="${api_product_subjects_url}" />
 	    <!-- 产品地区数据远程地址  -->
 	    <property name="api_product_areas_url" value="${api_product_areas_url}" />
+	    <!-- 远程服务类 -->
+	    <property name="remoteService" ref="remoteService"/>
 	</bean>
 	<!-- 章节 -->
 	<bean id="chapterService" class="com.examw.test.front.service.impl.ChapterServiceImpl">
@@ -28,6 +38,8 @@
 	    <property name="api_chapter_detail_url" value="${api_chapter_url}" />
 	    <!-- 知识点详情数据远程地址 -->
 	    <property name="api_knowledge_detail_url" value="${api_knowledge_url}" />
+	    <!-- 远程服务类 -->
+	    <property name="remoteService" ref="remoteService"/>
 	</bean>
 	<!-- 试卷 -->
 	<bean id="paperService" class="com.examw.test.front.service.impl.PaperServiceImpl">
@@ -55,11 +67,15 @@
 	    <property name="web_terminal_code" value="${web_terminal_code}"/>
 	    <!-- 数据缓存帮助类 -->
 	    <property name="cacheHelper" ref="cacheHelper"/>
+	    <!-- 远程服务类 -->
+	    <property name="remoteService" ref="remoteService"/>
 	</bean>
 	<!-- 笔记 -->
 	<bean id="noteService" class="com.examw.test.front.service.impl.NoteServiceImpl">
 	    <property name="api_item_notes_url" value="${api_item_notes_url}" />
 	    <property name="api_add_note_url" value="${api_add_note_url}" />
+	    <!-- 远程服务类 -->
+	    <property name="remoteService" ref="remoteService"/>
 	</bean>
 	<!-- 收藏 -->
 	<bean id="collectionService" class="com.examw.test.front.service.impl.CollectionServiceImpl">
@@ -75,6 +91,8 @@
 	    <property name="paperService" ref="paperService"/>
 	    <!-- 数据缓存帮助类 -->
 	    <property name="cacheHelper" ref="cacheHelper"/>
+	    <!-- 远程服务类 -->
+	    <property name="remoteService" ref="remoteService"/>
 	</bean>
 	<!-- 错题 -->
 	<bean id="errorItemService" class="com.examw.test.front.service.impl.ErrorItemServiceImpl">
@@ -84,6 +102,8 @@
 	    <property name="collectionService" ref="collectionService"/>
 	    <!-- 数据缓存帮助类 -->
 	    <property name="cacheHelper" ref="cacheHelper"/>
+	    <!-- 远程服务类 -->
+	    <property name="remoteService" ref="remoteService"/>
 	</bean>
 	<!-- 纠错 -->
 	<bean id="itemErrorRecorveryService" class="com.examw.test.front.service.impl.ItemErrorRecorveryServiceImpl">
@@ -91,6 +111,8 @@
 	    <property name="api_errorrecorvery_url" value="${api_errorrecorvery_url}" />
 	     <!-- web终端代码 -->
 	    <property name="web_terminal_code" value="${web_terminal_code}"/>
+	    <!-- 远程服务类 -->
+	    <property name="remoteService" ref="remoteService"/>
 	</bean>
 	<!-- 用户 -->
 	<bean id="userService" class="com.examw.test.front.service.impl.UserServiceImpl">
@@ -98,5 +120,7 @@
 	    <property name="api_user_verify_url" value="${api_user_verify_url}" />
 	    <!-- md5加密字符串 -->
 	    <property name="md5Key" value="${md5key}"/>
+	    <!-- 远程服务类 -->
+	    <property name="remoteService" ref="remoteService"/>
 	</bean>
 </beans>

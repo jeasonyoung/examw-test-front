@@ -5,7 +5,7 @@ import org.springframework.util.StringUtils;
 
 import com.examw.test.front.model.library.ItemErrorRecorveryInfo;
 import com.examw.test.front.service.IItemErrorRecorveryService;
-import com.examw.test.front.support.HttpUtil;
+import com.examw.test.front.service.IRemoteService;
 
 /**
  * 试题纠错服务接口实现类
@@ -18,6 +18,15 @@ public class ItemErrorRecorveryServiceImpl implements IItemErrorRecorveryService
 	private String api_errorrecorvery_url;
 	//web终端代码
 	private Integer web_terminal_code;
+	private IRemoteService remoteService;
+	/**
+	 * 设置 远程服务
+	 * @param remoteService
+	 * 
+	 */
+	public void setRemoteService(IRemoteService remoteService) {
+		this.remoteService = remoteService;
+	}
 	
 	/**
 	 * 设置 提交地址
@@ -44,7 +53,7 @@ public class ItemErrorRecorveryServiceImpl implements IItemErrorRecorveryService
 			return;
 		String url = String.format(this.api_errorrecorvery_url,info.getUserId());
 		info.setTerminalCode(this.web_terminal_code);
-		HttpUtil.upload(url, info);
+		remoteService.upload(url, info);
 	}
 	
 }

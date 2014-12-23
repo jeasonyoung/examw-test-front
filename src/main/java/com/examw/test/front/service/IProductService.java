@@ -20,25 +20,25 @@ public interface IProductService{
 	 * @return
 	 * @throws IOException
 	 */
-	List<FrontProductInfo> loadProducts(String examId,String categoryId) throws IOException;
+	List<FrontProductInfo> loadProducts(String examId,String categoryId) throws Exception;
 	/**
 	 * 根据ID加载产品信息
 	 * @param id
 	 * @return
 	 * @throws IOException
 	 */
-	FrontProductInfo loadProduct(String id)throws IOException;
+	FrontProductInfo loadProduct(String id)throws Exception;
 	/**
 	 * 根据产品ID查找包含的科目信息
 	 * @param productId
 	 * @return
 	 * @throws IOException
 	 */
-	List<SubjectInfo> loadProductSubjects(String productId) throws IOException;
+	List<SubjectInfo> loadProductSubjects(String productId) throws Exception;
 	/**
 	 * 查询产品地区集合
 	 * @param productId
 	 * @return
 	 */
-	List<AreaInfo> loadProductAreas(String productId) throws IOException;
+	List<AreaInfo> loadProductAreas(String productId) throws Exception;
 }

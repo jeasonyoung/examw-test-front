@@ -22,7 +22,7 @@ import com.examw.test.front.model.record.Collection;
 import com.examw.test.front.model.record.UserItemFavoriteInfo;
 import com.examw.test.front.service.ICollectionService;
 import com.examw.test.front.service.IPaperService;
-import com.examw.test.front.support.HttpUtil;
+import com.examw.test.front.service.IRemoteService;
 import com.examw.test.front.support.JSONUtil;
 import com.examw.test.front.support.MethodCacheHelper;
 
@@ -45,6 +45,15 @@ public class CollectionServiceImpl implements ICollectionService{
 	private Integer web_terminal_code;
 	//缓存帮助类
 	private MethodCacheHelper cacheHelper;
+	private IRemoteService remoteService;
+	/**
+	 * 设置 远程服务
+	 * @param remoteService
+	 * 
+	 */
+	public void setRemoteService(IRemoteService remoteService) {
+		this.remoteService = remoteService;
+	}
 	/**
 	 * 设置 笔记数据查询数据接口地址
 	 * @param api_item_notes_url
@@ -117,7 +126,7 @@ public class CollectionServiceImpl implements ICollectionService{
 				favor.setSubjectId(item.getSubjectId());
 				favor.setRemarks(info.getRemarks());
 			}
-			return HttpUtil.upload(url, favor);
+			return remoteService.upload(url, favor);
 		}
 		PaperPreview paper = this.paperService.findPaperDetail(info.getPaperId());
 		UserItemFavoriteInfo favor = null;
@@ -127,7 +136,7 @@ public class CollectionServiceImpl implements ICollectionService{
 		}else{
 			favor = this.changeModel(this.getStructureItemInfo(paper, info.getItemId()),null,info);
 		}
-		return HttpUtil.upload(url, favor);
+		return remoteService.upload(url, favor);
 	}
 
 	/*
@@ -214,13 +223,13 @@ public class CollectionServiceImpl implements ICollectionService{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<UserItemFavoriteInfo> findCollectionItems(Collection info)
-			throws IOException {
+			throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("收藏的试题集合...");
 		if(StringUtils.isEmpty(info.getUserId())) 
 			return null;
 		String url = String.format(this.api_collection_item_list_url,info.getUserId());
 		String data = "subjectId="+info.getSubjectId()+"&userId="+info.getUserId()+"&productId="+info.getProductId();
-		String xml = HttpUtil.httpRequest(url,"GET",data,"utf-8");
+		String xml = remoteService.httpRequest(url,"GET",data,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml, List.class,UserItemFavoriteInfo.class);
 		}
@@ -267,7 +276,7 @@ public class CollectionServiceImpl implements ICollectionService{
 			String userId) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("收藏的试题科目列表...");
 		String url = String.format(this.api_collection_subject_list_url,productId,userId);
-		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml, List.class,FrontSubjectInfo.class);
 		}

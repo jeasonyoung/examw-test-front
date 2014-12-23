@@ -1,6 +1,5 @@
 package com.examw.test.front.service.impl;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -35,8 +34,8 @@ import com.examw.test.front.model.record.UserItemFavoriteInfo;
 import com.examw.test.front.model.record.UserItemRecordInfo;
 import com.examw.test.front.model.record.UserPaperRecordInfo;
 import com.examw.test.front.service.IPaperService;
+import com.examw.test.front.service.IRemoteService;
 import com.examw.test.front.support.DateUtil;
-import com.examw.test.front.support.HttpUtil;
 import com.examw.test.front.support.JSONUtil;
 import com.examw.test.front.support.MethodCacheHelper;
 
@@ -71,6 +70,15 @@ public class PaperServiceImpl implements IPaperService{
 	private Integer web_terminal_code;
 	//数据缓存帮助类
 	private MethodCacheHelper cacheHelper;
+	private IRemoteService remoteService;
+	/**
+	 * 设置 远程服务
+	 * @param remoteService
+	 * 
+	 */
+	public void setRemoteService(IRemoteService remoteService) {
+		this.remoteService = remoteService;
+	}
 	/**
 	 * 设置 试卷列表数据接口地址
 	 * @param api_paperlist_url
@@ -186,8 +194,8 @@ public class PaperServiceImpl implements IPaperService{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<String, String> loadPaperType() throws IOException {
-		String xml = HttpUtil.httpRequest(this.api_papertype_url, "GET", null, "utf-8");
+	public Map<String, String> loadPaperType() throws Exception {
+		String xml = remoteService.httpRequest(this.api_papertype_url, "GET", null, "utf-8");
 		if(StringUtils.isEmpty(xml)) return null;
 		return JSONUtil.JsonToCollection(xml, Map.class, String.class,String.class);
 	}
@@ -197,12 +205,12 @@ public class PaperServiceImpl implements IPaperService{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<FrontPaperInfo> loadPaperList(String productId) throws IOException {
+	public List<FrontPaperInfo> loadPaperList(String productId) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷列表...");
 		if(StringUtils.isEmpty(productId))
 		return null;
 		String url = String.format(this.api_paperlist_url,productId);
-		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml, List.class, FrontPaperInfo.class);
 		}
@@ -236,15 +244,15 @@ public class PaperServiceImpl implements IPaperService{
 	 * @param userId
 	 * @param productId
 	 * @return
-	 * @throws IOException
+	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	public List<UserPaperRecordInfo> findUserPaperRecords(String userId,String productId) throws IOException{
+	public List<UserPaperRecordInfo> findUserPaperRecords(String userId,String productId) throws Exception{
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考场用户试卷记录列表...");
 		if(StringUtils.isEmpty(productId))
 		return null;
 		String url = String.format(this.api_user_paper_records_url,userId,productId);
-		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml, List.class, UserPaperRecordInfo.class);
 		}
@@ -256,7 +264,7 @@ public class PaperServiceImpl implements IPaperService{
 	 * @see com.examw.test.front.service.IPaperService#loadPaperInfo(java.lang.String)
 	 */
 	@Override
-	public PaperPreview loadPaperInfo(String paperId) throws IOException {
+	public PaperPreview loadPaperInfo(String paperId) throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷基本信息...");
 		return this.findPaperDetail(paperId);
 	}
@@ -264,16 +272,16 @@ public class PaperServiceImpl implements IPaperService{
 	 * 试卷详细情况
 	 * @param paperId
 	 * @return
-	 * @throws IOException
+	 * @throws Exception
 	 */
-	public PaperPreview findPaperDetail(String paperId)throws IOException{
+	public PaperPreview findPaperDetail(String paperId)throws Exception{
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷基本信息...");
 		if(StringUtils.isEmpty(paperId))
 		return null;
 		PaperPreview paper = (PaperPreview) this.cacheHelper.getCache(PaperPreview.class.getName(), this.getClass().getName()+"loadPaperDetail", new String[]{paperId});
 		if(paper == null){
 			String url = String.format(this.api_paper_detail_url,paperId);
-			String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+			String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 			if(!StringUtils.isEmpty(xml)){
 				paper = JSONUtil.JsonToObject(xml, PaperPreview.class);
 			}
@@ -300,7 +308,7 @@ public class PaperServiceImpl implements IPaperService{
 			info.setProductId(productId);
 			info.setUserId(userId);
 			//提交记录
-			HttpUtil.upload(this.api_user_paper_record_add_url, info);
+			remoteService.upload(this.api_user_paper_record_add_url, info);
 			//试卷有缓存,清除对象题目的答案
 			clearUserAnswer(paper);
 			
@@ -324,7 +332,7 @@ public class PaperServiceImpl implements IPaperService{
 		UserPaperRecordInfo info = null;
 		if(info == null){
 			String url = String.format(this.api_user_paper_lasted_record_url,userId,paperId);
-			String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+			String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 			Json json = null;
 			if(!StringUtils.isEmpty(xml)){
 				json = JSONUtil.JsonToObject(xml, Json.class);
@@ -343,7 +351,7 @@ public class PaperServiceImpl implements IPaperService{
 		UserPaperRecordInfo info = null;
 		if(info == null){
 			String url = String.format(this.api_user_paper_record_url,userId,recordId);
-			String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+			String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 			Json json = null;
 			if(!StringUtils.isEmpty(xml)){
 				json = JSONUtil.JsonToObject(xml, Json.class);
@@ -393,8 +401,11 @@ public class PaperServiceImpl implements IPaperService{
 		}else
 		{
 			Set<StructureItemInfo> items = info.getItems();
-			for(StructureItemInfo item:items){
-				setUserAnswer(item,itemRecords,favors);
+			if(items!=null)
+			{
+				for(StructureItemInfo item:items){
+					setUserAnswer(item,itemRecords,favors);
+				}
 			}
 		}
 	}
@@ -484,8 +495,11 @@ public class PaperServiceImpl implements IPaperService{
 		}else
 		{
 			Set<StructureItemInfo> items = info.getItems();
-			for(StructureItemInfo item:items){
-				this.clearUserAnswer(item);
+			if(items != null)
+			{
+				for(StructureItemInfo item:items){
+					this.clearUserAnswer(item);
+				}
 			}
 		}
 	}
@@ -549,7 +563,7 @@ public class PaperServiceImpl implements IPaperService{
 	 * @see com.examw.test.front.service.IPaperService#loadItemsList(com.examw.test.front.model.PaperPreview)
 	 */
 	@Override
-	public java.util.List<com.examw.test.front.model.library.StructureItemInfo> findItemsList(PaperPreview paper) throws IOException {
+	public java.util.List<com.examw.test.front.model.library.StructureItemInfo> findItemsList(PaperPreview paper) throws Exception {
 		if(paper == null) return null;
 		List<StructureItemInfo> result = new ArrayList<StructureItemInfo>();
 		List<StructureInfo> structures = paper.getStructures();
@@ -624,7 +638,7 @@ public class PaperServiceImpl implements IPaperService{
 	 */
 	@Override
 	public List<StructureItemInfo> findBigItemsList(PaperPreview paper)
-			throws IOException {
+			throws Exception {
 		if(paper == null) return null;
 		List<StructureItemInfo> result = new ArrayList<StructureItemInfo>();
 		List<StructureInfo> structures = paper.getStructures();
@@ -637,11 +651,11 @@ public class PaperServiceImpl implements IPaperService{
 	}
 //	
 //	@Override
-//	public Json sumbitPaper(PaperSubmitInfo info)throws IOException {
+//	public Json sumbitPaper(PaperSubmitInfo info)throws Exception {
 //		if(logger.isDebugEnabled()) logger.debug("加载模拟考场试卷基本信息...");
 //		if(!info.isSafe())
 //		return null;
-//		String xml = HttpUtil.httpRequest(this.api_papersubmit_url,"POST",info.createSubmitData(),"utf-8");
+//		String xml = remoteService.httpRequest(this.api_papersubmit_url,"POST",info.createSubmitData(),"utf-8");
 //		if(!StringUtils.isEmpty(xml)){
 //			return JSONUtil.JsonToObject(xml, Json.class);
 //		}
@@ -679,14 +693,14 @@ public class PaperServiceImpl implements IPaperService{
 		return paper;
 	}
 	@SuppressWarnings("unchecked")
-	private List<UserItemFavoriteInfo> loadItemFavorites(String userId) throws IOException{
+	private List<UserItemFavoriteInfo> loadItemFavorites(String userId) throws Exception{
 		if(logger.isDebugEnabled()) logger.debug("加载用户收藏...");
 		if(StringUtils.isEmpty(userId))
 			return null;
 		List<UserItemFavoriteInfo> list = (List<UserItemFavoriteInfo>) this.cacheHelper.getCache(UserItemFavoriteInfo.class.getName(), this.getClass().getName()+"loadItemFavorites", new String[]{userId});
 			if(list == null){
 				String url = String.format(this.api_user_collections_url,userId);
-				String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+				String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 				if(!StringUtils.isEmpty(xml)){
 					list = JSONUtil.JsonToCollection(xml, List.class, UserItemFavoriteInfo.class);
 				}
@@ -888,7 +902,7 @@ public class PaperServiceImpl implements IPaperService{
 		//时间提交过去有问题
 		record.setCreateTime(null);
 		record.setLastTime(null);
-		return HttpUtil.upload(api_user_paper_record_add_url, record);
+		return remoteService.upload(api_user_paper_record_add_url, record);
 	}
 	//根据ID获取试题信息
 	private StructureItemInfo getStructureItemInfo(PaperPreview paper,String itemId){
@@ -1240,7 +1254,7 @@ public class PaperServiceImpl implements IPaperService{
 		List<FrontPaperInfo> list = (List<FrontPaperInfo>) this.cacheHelper.getCache(FrontPaperInfo.class.getName(), this.getClass().getName()+"loadPaperList", new Object[]{productId,today});
 		if(list == null){
 			String url = String.format(this.api_daily_papers_url,productId);
-			String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+			String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 			if(!StringUtils.isEmpty(xml)){
 				list = JSONUtil.JsonToCollection(xml, List.class, FrontPaperInfo.class);
 			}
@@ -1260,7 +1274,7 @@ public class PaperServiceImpl implements IPaperService{
 		if(StringUtils.isEmpty(productId))
 		return null;
 		String url = String.format(this.api_daily_papers_undone_number_url,userId,productId);
-		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToObject(xml, Json.class);
 		}

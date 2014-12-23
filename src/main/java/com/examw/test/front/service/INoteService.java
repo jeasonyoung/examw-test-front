@@ -19,7 +19,7 @@ public interface INoteService {
 	 * @return
 	 * @throws IOException 
 	 */
-	DataGrid<NoteInfo> findNotes(NoteInfo note) throws IOException;
+	DataGrid<NoteInfo> findNotes(NoteInfo note) throws Exception;
 	/**
 	 * 添加笔记
 	 * @param info

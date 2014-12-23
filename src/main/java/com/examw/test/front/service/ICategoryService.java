@@ -14,5 +14,5 @@ public interface ICategoryService {
 	 * 加载所有的考试类型-考试
 	 * @return
 	 */
-	List<FrontCategoryInfo> loadAllCategoryAndExams() throws IOException;
+	List<FrontCategoryInfo> loadAllCategoryAndExams() throws Exception;
 }

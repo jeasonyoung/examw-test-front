@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 import com.examw.test.front.model.syllabus.KnowledgeInfo;
 import com.examw.test.front.model.syllabus.SyllabusInfo;
 import com.examw.test.front.service.IChapterService;
-import com.examw.test.front.support.HttpUtil;
+import com.examw.test.front.service.IRemoteService;
 import com.examw.test.front.support.JSONUtil;
 
 /**
@@ -21,6 +21,15 @@ public class ChapterServiceImpl implements IChapterService{
 	private String api_list_url;
 	private String api_knowledge_detail_url;
 	private String api_chapter_detail_url;
+	private IRemoteService remoteService;
+	/**
+	 * 设置 远程服务
+	 * @param remoteService
+	 * 
+	 */
+	public void setRemoteService(IRemoteService remoteService) {
+		this.remoteService = remoteService;
+	}
 	/**
 	 * 设置 章节列表数据接口地址
 	 * @param api_url
@@ -60,7 +69,7 @@ public class ChapterServiceImpl implements IChapterService{
 		if(StringUtils.isEmpty(subjectId))
 		return null;
 		String url = String.format(this.api_list_url,subjectId);
-		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml, List.class, SyllabusInfo.class);
 		}
@@ -78,7 +87,7 @@ public class ChapterServiceImpl implements IChapterService{
 		if(StringUtils.isEmpty(id))
 		return null;
 		String url = String.format(this.api_knowledge_detail_url,id);
-		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			List<KnowledgeInfo> list = JSONUtil.JsonToCollection(xml,List.class, KnowledgeInfo.class);
 			if(list!=null && list.size()>0){
@@ -99,7 +108,7 @@ public class ChapterServiceImpl implements IChapterService{
 		if(StringUtils.isEmpty(chapterId))
 		return null;
 		String url = String.format(this.api_chapter_detail_url,chapterId);
-		String xml = HttpUtil.httpRequest(url,"GET",null,"utf-8");
+		String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToObject(xml, SyllabusInfo.class);
 		}

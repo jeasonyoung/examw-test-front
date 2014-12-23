@@ -25,13 +25,13 @@ public interface IPaperService {
 	 * @return
 	 * @throws IOException
 	 */
-	Map<String,String> loadPaperType() throws IOException;
+	Map<String,String> loadPaperType() throws Exception;
 	/**
 	 * 根据条件加载试卷信息
 	 * @param info
 	 * @return
 	 */
-	List<FrontPaperInfo> loadPaperList(String productId)throws IOException;
+	List<FrontPaperInfo> loadPaperList(String productId)throws Exception;
 	/**
 	 * 加载所有试题的年份
 	 * @param productId
@@ -45,7 +45,7 @@ public interface IPaperService {
 	 * @return
 	 * @throws IOException
 	 */
-	PaperPreview loadPaperInfo(String paperId)throws IOException;
+	PaperPreview loadPaperInfo(String paperId)throws Exception;
 	/**
 	 * 根据试卷ID加载试卷详情
 	 * @param paperId
@@ -78,8 +78,8 @@ public interface IPaperService {
 	 * @return
 	 * @throws IOException
 	 */
-	public List<StructureItemInfo> findItemsList(PaperPreview paper)throws IOException;
-	public List<StructureItemInfo> findBigItemsList(PaperPreview paper)throws IOException;
+	public List<StructureItemInfo> findItemsList(PaperPreview paper)throws Exception;
+	public List<StructureItemInfo> findBigItemsList(PaperPreview paper)throws Exception;
 	/**
 	 * 试卷基本信息[分页]
 	 * @param info
@@ -94,7 +94,7 @@ public interface IPaperService {
 	 * @return
 	 * @throws IOException
 	 */
-	PaperPreview findPaperDetail(String paperId)throws IOException;
+	PaperPreview findPaperDetail(String paperId)throws Exception;
 	/**
 	 * 试卷最新记录
 	 * @param userId
