@@ -38,16 +38,20 @@
        <div class="xz-daan fl" >
             <div class="list">
                 <ul>
+                <#if i.children??>
                 <#list i.children?sort_by(["orderNo"]) as option>
                 <li item_index="${index}" option_id="${option.id}" record_id='${i.recordId?default("0")}' s_item_id="${i.id}" <#if parent??>pid="${parent.id}"</#if> option_type="${input}" <#if i.userAnswer?contains(option.id)>class="over"<#else>class="out"</#if>><i><@option_flag option_index/>．</i><em><#if option.content?matches("[A-Z]{1}[.][\\W\\w]*")>${option.content?substring(2)}<#else>${option.content}</#if></em></li>
                 </#list>
+                </#if>
                 </ul>
             </div>
             <div class="abcd">
                 <ul>
+                <#if i.children??>
                 <#list i.children?sort_by(["orderNo"]) as option>
                 <li item_index="${index}" <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> record_id='${i.recordId?default("0")}' option_id="${option.id}" s_item_id="${i.id}" <#if parent??>pid="${parent.id}"</#if> option_type="${input}" actual="true"><@option_flag option_index/></li>
                 </#list>
+                </#if>
                 </ul>
              </div>
          </div>
@@ -108,11 +112,13 @@
 		<i>${i.typeName}</i>
 		<em>${i.content}<br/>
 		<div class="share_answer">
+		<#if i.children??>
 		<#list i.children?sort_by(["orderNo"]) as child>
 			<#if child_index != (i.children?size - 1)>
 				<@option_flag child_index/>. ${child.content}<br/>
 			</#if>
 		</#list>
+		</#if>
 		</div>
 		</em>
 	</div>
@@ -125,11 +131,13 @@
         </#if>
 </#macro>
 <#macro item_share_answer_content i>
+	<#if i.children??>
 	<#list i.children?sort_by(["orderNo"]) as child>
 		<#if child_index != (i.children?size - 1)>
 			<@option_flag child_index/>. <#if child.content?matches("[A-Z]{1}[.][\\W\\w]*")>${child.content?substring(2)}<#else>${child.content}</#if><br/>
 		</#if>
 	</#list>
+	</#if>
 </#macro>
 <#macro show_share_answer_item items parent index>
 	<#list items.children?sort_by(["orderNo"]) as i>
@@ -147,11 +155,13 @@
        <div class="xz-daan fl" >
             <div class="abcd">
                 <ul>
+                <#if parent.children??>
                 <#list parent.children?sort_by(["orderNo"]) as option>
                 <#if option_index != (parent.children?size-1)>
                 <li item_index="${index+i_index}" <#if i.userAnswer?contains(option.id)>class="choose"<#else>class="off"</#if> option_id="${option.id}#${i.id}" s_item_id="${i.id}" pid="${parent.id}" <#if i.type == TYPE_SINGLE_VALUE>option_type="radio"<#else>option_type="checkbox"</#if> actual="true"><@option_flag option_index/></li>
                 </#if>
                 </#list>
+                </#if>
                 </ul>
              </div>
          </div>
@@ -160,11 +170,13 @@
 </#macro>
 <#-- 计算正确答案 -->
 <#macro calculate_right_answer i>
+	 <#if i.children??>
 	 <#list i.children as option>
        <#if i.answer?index_of(option.id)!=-1>
           	<@option_flag option_index/> 
        </#if>
      </#list>
+     </#if>
 </#macro>
 
 <#-- 答题卡 -->

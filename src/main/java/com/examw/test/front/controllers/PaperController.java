@@ -204,4 +204,7 @@ public class PaperController {
 	private String getUserId(HttpServletRequest request){
 		return ((User)(request.getSession().getAttribute("USER"))).getProductUserId();
 	}
+	private String getProductId(HttpServletRequest request){
+		return (String) (request.getSession().getAttribute("PRODUCTID"));
+	}
 }

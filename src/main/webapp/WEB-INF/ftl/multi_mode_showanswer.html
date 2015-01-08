@@ -66,7 +66,7 @@
                     <p>&gt; 试卷来源：${PAPER.sourceName}</p>
                 </div>
                 </#if>
-                <div class="tixing fl">
+                <div class="tixing fl" id="tixing">
                 	<div class="list">
                     	<ul>
                     		<#list PAPER.structures as structure>
@@ -151,6 +151,7 @@ $(function(){
 	var totalNum = Number("${PAPER.total}");
 	$("#answerCard").smartFloat(false);	//答题卡浮动
 	$("#leftArea").smartFloat(1);//左侧浮动
+	$("#tixing").smartFloat(1);//左侧浮动
 	//<!-- 答题卡点击显示  -->
 	$("#answerCard div").first().click(function(){
 		var card = $(this).siblings("div").last();

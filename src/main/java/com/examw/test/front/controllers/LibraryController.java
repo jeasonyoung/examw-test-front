@@ -73,6 +73,11 @@ public class LibraryController {
 			request.getSession().setAttribute("SESSIONPRODUCT", data);
 			model.addAttribute("PRODUCT", data);
 			model.addAttribute("PRODUCTID",productId);
+			
+			//2015.01.05 将产品ID放入session中
+			request.getSession().setAttribute("PRODUCTID", productId);
+			//2015.01.05
+			
 			//计算错题个数
 			List<SubjectInfo> subjectList = this.productService.loadProductSubjects(productId);
 			StructureItemInfo info = new StructureItemInfo();

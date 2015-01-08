@@ -14,9 +14,9 @@ import com.examw.model.Paging;
 @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class ProductInfo extends Paging implements Comparable<ProductInfo>{
 	private static final long serialVersionUID = 1L;
-	private String id,name,content,categoryId,categoryName,examId,examName,areaId,areaName,statusName;
+	private String id,name,image,content,categoryId,categoryName,examId,examName,areaId,areaName,statusName,analysisTypeName,realTypeName;
 	private String[] subjectId,subjectName;
-	private Integer orderNo,status;
+	private Integer orderNo,status,analysisType,realType,paperTotal,itemTotal;
 	private BigDecimal price,discount;
 	private String createTime,lastTime;
 	/**
@@ -304,5 +304,117 @@ public class ProductInfo extends Paging implements Comparable<ProductInfo>{
 			}
 		}
 		return index;
+	}
+	/**
+	 * 获取 
+	 * @return image
+	 * 
+	 */
+	public String getImage() {
+		return image;
+	}
+	/**
+	 * 设置 
+	 * @param image
+	 * 
+	 */
+	public void setImage(String image) {
+		this.image = image;
+	}
+	/**
+	 * 获取 
+	 * @return analysisTypeName
+	 * 
+	 */
+	public String getAnalysisTypeName() {
+		return analysisTypeName;
+	}
+	/**
+	 * 设置 
+	 * @param analysisTypeName
+	 * 
+	 */
+	public void setAnalysisTypeName(String analysisTypeName) {
+		this.analysisTypeName = analysisTypeName;
+	}
+	/**
+	 * 获取 
+	 * @return realTypeName
+	 * 
+	 */
+	public String getRealTypeName() {
+		return realTypeName;
+	}
+	/**
+	 * 设置 
+	 * @param realTypeName
+	 * 
+	 */
+	public void setRealTypeName(String realTypeName) {
+		this.realTypeName = realTypeName;
+	}
+	/**
+	 * 获取 
+	 * @return analysisType
+	 * 
+	 */
+	public Integer getAnalysisType() {
+		return analysisType;
+	}
+	/**
+	 * 设置 
+	 * @param analysisType
+	 * 
+	 */
+	public void setAnalysisType(Integer analysisType) {
+		this.analysisType = analysisType;
+	}
+	/**
+	 * 获取 
+	 * @return realType
+	 * 
+	 */
+	public Integer getRealType() {
+		return realType;
+	}
+	/**
+	 * 设置 
+	 * @param realType
+	 * 
+	 */
+	public void setRealType(Integer realType) {
+		this.realType = realType;
+	}
+	/**
+	 * 获取 
+	 * @return paperTotal
+	 * 
+	 */
+	public Integer getPaperTotal() {
+		return paperTotal;
+	}
+	/**
+	 * 设置 
+	 * @param paperTotal
+	 * 
+	 */
+	public void setPaperTotal(Integer paperTotal) {
+		this.paperTotal = paperTotal;
+	}
+	/**
+	 * 获取 
+	 * @return itemTotal
+	 * 
+	 */
+	public Integer getItemTotal() {
+		return itemTotal;
+	}
+	/**
+	 * 设置 
+	 * @param itemTotal
+	 * 
+	 */
+	public void setItemTotal(Integer itemTotal) {
+		this.itemTotal = itemTotal;
 	}
 }

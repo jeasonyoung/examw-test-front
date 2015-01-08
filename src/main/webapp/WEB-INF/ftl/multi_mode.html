@@ -36,7 +36,7 @@
             <div class="box fl yinying">
             	<div class="list">
                 	<ul>
-                        <li><a href="<@s.url "/library/paper/${PRODUCTID}/do/single/${PAPER.id}"/><em class="dan-liang"></em>单题模式</a></li>
+                        <li><a href="<@s.url "/library/paper/${PRODUCTID}/do/single/${PAPER.id}"/>"><em class="dan-liang"></em>单题模式</a></li>
                         <li><a href="答案页面.html"><em class="kandaan"></em>查看答案</a></li>
                         <li class="bb-no"><a href="#"><em class="jisuanqi"></em>计算器</a></li>
                     </ul>
@@ -63,7 +63,7 @@
                     <p>&gt; 试卷来源：${PAPER.sourceName}</p>
                     </#if>
                 </div>
-                <div class="tixing fl">
+                <div class="tixing fl" id="tixing">
                 	<div class="list">
                     	<ul>
                     		<#list PAPER.structures as structure>
@@ -148,6 +148,7 @@ $(function(){
 	var totalNum = Number("${PAPER.total}");
 	$("#answerCard").smartFloat(false);	//答题卡浮动
 	$("#leftArea").smartFloat(1);//左侧浮动
+	$("#tixing").smartFloat(1);//题型结构浮动
 	//<!-- 选择答案 -->
 	<#list ITEMLIST as item>
 	<#if item.userAnswer?? && item.type!=TYPE_QANDA_VALUE>
