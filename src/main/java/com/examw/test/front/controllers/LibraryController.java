@@ -75,7 +75,7 @@ public class LibraryController {
 			model.addAttribute("PRODUCTID",productId);
 			
 			//2015.01.05 将产品ID放入session中
-			request.getSession().setAttribute("PRODUCTID", productId);
+//			request.getSession().setAttribute("PRODUCTID", productId);
 			//2015.01.05
 			
 			//计算错题个数

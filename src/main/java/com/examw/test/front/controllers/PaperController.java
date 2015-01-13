@@ -78,6 +78,32 @@ public class PaperController {
 		return "multi_mode";
 	}
 	/**
+	 * 不带产品的试卷
+	 * @param paperId
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value ="/do/multi/{paperId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String paperDetail(@PathVariable String paperId,Model model,HttpServletRequest request){
+		if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情...");
+		String userId = this.getUserId(request);
+		//判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
+		try{
+			PaperPreview info = this.paperService.findPaperDetail(paperId,userId,null);
+			model.addAttribute("PAPER", info);
+			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
+			//题型
+			ItemTypeUtil.loadItemType(model);
+			//是否显示答案
+			model.addAttribute("IS_SHOW_ANSWER",false);
+		}catch(Exception e){
+			e.printStackTrace();
+			if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情异常...");
+		}
+		return "multi_mode_without_product";
+	}
+	/**
 	 * 单题模式
 	 * @param paperId
 	 * @param model
@@ -105,6 +131,28 @@ public class PaperController {
 			if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情异常...");
 		}
 		return "single_mode";
+	}
+	@RequestMapping(value ="/do/single/{paperId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String paperDetailSigleModel(@PathVariable String paperId,Model model,HttpServletRequest request){
+		if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情...");
+		//模拟一个用户ID
+		String userId = this.getUserId(request);
+		//判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
+		try{
+			PaperPreview info = this.paperService.findPaperDetail(paperId,userId,null);
+			model.addAttribute("PAPER", info);
+			model.addAttribute("ITEMS",this.paperService.findBigItemsList(info));
+			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
+			//题型
+			ItemTypeUtil.loadItemType(model);
+			//是否显示答案
+			model.addAttribute("IS_SHOW_ANSWER",false);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			if(logger.isDebugEnabled()) logger.debug("加载试卷试题详情异常...");
+		}
+		return "single_mode_without_product";
 	}
 	
 	/**
@@ -200,11 +248,62 @@ public class PaperController {
 		}
 		return "multi_mode_showanswer";
 	}
+	@RequestMapping(value ="/analysis/{paperId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String paperAnalysis(@PathVariable String paperId,Model model,HttpServletRequest request){
+		if(logger.isDebugEnabled()) logger.debug("加载试卷试题解析详情...");
+		//模拟一个用户ID
+		String userId = this.getUserId(request);
+		try{
+			PaperPreview info = this.paperService.findPaperAnalysis(paperId,userId,null);
+			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
+			model.addAttribute("PAPER", info);
+			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
+			//题型
+			ItemTypeUtil.loadItemType(model);
+			//答对
+			model.addAttribute("STATUS_RIGHT", Constant.STATUS_RIGHT);
+			//答错
+			model.addAttribute("STATUS_WRONG", Constant.STATUS_WRONG);
+		}catch(Exception e){
+			e.printStackTrace();
+			if(logger.isDebugEnabled()) logger.debug("加载试卷解析详情异常..."+e.getMessage());
+			if(e.getMessage().equals("考试未完成"))
+				return "redirect:/library/paper/do/multi/"+paperId;
+			return "redirect:/library/paper/"+paperId;
+		}
+		return "multi_mode_showanswer_without_product";
+	}
+	@RequestMapping(value ="/analysis/{paperId}/{recordId}", method = {RequestMethod.GET,RequestMethod.POST})
+	public String paperRecordAnalysis(@PathVariable String paperId,@PathVariable String recordId,Model model,HttpServletRequest request){
+		if(logger.isDebugEnabled()) logger.debug("加载试卷试题解析详情...");
+		//TODO 模拟一个用户ID
+		String userId = this.getUserId(request);
+		try{
+			PaperPreview info = this.paperService.findPaperAnalysis(paperId,recordId,userId,null);
+			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
+			model.addAttribute("PAPER", info);
+			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
+			//题型
+			ItemTypeUtil.loadItemType(model);
+			//答对
+			model.addAttribute("STATUS_RIGHT", Constant.STATUS_RIGHT);
+			//答错
+			model.addAttribute("STATUS_WRONG", Constant.STATUS_WRONG);
+				
+		}catch(Exception e){
+			e.printStackTrace();
+			if(logger.isDebugEnabled()) logger.debug("加载试卷解析详情异常..."+e.getMessage());
+			if(e.getMessage().equals("考试未完成"))
+				return "redirect:/library/paper/do/multi/"+paperId;
+			return "redirect:/library/paper/"+paperId;
+		}
+		return "multi_mode_showanswer_without_product";
+	}
 	
 	private String getUserId(HttpServletRequest request){
 		return ((User)(request.getSession().getAttribute("USER"))).getProductUserId();
 	}
-	private String getProductId(HttpServletRequest request){
-		return (String) (request.getSession().getAttribute("PRODUCTID"));
-	}
+//	private String getProductId(HttpServletRequest request){
+//		return (String) (request.getSession().getAttribute("PRODUCTID"));
+//	}
 }

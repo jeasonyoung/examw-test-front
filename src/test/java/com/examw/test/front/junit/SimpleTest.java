@@ -9,6 +9,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.StringTokenizer;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -115,6 +116,13 @@ public class SimpleTest {
         }
         String a = "/examw-test/upload/preview/42c7f9f5-6088-4bc8-acc0-59162257a775";
         System.out.println(a.replaceAll("(\\S+)(/[\\S]+)", "$1/ddddddddddddddddddd"));
+        String key = "U8z2D0O5s7Li1Q3y4k6g";
+        String text = "abcd#123456#123456#abcd@163.com#U8z2D0O5s7Li1Q3y4k6g#中国#13800000000#jzs1#Mobile#357070005327186";
+        System.out.println(TaoBaoMD5.sign(text, "", "GBK"));
+        System.out.println(URLEncoder.encode("中国", "ISO8859-1"));
+        System.out.println(new String("中国".getBytes("utf-8"),"gbk"));
+        System.out.println(unicodeToGB("\\u4e2d\\u56fd"));
+        System.out.println(toUnicodeString("中国"));
 	}
 
 	private String md5(String source) {
@@ -132,11 +140,31 @@ public class SimpleTest {
 				else
 					md5StrBuff.append(Integer.toHexString(0xFF & byteArray[i]));
 			}
-
 			return md5StrBuff.toString();
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
+	public   static   String   unicodeToGB(String   s)   {     
+        StringBuffer   sb   =   new   StringBuffer();     
+        StringTokenizer   st   =   new   StringTokenizer(s,   "\\u");     
+        while   (st.hasMoreTokens())   {     
+            sb.append(   (char)   Integer.parseInt(st.nextToken(),   16));     
+        }     
+        return   sb.toString();     
+    } 
+public static String toUnicodeString(String s) {
+   StringBuffer sb = new StringBuffer();
+   for (int i = 0; i < s.length(); i++) {
+     char c = s.charAt(i);
+     if (c >= 0 && c <= 255) {
+       sb.append(c);
+     }
+     else {
+      sb.append("\\u"+Integer.toHexString(c));
+     }
+   }
+   return sb.toString();
+ }
 }

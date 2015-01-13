@@ -1,0 +1,510 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>模拟考场 考试系统题库 - ${PAPER.name}</title>
+<#include "common/loadPageJS.ftl" />
+<!-- dialog -->
+<link href="<@s.url "/resources/artDialog/ui-dialog.css"/>" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="<@s.url "/resources/artDialog/dialog-min.js"/>"></script>
+<!-- scrollTo -->
+<script type="text/javascript" src="<@s.url "/resources/jquery.scrollTo.js"/>"></script>
+<style type="text/css">
+	.share_answer p{display:inline;}
+</style>
+</head>
+<body>
+<#assign MODEL = "multi" />
+<#include "common/item.ftl"/>
+<#include "common/structure.ftl"/>
+<#include "common/head.html" />
+	<div class="main">
+		<div class="h30"></div>
+		<div class="content fl">
+			<div class="cont-l fl" id="leftArea">
+				<div class="box fl yinying">
+					<div class="time" id="showtime">00:00:00</div>
+					<#if !PAPER.score??>
+					<div class="jiaojuan-botton">
+						<a href="javascript:void(0)" onclick="submitAnswer(1)">结束作答</a>
+					</div>
+					<#else>
+					<div class="hui-botton">
+						<a href="javascript:void(0)" onclick="pause_do();">暂停</a>
+					</div>
+					<div class="hui-botton">
+						<a href="javascript:void(0)" onclick="answerNexttime('http://test.examw.com')">下次再做</a>
+					</div>
+					<div class="jiaojuan-botton">
+						<a href="javascript:void(0)" onclick="submitAnswer(1)">提交试卷</a>
+					</div>
+					</#if>
+					<div class="h10"></div>
+				</div>
+				<div class="box fl yinying">
+					<div class="list">
+						<ul>
+							<li><a href="<@s.url " /library/paper/do/single/${PAPER.id}"/>"><em
+								class="dan-liang"></em>单题模式</a></li>
+							<li><a href="答案页面.html"><em class="kandaan"></em>查看答案</a></li>
+							<li class="bb-no"><a href="#"><em class="jisuanqi"></em>计算器</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="cont-r fr f-f14" id="paper_body">
+				<div class="box fl yinying">
+					<div class="daxiao">
+						<div class="list">
+							<ul id="fontset">
+								<li id="f-f14" current="true" class="out bg"><a>小</a></li>
+								<li id="f-f16" class="out"><a>中</a></li>
+								<li id="f-f18" class="out"><a>大</a></li>
+								<li>字体大小:</li>
+							</ul>
+						</div>
+					</div>
+					<div class="name">
+						<h1>${PAPER.name}</h1>
+					</div>
+					<div class="h20"></div>
+					<div class="shuoming">
+						<#if PAPER.score??>
+						<p>&gt; 本卷共分为${PAPER.structures?size}大题
+							${PAPER.total}小题，作答时间为${PAPER.time}分钟，总分${PAPER.score}分。</p>
+						<p>&gt; 试卷来源：${PAPER.sourceName}</p>
+						</#if>
+					</div>
+					<div class="tixing fl" id="tixing">
+						<div class="list">
+							<ul>
+								<#list PAPER.structures as structure> <#if structure_index == 0>
+								<li><a class="bg" href="javascript:void(0)"
+									onclick="chooseRule(this,'${structure.id}');">${structure.title}</a></li>
+								<#else>
+								<li><a href="javascript:void(0)"
+									onclick="chooseRule(this,'${structure.id}');">${structure.title}</a></li>
+								</#if> </#list>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<a name="danxiang" id="danxiang"></a> <#if PAPER.structures?? &&
+				(PAPER.structures?size>0)> <#list PAPER.structures as structure>
+				<@show_structure structure/> </#list> </#if>
+				<div class="datika fl" id="answerCard" style="width: 830px;">
+					<div class="ka fl" id="font14">展开答题卡</div>
+					<div class="ka-ge fl"></div>
+					<div class="ka-box fl" style="display: none"><@answer_card
+						ITEMLIST /></div>
+				</div>
+			</div>
+		</div>
+		<div class="h30"></div>
+	</div>
+	<#include "common/foot.html" />
+</body>
+<script type="text/javascript">
+<!-- 浮动,参数isTop是否距离顶部,否表示距离底部 -->
+$.fn.smartFloat = function(isTop) {
+	var position = function(element) {
+		var top = element.position().top,left =element.position().left, pos = element.css("position");
+		var height = $(this).height();
+		$(window).scroll(function() {
+			var scrolls = $(this).scrollTop();
+			var flag;
+			if(isTop) flag = scrolls-top;
+			else flag = top-height-scrolls;
+			if (flag > 0) { //如果滚动到页面超出了当前元素element的相对页面顶部的高度
+				if (window.XMLHttpRequest) { //如果不是ie6
+					if(isTop) element.css({position: "fixed",left:left,top: 0});
+					else
+					element.css({
+						position: "fixed",
+						left:left,
+						bottom: 0
+					});	
+				} else { //如果是ie6
+					if(isTop) element.css({position: "absolute",left:left,top: scrolls});
+					else
+					element.css({
+						position: "absolute",
+						left:left,
+						bottom: 0
+					});	
+				}
+			}else {	//滑到了底部
+				if(isTop) element.css({position: pos,left:left,top: top});
+				else
+				element.css({
+					position: pos,
+					left:left,
+					bottom: top
+				});	
+			}
+		});
+	};
+	return $(this).each(function() {
+		position($(this));						 
+	});
+};
+$(function(){
+	//var obj = '${PAPERJSON}';
+	//console.info(obj);
+	window.tempChooseAnswer = "";
+	var paperId = "${PAPER.id}";
+	var productId = "";
+	var totalNum = Number("${PAPER.total}");
+	$("#answerCard").smartFloat(false);	//答题卡浮动
+	$("#leftArea").smartFloat(1);//左侧浮动
+	$("#tixing").smartFloat(1);//题型结构浮动
+	//<!-- 选择答案 -->
+	<#list ITEMLIST as item>
+	<#if item.userAnswer?? && item.type!=TYPE_QANDA_VALUE>
+	saveChooseAnswer('${item.id}','${item.userAnswer}');
+	</#if>
+	</#list>
+	//<!-- 答题卡点击显示  -->
+	$("#answerCard div").first().click(function(){
+		var card = $(this).siblings("div").last();
+		if(card.is(":hidden"))
+		{
+			$(this).html("隐藏答题卡");
+			card.show();
+		}
+		else{
+			$(this).html("展开答题卡");
+			card.hide();
+		}
+	});
+	//<!-- 点击选项 -->
+	$("ul li[option_id]").click(function(){
+		var option_id = $(this).attr("option_id");
+		var s_item_id = $(this).attr("s_item_id");
+		var pid = $(this).attr("pid");
+		var record_id = $(this).attr("record_id");
+		if($(this).attr("option_type")=="radio") //互斥
+		{
+			if($(this).attr("class").indexOf("choose")!=-1) {	//取消选择
+				$("li[option_id='"+option_id+"']").attr("class","out");
+				$("li[actual][option_id='"+option_id+"']").attr("class","off");
+				$("#answerCard a[s_item_id='"+s_item_id+"']").removeClass("yida");
+				return;
+			}
+			$("li[actual][option_id='"+option_id+"']").attr("class","choose");
+			$("li[option_id='"+option_id+"']").siblings().attr("class","out");
+			$("li[actual][option_id='"+option_id+"']").siblings().attr("class","off");
+			$("#answerCard a[s_item_id='"+s_item_id+"']").attr("class","yida");
+		}else{
+			if($(this).attr("class").indexOf("choose")!=-1)
+			{
+				$("li[option_id='"+option_id+"']").attr("class","out");
+				$("li[actual][option_id='"+option_id+"']").attr("class","off");
+				if($(this).parent().children("li[class='choose']").length==0){
+					$("#answerCard a[s_item_id='"+s_item_id+"']").removeClass("yida");
+				}
+			}else{
+				$("li[actual][option_id='"+option_id+"']").attr("class","choose");
+				$("#answerCard a[s_item_id='"+s_item_id+"']").attr("class","yida");
+			}
+		}
+		var choosen = $("li[actual][s_item_id='"+s_item_id+"'][class='choose']")
+		var answers = [];
+		$.each(choosen,function(i){
+			if($(choosen[i]).attr("option_value")==undefined){
+				answers.push($(choosen[i]).attr("option_id").split('#')[0]);
+			}else
+				answers.push($(choosen[i]).attr("option_value"));//判断题答案
+		});
+		answers.join(",");
+		if(pid && pid!=s_item_id){
+			s_item_id = pid+"#"+s_item_id;
+		}
+		saveChooseAnswer(s_item_id,answers.toString());
+		if($(this).attr("option_type")=="radio"){
+			focusTo(0,Number($(this).attr("item_index"))+1);
+		}
+		//console.info(window.tempChooseAnswer);
+	}).mouseout(function(){
+		if($(this).attr("actual")){
+			if($(this).attr("class")=="choose") return;
+			$(this).attr("class","off");
+			$("li[option_id='"+$(this).attr("option_id")+"']:not([actual])").attr("class","out");
+		}else{
+			if($("li[option_id='"+$(this).attr("option_id")+"'][actual]").attr("class")=="choose") return;
+			$(this).attr("class","out");
+			$("li[option_id='"+$(this).attr("option_id")+"'][actual]").attr("class","off");
+		}
+	}).mouseover(function(){
+		if($(this).attr("actual")){
+			if($(this).attr("class")=="choose") return;
+			$(this).attr("class","on");
+			$("li[option_id='"+$(this).attr("option_id")+"']:not([actual])").attr("class","over");
+		}else{
+			if($("li[option_id='"+$(this).attr("option_id")+"'][actual]").attr("class")=="choose") return;
+			$(this).attr("class","over");
+			$("li[option_id='"+$(this).attr("option_id")+"'][actual]").attr("class","on");
+		}
+		$(this).addClass("over");
+	});
+	//<!-- 字体选择 -->
+	$("#fontset li").click(function(){
+		if($(this)==$("#fontset li[current='true']")) return;
+		$("#paper_body").addClass($(this).attr("id")).removeClass($("#fontset li[current='true']").attr("id"));
+		$(this).addClass("bg");
+		$(this).attr("current",'true');
+		$(this).siblings().removeClass("bg").attr("current",'false');
+	});
+	//<!-- timer -->
+	<#if PAPER.leftTime??>
+	window.limit_time = parseInt('${PAPER.leftTime?c}');        // 单位：秒
+	<#else>
+	window.limit_time = 0;
+	</#if>
+	
+	window.timer         = setInterval(updateTime,1000);        // 过1秒执行
+	<#if PAPER.score??>
+	function updateTime(){
+		if (window.limit_time==300){
+			//小于5分钟提示
+			alert('请抓紧时间答题');
+		}
+		if (window.limit_time ==0 ){
+			// 停止计时，并自动交卷
+			clearInterval(window.timer);
+			window.limit_time=0;
+			//xc.answer.submit();
+			submitAnswer(0);	//交卷
+		}
+		// 转换
+		var fillZero = function (num,n){
+			var str = ''+num;   //数字转换为字符串
+			while(str.length<n){
+				str = '0'+str;
+			}
+			return str;
+		};
+		var iRemain = window.limit_time;
+		//剩余小时
+		var iHour = fillZero(parseInt(iRemain/3600),2);
+		iRemain%=3600;  //剩下的秒数
+		//剩余分钟
+		var iMin = fillZero(parseInt(iRemain/60),2);
+		iRemain%=60;
+		//剩余秒
+		var iSec = fillZero(parseInt(iRemain),2);
+		var sTime = iHour+':'+iMin+':'+iSec;
+		$('#showtime').html(sTime);
+		//$('#showtime').css("transform","rotate("+(window.limit_time%36)*10+"deg)")
+		window.limit_time--;
+	}
+	<#else>
+	function updateTime(){
+		// 转换
+		var fillZero = function (num,n){
+			var str = ''+num;   //数字转换为字符串
+			while(str.length<n){
+				str = '0'+str;
+			}
+			return str;
+		};
+		var iRemain = window.limit_time;
+		//剩余小时
+		var iHour = fillZero(parseInt(iRemain/3600),2);
+		iRemain%=3600;  //剩下的秒数
+		//剩余分钟
+		var iMin = fillZero(parseInt(iRemain/60),2);
+		iRemain%=60;
+		//剩余秒
+		var iSec = fillZero(parseInt(iRemain),2);
+		var sTime = iHour+':'+iMin+':'+iSec;
+		$('#showtime').html(sTime);
+		window.limit_time++;
+	}
+	</#if>
+	//<!-- 暂停 -->
+	pause_do = function(){
+		window.clearInterval(timer);
+		dialog({
+	        content: "<div class='pause'></div>",
+	        ok: function () {
+	        	if(window.limit_time<=0) return true;
+	        	window.timer = setInterval(updateTime,1000);   
+	            return true;
+	        },
+	        okValue: '点击继续'
+	    }).showModal();
+	}
+	
+	//<!-- 滑动到目标题目 -->
+	focusTo = function(obj,index){
+		var target;
+		if(obj)
+		 	target = $("div[item_id='"+$(obj).attr("item_id")+"']");
+		else if(index){
+			target = $("div[item_index='"+index+"']");
+		}
+		$.scrollTo(target,800,{axis:'y', offset:-20 });
+		
+	}
+	//<!-- 切换大题 -->
+	chooseRule = function(obj,id){
+		var target = $("div[structure_id='" + id + "']");
+		$(obj).addClass("bg");
+		$(obj).parent().siblings().children().removeClass("bg");
+		$.scrollTo(target,800,{axis:'y', offset:-20 });
+	}
+	//<!-- 查看材料 -->
+	showCommonTitle = function(id){
+		dialog({
+			id:'cailiaoDialog',
+			title: '查看材料',
+			drag: true,
+	        content: "<div class='cont-r'><div class='fenxiti fl' style='border:0px'>"+$("div[fenxi_item_id='"+id+"']").html()+"</div></div>"
+	    }).show();
+	}
+	//<!-- 显示收起解析 -->
+	toggleAnalysis = function(obj,id){
+		var target = $("div[name='jiexi'][item_id='"+id+"']");
+		if(target.is(":hidden")){
+			target.show();
+			$(obj).html("收起解析");
+			$(obj).parent().siblings("em").attr("class","jiexi-h");
+		}else{
+			target.hide();
+			$(obj).html("展开解析");
+			$(obj).parent().siblings("em").attr("class","jiexi");
+		}
+	}
+	//<!-- 保存临时答案 -->
+	function saveChooseAnswer(s_item_id,answers){
+		if(window.tempChooseAnswer == "" || window.tempChooseAnswer.indexOf(s_item_id+"=")==-1){
+			window.tempChooseAnswer = window.tempChooseAnswer + s_item_id+"="+answers+"&";
+		}else{
+			var front = window.tempChooseAnswer.substring(0,window.tempChooseAnswer.indexOf(s_item_id+"="));
+			var temp = window.tempChooseAnswer.substring(window.tempChooseAnswer.indexOf(s_item_id+"="),window.tempChooseAnswer.length);
+			var after = temp.substring(temp.indexOf("&")+1,temp.length);
+			if($.trim(answers)=="")
+				window.tempChooseAnswer = front + after;
+			else
+				window.tempChooseAnswer = front + s_item_id +"="+answers+"&"+after;
+		}
+	}
+	//<!-- 下次做提交  -->
+	answerNexttime = function(url){
+			var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":0,"prodouctId":productId,"textAnswers":getTextAreaValue()};
+			dialog({
+				id:'nexttimeDialog',
+				title: '下次再做',
+				drag: true,
+		        content: "<div><b>下次再做</b><p>如果你想下次再接着练习可以选择此功能，考试期间会暂停考试计时</p><p>可以在题库首页直接点击“继续练习”或者在“练习记录”中进入</p></div></div>",
+		        button: [
+		 	    {
+		 	        value: '继续做题'
+		 	    },
+		 	     {
+		 	        value: '下次再做',
+		 	        callback: function () {
+		 	           this.content('<div style="padding:20px 20px"><span class="ui-dialog-loading">Loading..</span></div>');
+		 	           this.title(null);
+		 	           this.button(null);
+		 	           $.ajax({
+		 	        	   type:"POST",
+		 	               url:'<@s.url "/library/paper/submit"/>',
+		 	               data:data,
+		 	               dataType:'json',
+		 	               success:function(data){
+		 	            	   if(data.success){
+		 	            		   location=url;
+		 	            	   }
+		 	               }
+		 	           });
+		 	          return false;
+		 	         },
+		 	          autofocus: true
+		 	      }]
+		 	   }).showModal();
+	}
+	//<!-- 交卷 -->
+	submitAnswer = function(withTips){
+		var data = {"limitTime":window.limit_time,"chooseAnswers":window.tempChooseAnswer,"paperId":paperId,"model":1,"productId":productId,"textAnswers":getTextAreaValue()};
+		var leftNum = totalNum-window.tempChooseAnswer.split("&").length+1;
+		var content = "是否选择确定交卷?";
+		if(leftNum > 0){
+			content = "<div>您还有<span style='color:red'>"+(leftNum)+"</span>道试题未作答，<br>是否选择确定交卷？</div>";
+		}
+		if(withTips)
+			dialog({
+				id:'sumbitDialog',
+				title: '确认交卷',
+				drag: true,
+	       		content: content,
+	       		button: [
+	     		 	    {
+	     		 	         value: '继续做题'
+	     		 	    },
+	     		 	     {
+	     		 	        value: '交卷',
+	     		 	        callback: function () {
+	     		 	           this.content("提交中,请稍候");
+	     		 	           submit(data);
+	     		 	         },
+	     		 	          autofocus: true
+	     		 	      }]
+		}).showModal();
+		else{
+			dialog({
+				id:"submitDialog",
+				content:'<div style="padding:20px 20px"><span class="ui-dialog-loading">Loading..</span></div><div>时间到,提交试卷中...</div>'
+			}).showModal();
+			submit(data);
+		}
+		//提交
+		function submit(data){
+			 dialog({}).showModal();
+			 $.ajax({
+				 type:"POST",
+	             url:'<@s.url "/library/paper/submit"/>',
+	             data:data,
+	             dataType:'json',
+	             success:function(data){
+	            	 location='<@s.url "/library/paper/analysis/${PAPER.id}"/>';
+	               }
+	           });
+		}
+	}
+	//获取文字题的答案
+	function getTextAreaValue(){
+		var textareas = $("textarea[name='item_text']");
+		var textAnswers = "";
+		$.each(textareas,function(i){
+			var value = $(textareas[i]).val();
+			if($.trim(value)!=""){
+				var pid = $(textareas[i]).attr("pid");
+				if(pid)
+					textAnswers += (pid+"#"+$(textareas[i]).attr("item_id")+"="+encodeURIComponent(value)+"&");
+				else
+					textAnswers += ($(textareas[i]).attr("item_id")+"="+encodeURIComponent(value)+"&");
+			}
+		});
+		return textAnswers;
+	}
+	//改变文字题的状态
+	answerTextArea = function(obj){
+		if($.trim($(obj).val())!="")
+			$("#answerCard a[s_item_id='"+$(obj).attr("item_id")+"']").attr("class","yida");
+		else
+			$("#answerCard a[s_item_id='"+$(obj).attr("item_id")+"']").removeClass("yida");
+	}
+	//点击顶部其他链接需要提醒保存答案
+	$("#top_head").find("a").click(function(){
+		var url = $(this).attr("href");
+		<#if PAPER.score??>
+		answerNexttime(url);
+		<#else>
+		submitAnswer(1);
+		</#if>
+		return false;
+	});
+});
+</script>
+</html>
