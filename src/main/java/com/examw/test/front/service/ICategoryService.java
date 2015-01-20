@@ -1,6 +1,5 @@
 package com.examw.test.front.service;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.examw.test.front.model.product.FrontCategoryInfo;

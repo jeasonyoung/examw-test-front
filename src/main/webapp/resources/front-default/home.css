@@ -11,6 +11,7 @@
 .examw .examwbox .kuaiji{ background-position:-164px -74px}
 .examw .examwbox .acc{ background-position:-164px -74px}
 .examw .examwbox .jianzhu{ background-position:-241px -74px}
+.examw .examwbox .gongcheng{ background-position:-241px -74px}
 .examw .examwbox .waimao{ background-position:-323px -74px}
 .examw .examwbox .yiyao{ background-position:-3px -161px}
 .examw .examwbox .yixue{ background-position:-3px -161px}
@@ -59,7 +60,7 @@
 .product .f-l{ width:168px; height:89px; margin-top:1px; margin-left:1px; border-right:#e8e8e8 solid 1px; background:#f6f6f6;-webkit-border-top-left-radius:3px;-webkit-border-top-right-radius:0px;-webkit-border-bottom-right-radius:0px;-webkit-border-bottom-left-radius:3px;-moz-border-radius-topleft:3px;-moz-border-radius-topright:0px;-moz-border-radius-bottomright:0px;-moz-border-radius-bottomleft:3px;border-top-left-radius:3px;border-top-right-radius:0px;border-bottom-right-radius:0px;border-bottom-left-radius:3px; padding:10px 0px; font:16px/89px "微软雅黑"; color:#999}
 .product .f-l span{ width:9px; height:17px; float:right; background-position:0px 0px; position:relative; right:-9px;top:41px;}
 .product .zhj{ width:643px;margin-left:15px; height:110px;}
-.product .name{ width:100%; height:60px; border-bottom:#eee solid 1px; font:24px/60px "微软雅黑"; color:#F30F4A}
+.product .name{ width:100%; height:60px; border-bottom:#eee solid 1px; font:16px/60px "微软雅黑"; color:#F30F4A}
 .product .ti li{width:300px; height:50px; float:left; font:16px/50px "宋体"; color:#444}
 .product .ti li span{ color:#f50; font-size:20px; font-weight:bold}
 .product .jianjie li{width:213px; height:45px; text-align:left; float:left; font:12px/45px "宋体"; color:#999}

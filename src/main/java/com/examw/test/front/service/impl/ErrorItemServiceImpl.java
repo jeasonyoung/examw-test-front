@@ -156,6 +156,7 @@ public class ErrorItemServiceImpl implements IErrorItemService {
 			 if(info == null)continue;
 			 StructureItemInfo data = new StructureItemInfo();
 			 data = JSONUtil.JsonToObject(info.getItemContent(), StructureItemInfo.class);
+			 if(data == null) continue;
 			 if(!StringUtils.isEmpty(info.getAnswer()))
 			 {
 				 if(info.getItemId().contains("#")){

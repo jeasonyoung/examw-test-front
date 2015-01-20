@@ -177,7 +177,7 @@ $(function(){
 	//<!-- 滑动到目标题目 -->
 	focusTo = function(obj,index){
 		var target = $("div[item_id='"+$(obj).attr("item_id")+"']");
-		$.scrollTo(target,800,{axis:'y', offset:-20 });
+		$.scrollTo(target,800,{axis:'y', offset:-60 });
 		
 	}
 	//<!-- 切换大题 -->
@@ -185,7 +185,7 @@ $(function(){
 		var target = $("div[structure_id='" + id + "']");
 		$(obj).addClass("bg");
 		$(obj).parent().siblings().children().removeClass("bg");
-		$.scrollTo(target,800,{axis:'y', offset:-20 });
+		$.scrollTo(target,800,{axis:'y', offset:-60 });
 	}
 	//<!-- 查看材料 -->
 	showCommonTitle = function(id){

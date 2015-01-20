@@ -343,7 +343,7 @@ $(function(){
 		else if(index){
 			target = $("div[item_index='"+index+"']");
 		}
-		$.scrollTo(target,800,{axis:'y', offset:-20 });
+		$.scrollTo(target,800,{axis:'y', offset:-60 });
 		
 	}
 	//<!-- 切换大题 -->
@@ -351,7 +351,7 @@ $(function(){
 		var target = $("div[structure_id='" + id + "']");
 		$(obj).addClass("bg");
 		$(obj).parent().siblings().children().removeClass("bg");
-		$.scrollTo(target,800,{axis:'y', offset:-20 });
+		$.scrollTo(target,800,{axis:'y', offset:-60 });
 	}
 	//<!-- 查看材料 -->
 	showCommonTitle = function(id){
