@@ -32,7 +32,7 @@
 .cont-r .daxiao .list .over,.cont-r .daxiao .list .bg{width:auto; height:auto; float:right; padding:0px 6px; background:#64ad75; border:#3f9a54 solid 1px;-moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px}
 .cont-r .daxiao .list .bg a,.cont-r .daxiao .list .over a{ color:#fff}
 .cont-r .name{width:96%; height:auto; line-height:75px; padding-top:10px; margin:0 auto; border-bottom:#ccc dotted 1px; overflow:hidden}
-.cont-r .name h1{font:26px/75px "微软雅黑"; color:#000}
+.cont-r .name h1{font:22px/75px "微软雅黑"; color:#000}
 .cont-r .shuoming p{width:96%; height:auto; line-height:20px; padding:5px 0; color:#666; margin:0 auto; text-align:left}
 .cont-r .tixing{z-index:900; width:100%; background:#f5f4f9; height:auto;-webkit-border-top-left-radius:0px;-webkit-border-top-right-radius:0px;-webkit-border-bottom-right-radius:5px;-webkit-border-bottom-left-radius:5px;-moz-border-radius-topleft:0px;-moz-border-radius-topright:0px;-moz-border-radius-bottomright:5px;-moz-border-radius-bottomleft:5px;border-top-left-radius:0px;border-top-right-radius:0px;border-bottom-right-radius:5px;border-bottom-left-radius:5px}
 .cont-r .tixing .list li,.record .list li{ float:left; line-height:30px; font-size:14px}
@@ -60,6 +60,7 @@
 .cont-r .xz-daan .list li span{ width:60px; height:35px; text-align:center; float:left; font:20px/30px Arial; color:#777; position:relative; overflow:hidden; background-position:-290px -4px}
 .cont-r .xz-daan .list .out{width:100%; height:30px; float:left; min-height:30px; height:auto !important}
 .cont-r .xz-daan .list .over{width:100%; height:30px; float:left; min-height:30px; height:auto !important;-moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; background:#f2f2f2}
+.cont-r .xz-daan .list .choose{width:100%; height:30px; float:left; min-height:30px; height:auto !important;-moz-border-radius:4px; -webkit-border-radius:4px; border-radius:4px; background:#f2f2f2}
 .cont-r .xz-daan .abcd li{ width:67px; height:auto !important; height:37px; min-height:37px; padding-left:44px; margin:20px 20px 0px 0px; float:left; text-align:left;font:20px/37px "Arial","宋体"; color:#777; cursor:pointer}
 .cont-r .xz-daan .abcd .on{ background-position: -430px -30px; color:#fff;width:67px;height:37px; float:left}
 .cont-r .xz-daan .abcd .off{ background-position: -430px -70px;width:67px;height:37px; float:left}

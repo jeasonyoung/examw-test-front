@@ -23,7 +23,7 @@ import com.examw.test.front.service.IProductService;
  */
 @Controller
 @RequestMapping("/library/chapter")
-public class ChapterController {
+public class ChapterController extends BaseProductController{
 	private static final Logger logger = Logger.getLogger(ChapterController.class);
 	//章节服务接口
 	@Resource
@@ -43,6 +43,10 @@ public class ChapterController {
 	public String chapters(@PathVariable String productId,String subjectId,String subSubjectId,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载章节练习...");
 		try{
+			if(this.loadProductInfo(productId)==null)
+			{
+				return "redirect:/404";
+			}
 			List<SubjectInfo> list = this.productService.loadProductSubjects(productId);
 			model.addAttribute("PRODUCTID", productId);
 			model.addAttribute("SUBJECTLIST", list);

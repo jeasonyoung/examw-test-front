@@ -28,7 +28,7 @@
                   				</a> 
                   			-->
                   			</li>
-                            <li>年份：${PAPER.year?c} 年</li>
+                            <li>年份：<#if PAPER.year??>${PAPER.year?c} 年</#if></li>
                             <li>类型：${PAPER.typeName}</li>
                             <li>总分: ${PAPER.score} 分</li>
                             <li>作答：${PAPER.time} 分钟</li>

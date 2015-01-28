@@ -70,6 +70,8 @@ public class LibraryController {
 		try{
 			String userId = this.getUserId(request);
 			FrontProductInfo data = productService.loadProduct(productId);
+			if(data == null)
+				return "redirect:/404";
 			request.getSession().setAttribute("SESSIONPRODUCT", data);
 			model.addAttribute("PRODUCT", data);
 			model.addAttribute("PRODUCTID",productId);
@@ -107,8 +109,11 @@ public class LibraryController {
 	@RequestMapping(value = "/collection/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String collection(@PathVariable String productId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载收藏界面...");
-		model.addAttribute("PRODUCTID", productId);
 		try{
+			FrontProductInfo data = productService.loadProduct(productId);
+			if(data == null)
+				return "redirect:/404";
+			model.addAttribute("PRODUCTID", productId);
 			String userId = this.getUserId(request);
 			model.addAttribute("SUBJECTLIST", this.collectionService.findCollectionSubjects(productId, userId));
 		}catch(Exception e){
@@ -191,9 +196,13 @@ public class LibraryController {
 	@RequestMapping(value = "/error/{productId}/item/{itemId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String errorDetail(@PathVariable String productId,@PathVariable String itemId,String flag,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载错题详细界面...");
-		model.addAttribute("PRODUCTID", productId);
-		String userId = this.getUserId(request);
+		
 		try{
+			FrontProductInfo data = productService.loadProduct(productId);
+			if(data == null)
+				return "redirect:/404";
+			model.addAttribute("PRODUCTID", productId);
+			String userId = this.getUserId(request);
 			List<SubjectInfo> subjectList = this.productService.loadProductSubjects(productId);
 			String subjectId = "";
 			if(subjectList!=null && subjectList.size()>0){
@@ -229,6 +238,8 @@ public class LibraryController {
 	public String simulate(@PathVariable String productId,PaperInfo info,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载模拟考试界面[试卷列表]...");
 		try{
+			if(productService.loadProduct(productId) == null)
+				return "redirect:/404";
 			String userId = this.getUserId(request);
 			DataGrid<FrontPaperInfo> data = this.paperService.dataGrid(productId, info, userId);
 			//productId
@@ -278,6 +289,8 @@ public class LibraryController {
 		if(logger.isDebugEnabled()) logger.debug("加载错题界面...");
 		String userId = this.getUserId(request);
 		try{
+			if(productService.loadProduct(productId) == null)
+				return "redirect:/404";
 			model.addAttribute("PRODUCTID", productId);
 			UserPaperRecordInfo record = this.paperService.findProductLastedRecord(userId, productId);
 			if(record == null){
@@ -303,6 +316,8 @@ public class LibraryController {
 	public String daily(@PathVariable String productId,@PathVariable String date,HttpServletRequest request,Model model){
 		if(logger.isDebugEnabled()) logger.debug("获取每日一练试卷...");
 		try{
+			if(productService.loadProduct(productId) == null)
+				return "redirect:/404";
 			Date dateParam = DateUtil.parse(date);
 			//解析错误就加载今天的数据
 			Calendar calendar = Calendar.getInstance();
@@ -334,6 +349,8 @@ public class LibraryController {
 	@ResponseBody
 	public Json dailyRestNumber(@PathVariable String productId,HttpServletRequest request){
 		try{
+			if(productService.loadProduct(productId) == null)
+				return null;
 			String userId = this.getUserId(request);
 			return this.paperService.findUndoneDailyPaperNumber(userId, productId);
 		}catch(Exception e){
@@ -351,7 +368,11 @@ public class LibraryController {
 	@RequestMapping(value = "/record/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
 	public String records(@PathVariable String productId,PaperInfo info,Model model,HttpServletRequest request){
 		try{
+			if(productService.loadProduct(productId) == null)
+				return "redirect:/404";
+			
 			String userId = this.getUserId(request);
+			
 			//包含科目集合
 			model.addAttribute("SUBJECTLIST", this.productService.loadProductSubjects(productId));
 			DataGrid<UserPaperRecordInfo> datagrid = this.paperService.recordDataGrid(userId, productId,info);

@@ -1,0 +1,10 @@
+@charset "gb2312";
+/* CSS Document */
+body{ margin:0; padding:0; background: #15ab84; text-align:center}
+.tit404{ width:100%; float:left; padding-top:80px; font:50px/60px "\5fae\8f6f\96c5\9ed1"; color:#027557}
+.pic404{ width:100%; float:left; height:300px}
+.btnbox{ width:100%; float:left}
+.btnbox .btn{ width:280px; font:24px/40px "\5fae\8f6f\96c5\9ed1"; margin:0 auto}
+.cheng-btn a:link,.cheng-btn a:visited,.cheng-btn a:active,.cheng-btn a:hover{-moz-border-radius:45px; -webkit-border-radius:35px; border-radius:35px; width:100%; height:auto; float:left; text-decoration:none}
+.cheng-btn a:link,.cheng-btn a:visited,.cheng-btn a:active{ background:#11a07a; border:#027557 solid 1px; color:#01644a}
+.cheng-btn a:hover{ background:#17b28a; border:#0fc898 solid 1px;color:#fff;}

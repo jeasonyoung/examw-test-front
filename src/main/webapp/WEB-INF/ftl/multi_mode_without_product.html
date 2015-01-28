@@ -43,10 +43,10 @@
 				<div class="box fl yinying">
 					<div class="list">
 						<ul>
-							<li><a href="<@s.url " /library/paper/do/single/${PAPER.id}"/>"><em
+							<li class="bb-no"><a href="<@s.url " /library/paper/do/single/${PAPER.id}"/>"><em
 								class="dan-liang"></em>单题模式</a></li>
-							<li><a href="答案页面.html"><em class="kandaan"></em>查看答案</a></li>
-							<li class="bb-no"><a href="#"><em class="jisuanqi"></em>计算器</a></li>
+							<!-- <li><a href="答案页面.html"><em class="kandaan"></em>查看答案</a></li> -->
+							<!-- <li class="bb-no"><a href="#"><em class="jisuanqi"></em>计算器</a></li>-->
 						</ul>
 					</div>
 				</div>
@@ -71,7 +71,9 @@
 						<#if PAPER.score??>
 						<p>&gt; 本卷共分为${PAPER.structures?size}大题
 							${PAPER.total}小题，作答时间为${PAPER.time}分钟，总分${PAPER.score}分。</p>
-						<p>&gt; 试卷来源：${PAPER.sourceName}</p>
+						<#if PAPER.sourceName?? || PAPER.sourceName!="">
+                    	<p>&gt; 试卷来源：${PAPER.sourceName}</p>
+                   		</#if>
 						</#if>
 					</div>
 					<div class="tixing fl" id="tixing">
@@ -203,6 +205,7 @@ $(function(){
 					$("#answerCard a[s_item_id='"+s_item_id+"']").removeClass("yida");
 				}
 			}else{
+				$("li[option_id='"+option_id+"']").attr("class","choose");
 				$("li[actual][option_id='"+option_id+"']").attr("class","choose");
 				$("#answerCard a[s_item_id='"+s_item_id+"']").attr("class","yida");
 			}

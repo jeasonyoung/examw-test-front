@@ -26,7 +26,7 @@ import com.examw.test.front.support.ItemTypeUtil;
  */
 @Controller
 @RequestMapping("/library/paper")
-public class PaperController {
+public class PaperController extends BaseProductController{
 	private static final Logger logger = Logger.getLogger(PaperController.class);
 	//试卷服务接口
 	@Resource
@@ -41,6 +41,10 @@ public class PaperController {
 	public String paperInfo(@PathVariable String productId,@PathVariable String paperId,HttpServletRequest request,Model model){
 		if(logger.isDebugEnabled()) logger.debug("加载试卷基本信息...");
 		try{
+			if(this.loadProductInfo(productId)==null)
+			{
+				return "redirect:/404";
+			}
 			PaperPreview info = this.paperService.loadPaperInfo(paperId);
 			model.addAttribute("PAPER", info);
 			model.addAttribute("PRODUCTID",productId);
@@ -62,6 +66,10 @@ public class PaperController {
 		String userId = this.getUserId(request);
 		//判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
 		try{
+			if(this.loadProductInfo(productId)==null)
+			{
+				return "redirect:/404";
+			}
 			PaperPreview info = this.paperService.findPaperDetail(paperId,userId,productId);
 			model.addAttribute("PAPER", info);
 			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
@@ -116,6 +124,10 @@ public class PaperController {
 		String userId = this.getUserId(request);
 		//判断是否有过做题记录,没有记录,要跳转到上一个页面[试卷基本信息界面]
 		try{
+			if(this.loadProductInfo(productId)==null)
+			{
+				return "redirect:/404";
+			}
 			PaperPreview info = this.paperService.findPaperDetail(paperId,userId,productId);
 			model.addAttribute("PAPER", info);
 			model.addAttribute("ITEMS",this.paperService.findBigItemsList(info));
@@ -190,6 +202,10 @@ public class PaperController {
 		//模拟一个用户ID
 		String userId = this.getUserId(request);
 		try{
+			if(this.loadProductInfo(productId)==null)
+			{
+				return "redirect:/404";
+			}
 			PaperPreview info = this.paperService.findPaperAnalysis(paperId,userId,productId);
 			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
 			model.addAttribute("PAPER", info);
@@ -227,6 +243,10 @@ public class PaperController {
 		//TODO 模拟一个用户ID
 		String userId = this.getUserId(request);
 		try{
+			if(this.loadProductInfo(productId)==null)
+			{
+				return "redirect:/404";
+			}
 			PaperPreview info = this.paperService.findPaperAnalysis(paperId,recordId,userId,productId);
 			model.addAttribute("ITEMLIST",this.paperService.findItemsList(info));
 			model.addAttribute("PAPER", info);
