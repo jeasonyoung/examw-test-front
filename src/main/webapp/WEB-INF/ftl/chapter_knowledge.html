@@ -16,7 +16,7 @@
             	<ul>
             		<#list CHAPTER.children?sort_by(["orderNo"]) as child>
                 	<li <#if child.id == KNOWLEDGE.syllabusId>class="zsover"<#else>class="zsout"</#if> onMouseOver="this.className='zsover'" onMouseOut="this.className='zsout'">
-                		&middot;<a href="<@s.url "/library/chapter/detail?pid=${CHAPTER.id}&id=${child.id}"/>">${child.title}</a>
+                		&middot;<a href="<@s.url "/library/chapter/detail/${CHAPTER.id}/${child.id}"/>">${child.title}</a>
                 	</li>
                 	</#list>
                 </ul>

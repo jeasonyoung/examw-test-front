@@ -47,7 +47,6 @@
        <#if sun.children?? && (sun.children?size>0)>
        <li <#if index != 0>style="display:none;overflow:hidden;"</#if> name="child" <#if father??>tpid="${father.id}"</#if> pid="${chapter.id}" sid="${sun.id}" class="chapter-out" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
            <div class="title">
-           		${cycle}
                <div id="${sun.id}" name="father" >
                   <#if sun.children??>
                        <div class="jia kong${cycle}"></div>
@@ -67,7 +66,6 @@
      <#else>
      	<li class="chapter-out" <#if father??>pid="${father.id}"<#else>pid="${chapter.id}"</#if> style="display:none;overflow:hidden;" onMouseOver="this.className='chapter-over'" onMouseOut="this.className='chapter-out'">
              <div class="title">
-             ${cycle}
              <div class="jian kong${cycle} bg-no"></div>
              <i class="i${cycle}">&middot; 
              	<#if father??>
