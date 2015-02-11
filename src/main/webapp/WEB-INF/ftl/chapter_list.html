@@ -8,6 +8,7 @@
 <#assign current_page="chapter"/>
 <#include "common/head.html" />
 <#include "common/chapter.ftl" />
+<#include "common/chapter2.ftl" />
 <div class="main">
 	<div class="h30"></div>
 	<div class="content fl">
@@ -111,7 +112,12 @@
 				$("li[pid="+id+"]").show();
 			}else{	//收起 全收
 				$(this).find(".jian").addClass("jia").removeClass("jian");
+				//子类全部收起
+				var children = $("li[pid="+id+"]");
 				$("li[pid="+id+"]").hide();
+				$.each(children,function(i){
+					$("li[pid="+$(children[i]).attr("sid")+"]").hide();
+				});
 				var children = $("li[pid="+id+"]");
 				//带子子类的进行收起符号的处理
 				$.each(children,function(i){

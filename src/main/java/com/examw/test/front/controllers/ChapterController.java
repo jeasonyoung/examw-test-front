@@ -11,8 +11,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.test.front.model.product.SubjectInfo;
+import com.examw.test.front.model.syllabus.SyllabusInfo;
 import com.examw.test.front.service.IChapterService;
 import com.examw.test.front.service.IProductService;
 
@@ -72,6 +74,17 @@ public class ChapterController extends BaseProductController{
 			if(logger.isDebugEnabled()) logger.debug("加载章节信息异常...");
 		}
 		return "chapter_list";
+	}
+	@RequestMapping(value = "/listjson/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
+	@ResponseBody
+	public List<SyllabusInfo> chaptersJson(@PathVariable String productId,String subjectId,String subSubjectId,Model model){
+		try {
+			return this.chapterService.loadChapterInfo(subjectId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 	/**
 	 * 章节详情
