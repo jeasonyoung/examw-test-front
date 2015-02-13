@@ -31,7 +31,12 @@ public class ItemController {
 	//收藏服务接口
 	@Resource
 	private ICollectionService collectionService;
-	
+	/**
+	 * 收藏或者取消收藏
+	 * @param info
+	 * @param session
+	 * @return
+	 */
 	@RequestMapping(value ="collect", method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
 	public Json collectOrCancel(Collection info,HttpSession session){
