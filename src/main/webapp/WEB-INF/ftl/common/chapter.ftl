@@ -14,8 +14,8 @@
         </#if>
         <em>${father.title}</em>
         </div>
-        <span>0</span>
-        <span class="red">0</span>
+        <span>${father.userDoneItemSum}/${father.itemSum}</span>
+        <span class="red">${father.userErrorItemSum}</span>
         <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
         </div>
     </li>
@@ -30,8 +30,8 @@
                        <div class="jian kong"></div>	
                   </#if>
                   <i class="i${sun.level}">${sun.title}</i></div>
-                  <span>0</span>
-                  <span>0</span>
+                  <span>${sun.userDoneItemSum}/${sun.itemSum}</span>
+                  <span>${sun.userErrorItemSum}</span>
                   <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
         </li>
         <@show_chapter_child father sun  1/>
@@ -52,8 +52,8 @@
                        <div class="jian kong${sun.level}"></div>	
                   </#if>
                   <i class="i${sun.level}">${sun.title}</i></div>
-                  <span>0</span>
-                  <span>0</span>
+                  <span>${sun.userDoneItemSum}/${sun.itemSum}</span>
+                  <span>${sun.userErrorItemSum}</span>
                   <span><div class="buy-botton"><div class="hei-botton"><a href="#">开始做题</a></div></div></span>
         </li>
         <@show_chapter_child chapter sun sun_index />

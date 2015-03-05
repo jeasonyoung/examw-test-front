@@ -17,7 +17,7 @@ public interface IChapterService {
 	 * @return 章节信息的集合
 	 * @throws Exception
 	 */
-	List<SyllabusInfo> loadChapterInfo(String subjectId)throws Exception;
+	List<SyllabusInfo> findChapterInfo(String subjectId,String userId)throws Exception;
 	/**
 	 * 加载章节详情
 	 * @param pid	上级章节ID

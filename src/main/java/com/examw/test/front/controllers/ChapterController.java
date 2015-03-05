@@ -3,6 +3,7 @@ package com.examw.test.front.controllers;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.examw.test.front.model.product.SubjectInfo;
 import com.examw.test.front.model.syllabus.SyllabusInfo;
+import com.examw.test.front.model.user.User;
 import com.examw.test.front.service.IChapterService;
 import com.examw.test.front.service.IProductService;
 
@@ -42,7 +44,7 @@ public class ChapterController extends BaseProductController{
 	 * @return
 	 */
 	@RequestMapping(value = "/list/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
-	public String chapters(@PathVariable String productId,String subjectId,String subSubjectId,Model model){
+	public String chapters(@PathVariable String productId,String subjectId,String subSubjectId,Model model,HttpServletRequest request){
 		if(logger.isDebugEnabled()) logger.debug("加载章节练习...");
 		try{
 			if(this.loadProductInfo(productId)==null)
@@ -66,7 +68,7 @@ public class ChapterController extends BaseProductController{
 					}
 				}
 			}
-			model.addAttribute("CHAPTERLIST", this.chapterService.loadChapterInfo(subjectId));
+			model.addAttribute("CHAPTERLIST", this.chapterService.findChapterInfo(subjectId,this.getUserId(request)));
 			model.addAttribute("CURRENT_SUBJECT_ID", subjectId);
 			model.addAttribute("CURRENT_CHILD_SUBJECT_ID", subSubjectId);
 		}catch(Exception e){
@@ -77,9 +79,9 @@ public class ChapterController extends BaseProductController{
 	}
 	@RequestMapping(value = "/listjson/{productId}", method = {RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
-	public List<SyllabusInfo> chaptersJson(@PathVariable String productId,String subjectId,String subSubjectId,Model model){
+	public List<SyllabusInfo> chaptersJson(@PathVariable String productId,String subjectId,String subSubjectId,Model model,HttpServletRequest request){
 		try {
-			return this.chapterService.loadChapterInfo(subjectId);
+			return this.chapterService.findChapterInfo(subjectId,this.getUserId(request));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -104,5 +106,9 @@ public class ChapterController extends BaseProductController{
 			if(logger.isDebugEnabled()) logger.debug("加载章节信息异常...");
 		}
 		return "chapter_knowledge";
+	}
+	
+	private String getUserId(HttpServletRequest request){
+		return ((User)(request.getSession().getAttribute("USER"))).getProductUserId();
 	}
 }

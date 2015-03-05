@@ -63,12 +63,12 @@ public class ChapterServiceImpl implements IChapterService{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<SyllabusInfo> loadChapterInfo(String subjectId)
+	public List<SyllabusInfo> findChapterInfo(String subjectId,String userId)
 			throws Exception {
 		if(logger.isDebugEnabled()) logger.debug("加载章节信息....");
 		if(StringUtils.isEmpty(subjectId))
 		return null;
-		String url = String.format(this.api_list_url,subjectId);
+		String url = String.format(this.api_list_url,subjectId) + "?userId="+userId;
 		String xml = remoteService.httpRequest(url,"GET",null,"utf-8");
 		if(!StringUtils.isEmpty(xml)){
 			return JSONUtil.JsonToCollection(xml, List.class, SyllabusInfo.class);
