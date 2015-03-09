@@ -306,7 +306,7 @@ public class ProductInfo extends Paging implements Comparable<ProductInfo>{
 		return index;
 	}
 	/**
-	 * 获取 
+	 * 获取 图片
 	 * @return image
 	 * 
 	 */
@@ -314,7 +314,7 @@ public class ProductInfo extends Paging implements Comparable<ProductInfo>{
 		return image;
 	}
 	/**
-	 * 设置 
+	 * 设置 图片
 	 * @param image
 	 * 
 	 */
@@ -322,7 +322,7 @@ public class ProductInfo extends Paging implements Comparable<ProductInfo>{
 		this.image = image;
 	}
 	/**
-	 * 获取 
+	 * 获取 解析类型名称
 	 * @return analysisTypeName
 	 * 
 	 */
@@ -330,7 +330,7 @@ public class ProductInfo extends Paging implements Comparable<ProductInfo>{
 		return analysisTypeName;
 	}
 	/**
-	 * 设置 
+	 * 设置  解析类型名称
 	 * @param analysisTypeName
 	 * 
 	 */
@@ -338,7 +338,7 @@ public class ProductInfo extends Paging implements Comparable<ProductInfo>{
 		this.analysisTypeName = analysisTypeName;
 	}
 	/**
-	 * 获取 
+	 * 获取 是否真题
 	 * @return realTypeName
 	 * 
 	 */
@@ -346,7 +346,7 @@ public class ProductInfo extends Paging implements Comparable<ProductInfo>{
 		return realTypeName;
 	}
 	/**
-	 * 设置 
+	 * 设置 是否真题
 	 * @param realTypeName
 	 * 
 	 */
@@ -386,7 +386,7 @@ public class ProductInfo extends Paging implements Comparable<ProductInfo>{
 		this.realType = realType;
 	}
 	/**
-	 * 获取 
+	 * 获取 试卷总数
 	 * @return paperTotal
 	 * 
 	 */
@@ -394,7 +394,7 @@ public class ProductInfo extends Paging implements Comparable<ProductInfo>{
 		return paperTotal;
 	}
 	/**
-	 * 设置 
+	 * 设置 试卷总数
 	 * @param paperTotal
 	 * 
 	 */
@@ -402,7 +402,7 @@ public class ProductInfo extends Paging implements Comparable<ProductInfo>{
 		this.paperTotal = paperTotal;
 	}
 	/**
-	 * 获取 
+	 * 获取 题目总数
 	 * @return itemTotal
 	 * 
 	 */
@@ -410,11 +410,61 @@ public class ProductInfo extends Paging implements Comparable<ProductInfo>{
 		return itemTotal;
 	}
 	/**
-	 * 设置 
+	 * 设置 题目总数
 	 * @param itemTotal
 	 * 
 	 */
 	public void setItemTotal(Integer itemTotal) {
 		this.itemTotal = itemTotal;
+	}
+	//2015.03.09添加属性
+	private String title,keywords,description;
+	/**
+	 * 获取 标题
+	 * @return title
+	 * 标题
+	 */
+	public String getTitle() {
+		return title;
+	}
+	/**
+	 * 设置 标题
+	 * @param title
+	 * 标题
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	/**
+	 * 获取 关键字
+	 * @return keywords
+	 * 关键字
+	 */
+	public String getKeywords() {
+		return keywords;
+	}
+	/**
+	 * 设置 关键字
+	 * @param keywords
+	 * 关键字
+	 */
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
+	/**
+	 * 获取 描述
+	 * @return description
+	 * 描述
+	 */
+	public String getDescription() {
+		return description;
+	}
+	/**
+	 * 设置 描述
+	 * @param description
+	 * 描述
+	 */
+	public void setDescription(String description) {
+		this.description = description;
 	}
 }
