@@ -20,6 +20,7 @@ public class SyllabusInfo extends Paging implements Comparable<SyllabusInfo> {
 	private Set<SyllabusInfo> children;
 	private Integer status, orderNo;
 	private Integer year;
+	private String description;
 
 	/**
 	 * 获取上级大纲ID。
@@ -342,6 +343,24 @@ public class SyllabusInfo extends Paging implements Comparable<SyllabusInfo> {
 	 */
 	public void setUserDoneItemSum(Integer userDoneItemSum) {
 		this.userDoneItemSum = userDoneItemSum;
+	}
+
+	/**
+	 * 获取 内容
+	 * @return content
+	 * 
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * 设置 内容
+	 * @param content
+	 * 
+	 */
+	public void setDescription(String content) {
+		this.description = content;
 	}
 	
 }
