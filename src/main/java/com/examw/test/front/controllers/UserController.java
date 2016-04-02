@@ -40,16 +40,26 @@ public class UserController {
 	public String getUserInfo(HttpServletRequest request,HttpServletResponse response,Model model)
 	{
 		try{
+			if(logger.isDebugEnabled()) logger.debug("url=" + request.getQueryString());
 			String md5Key = this.userService.getMd5Key();
+			if(logger.isDebugEnabled()) logger.debug("md5key=" + md5Key);
 			String users = request.getParameter("Users");
+			if(logger.isDebugEnabled()) logger.debug("users=" + users);
+			
 			users = new String(users.getBytes("ISO-8859-1"),"GBK");
+			if(logger.isDebugEnabled()) logger.debug("users(GBK)=" + users);
 			String key = request.getParameter("KeyStr");
+			if(logger.isDebugEnabled()) logger.debug("KeyStr(key1)=" + key);
 			String key2 = TaoBaoMD5.sign(users, md5Key, "GBK");
+			if(logger.isDebugEnabled()) logger.debug("KeyStr(key2)=" + key2);
 			if(key2.equals(key)){
+				if(logger.isDebugEnabled()) logger.debug("key1==key2");
 				User user = this.userService.verifyUser(users);
 				request.getSession().setAttribute("USER", user);
 				users = user.getProductUserId()+"$"+users;
+				if(logger.isDebugEnabled()) logger.debug("users(cookie)="+ users);
 				key = TaoBaoMD5.sign(users, md5Key, "GBK");
+				if(logger.isDebugEnabled()) logger.debug("users(cookie key)="+ key);
 				//创建cookie
 				response.setHeader("P3P","CP='IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT'");
 				response.setHeader("Set-Cookie","Examwww="+URLEncoder.encode(users, "utf-8")+"#"+key);
@@ -64,6 +74,7 @@ public class UserController {
 		    		}
 		    	}
 		    }
+		    if(logger.isDebugEnabled()) logger.debug("redirect:lastpage="+ lastPage);
 			return "redirect:"+lastPage;
 		}catch(Exception e){
 			e.printStackTrace();

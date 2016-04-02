@@ -7,6 +7,8 @@ import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -757,6 +759,22 @@ public class PaperServiceImpl implements IPaperService{
 				result.add(paper);
 			}
 		}
+		//排序，创建时间倒序
+		if(result.size() > 0){
+			Collections.sort(result, new Comparator<FrontPaperInfo>(){
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				@Override
+				public int compare(FrontPaperInfo o1, FrontPaperInfo o2) {
+					try{
+						final Date d1 = dateFormat.parse(o1.getCreateTime());
+						final Date d2 = dateFormat.parse(o2.getCreateTime());
+						return d2.compareTo(d1);
+					}catch(Exception e){}
+					return o2.getCreateTime().compareToIgnoreCase(o1.getCreateTime());
+				}
+			});
+		}
+		//
 		int total = result.size();
 		if(total > 0){
 			datagrid.setTotal((long) total);
